@@ -1,0 +1,5 @@
+  /*CENTRAR LOS TITULOS DE LAS TABLAS*/
+    table th {
+      text-align: center;
+    }
+

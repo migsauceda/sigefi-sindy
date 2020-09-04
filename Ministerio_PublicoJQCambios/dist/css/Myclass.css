@@ -1,0 +1,308 @@
+  .navbar .navbar-nav {
+    display: inline-block;
+    float: none;
+}
+
+.navbar .navbar-collapse {
+    text-align: center;
+}
+  
+  .mensajes {
+	    background: rgba(0, 0, 0, 0.5);
+      padding: 2%;
+      text-align:center;
+}
+
+
+body{
+  overflow-x: hidden;
+  margin:0 ;
+  
+}
+
+#img-carrucel{
+
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+
+#slides_control > div{
+  height: 200px;
+}
+
+
+#controls {
+  position:absolute; 
+  padding: 0px;
+  width: 100%;
+  left: 0; 
+  margin-left: 2%; 
+
+}
+
+
+.margen-carrucel{
+  padding-top: 0px;
+  padding-bottom: 0px;
+
+
+}
+#carrucel-apartment{
+padding: 0;
+}
+
+
+
+.img-miniatura-marge{
+  margin-left: 3%;
+  margin-top: 0%;
+
+  padding-right: 0%;
+  padding-left: 0%;
+  padding-top: 0%;
+ 
+  
+}
+
+.navbar{
+        border: none;
+        border-radius: 0;
+       
+}
+
+.fondo-blanco{
+
+      /*background-color: rgba(0,0,0,0.5);*/
+      background-color: white;
+     
+}
+.jumbotron-menu{
+   margin-left: 1%;
+   margin-right: 1%;
+   padding-left: 1%;
+ 
+   padding-top:0;
+   padding-bottom: 0; 
+}
+
+#menu-lateral{
+  padding: 0;
+  background-color: white;
+  margin-bottom: 0px; 
+ 
+}
+
+.ul-padding{
+  padding-left: 0;
+}
+
+li.vineta{
+  list-style: none;
+  padding:2%; 
+
+}
+
+
+.jumbotron-padding{
+  padding: 0;
+}
+
+
+#contenedor-principal{
+
+  
+   height: 100vh;
+  
+   background-image: url('disney.jpg');
+   background-repeat:no-repeat;
+  /* background-attachment: fixed;*/
+  background-position: center;
+   background-size: cover;
+   padding-top: 0%;
+   margin-top: 0%;
+ 
+ 
+}
+#contenedor-hijo{
+
+
+ float: left;
+
+ height: 20vh;
+  width: 80%;
+  margin-top: 50vh;
+  margin-left: 10%;
+  
+}
+
+.contenedor-apartamento{
+height: 100vh;
+/*margin-left: 20%;
+margin-right: 20%;*/
+ padding-right: 5%;
+  padding-left: 5%;
+  margin-right: auto;
+  margin-left: auto;
+ /*background-position: center;
+ background-size: cover;*/
+}
+@media (max-width: 768px) {
+  .contenedor-apartamento {
+    width: 100%;
+
+    height: 120vh;
+  }
+  .fondo-jumbotrom-reglas{
+    font-size: 3vw;
+  }
+}
+@media (max-width: 992px) {
+  .contenedor-apartamento {
+    width: 100%;
+    height: 120vh;
+   /* height: 100vh;*/
+  }
+   .fondo-jumbotrom-reglas{
+    font-size: 3vw;
+  }
+}
+@media (max-width: 1200px) {
+  .contenedor-apartamento {
+    width: 100%;
+    height: 120vh;
+    /*height: 100vh;*/
+  }
+   .fondo-jumbotrom-reglas{
+    font-size: 3vw;
+  }
+}
+.cabezara{
+  background-color:lightblue;
+  padding-left: 5%;
+  padding-top:2vh;
+  
+  height:10vh;
+
+}
+
+.margenes-pagina{
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+  margin-bottom: 0;
+ 
+
+}
+.margenes-jumbotrom{
+  background-color: white;
+  padding-top: 1%;
+  margin-left: 2.5%;
+}
+.altura-imagen{
+  height: 50px;
+  width: 50px;
+}
+.altura-imagen-playa{
+  height: 50%;
+  width: 50%;
+
+ vertical-align:middle;
+
+  justify-content: center;
+
+}
+.texto{
+  padding-right:48px;
+}
+.fondo-jumbotrom-reglas{
+  background-color: lightblue;
+  height: 55vh;
+  
+}
+
+.fondo-jumbotrom-redes{
+  background-color: cornflowerblue;
+  padding-top:1%;
+  height: 55vh;
+  
+  
+}
+
+
+.form-popup{
+  margin-top: 120px;
+}
+.jumbotron-paddin{
+  padding: 5%;
+}
+.color-letra{
+  color:black;
+}
+.logo-paypal{
+  width: 30%;
+  margin-left: 5%;
+}
+a:link   
+{   
+ text-decoration:none;   
+ 
+} 
+.iconos-paddig{
+       border-left-width: 6px;
+       margin-left: 30px;
+      margin-right: 0px;
+}
+.color-pie{
+  color: white;
+}
+.tamanio-icono{
+  width: 30px;
+  height: 30px;
+}
+.div-pie-icon{
+  padding: 0;
+  margin: 0;
+}
+.div-row-pie{
+  display:inline-block;
+ 
+}
+.ul-pie{
+ margin-left: 5%;
+}
+/*media queyrs**/
+/*.navbar-brand
+{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    margin:0 auto;
+}
+.navbar-toggle {
+    z-index:3;
+}*/
+.navbar-brand {
+  padding: 0px;
+}
+.navbar-brand>img {
+  height: 110%;
+  padding: 0;
+  margin-left: 25%;
+  width: 70%;
+}
+/*.navbar{
+      background-color: rgba(0,0,0,0.5);
+  padding: 0;
+
+}*/
+
+.logo-nav{
+  width: 150px;
+  height: 40px;
+  margin-left: 5%;
+}

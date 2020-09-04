@@ -1,0 +1,17 @@
+copy tbl_departamentopais (cdepartamentoid, cdescripcion)
+from '/var/www/aplicacion-web/direcciones-utr/deptos.csv'
+delimiter ','
+
+copy tbl_municipio (cmunicipioid, cdepartamentoid,cdescripcion)
+from '/var/www/aplicacion-web/direcciones-utr/municipios.csv'
+delimiter ','
+
+copy tbl_aldea (caldeaid, cmunicipioid, cdepartamentoid, cdescripcion, carea)
+from '/var/www/aplicacion-web/direcciones-utr/aldea.csv'
+delimiter ','
+
+copy tbl_aldea (caldeaid, cmunicipioid, cdepartamentoid, cdescripcion, carea)
+from '/var/www/aplicacion-web/direcciones-utr/aldea.csv'
+delimiter ','
+
+delete from tbl_municipio

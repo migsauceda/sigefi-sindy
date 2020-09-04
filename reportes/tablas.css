@@ -1,0 +1,17 @@
+th {
+	background-color:    #1f618d  ;
+	color:      #d7dbdd   ; 
+	font-family: fantasy;
+
+}
+tr:nth-child(even) {
+	background-color:  #d6eaf8 ;
+ 
+
+}
+
+table  {
+	border-collapse: collapse ;
+	width: 100%;
+	
+}

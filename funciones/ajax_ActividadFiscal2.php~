@@ -1,0 +1,209 @@
+<?php
+session_start(); 
+
+include("../clases/class_conexion_pg.php");
+
+$opcion= $_POST['opcion'];
+$subetapa= $_POST['subetapa'];
+$imputados= $_POST['imputados'];
+$etapa= $_POST['etapa'];
+$denunciaid= $_SESSION['denunciaid'];
+
+$objConexion=new Conexion(); 
+
+if($opcion== "actividad"){
+    if ($etapa== 0){
+        $sql= "select act.nactividadid || ',' || et.netapaid as actividadid, act.cdescripcion || ', ' || et.cdescripcion as descripcionact
+                from mini_sedi.tbl_actividad as act 
+                inner join mini_sedi.tbl_etapa_actividad as eta on act.nactividadid= eta.nactividadid
+                inner join mini_sedi.tbl_etapa as et on et.netapaid= eta.netapaid order by descripcionact asc";
+    }
+    else{
+        $sql= "select act.nactividadid || ',' || et.netapaid as actividadid, act.cdescripcion || ', ' || et.cdescripcion as descripcionact
+                from mini_sedi.tbl_actividad as act 
+                inner join mini_sedi.tbl_etapa_actividad as eta on act.nactividadid= eta.nactividadid
+                inner join mini_sedi.tbl_etapa as et on et.netapaid= eta.netapaid 
+                where eta.netapaid= $etapa";       
+    }
+    
+//    $sql= "select distinct nactividadid as actividadid, cdescripcion as descripcionact
+//        from mini_sedi.tbl_actividad
+//        order by descripcionact asc";
+
+    $resActividad=$objConexion->ejecutarComando($sql);
+    $PrimerRegistro= 1;
+    $json= "[";
+    while ($Registro= pg_fetch_array($resActividad)){
+        $actividadid= $Registro[actividadid];  
+        $actividaddesc = $Registro[descripcionact];
+
+        if ($PrimerRegistro== 1){
+            $PrimerRegistro= 0;            
+        }
+        else{
+            $json .= ",";
+        }
+        $json .= "{\"actividadid\":\"$actividadid\",\"actividaddesc\":\"$actividaddesc\"}";                        
+    }
+    $json .="]";
+    echo $json; 
+}
+
+if($opcion== "imputados"){
+    $sql= "select distinct i.tpersonaid, (cnombres || ' ' || capellidos) as nombres from mini_sedi.tbl_imputado as i
+            inner join mini_sedi.tbl_imputado_delito as id on i.tpersonaid= id.tpersonaid
+            where i.tdenunciaid= $denunciaid
+            order by nombres";
+
+    $resActividad=$objConexion->ejecutarComando($sql);
+    $PrimerRegistro= 1;
+    $json= "[";
+    while ($Registro= pg_fetch_array($resActividad)){
+        $imputadoid= $Registro[tpersonaid];  
+        $nombreimputado = $Registro[nombres];
+
+        if ($PrimerRegistro== 1){
+            $PrimerRegistro= 0;            
+        }
+        else{
+            $json .= ",";
+        }
+        $json .= "{\"imputadoid\":\"$imputadoid\",\"nombre\":\"$nombreimputado\"}";                        
+    }
+    $json .="]";
+    echo $json; 
+}
+
+if($opcion== "delitos"){
+    
+    if (substr_count($imputados, ',') > 0){
+        //delitos en comun
+        $sql= "select ndelitoid, cdescripcion from mini_sedi.tbl_delito
+                where ndelitoid in (select ndelito from mini_sedi.tbl_imputado_delito 
+                where tpersonaid in ($imputados)  
+                group by ndelito having count(ndelito) > 1)";        
+    }
+    else{
+        //delitos individual
+        $sql= "select ndelitoid, cdescripcion from mini_sedi.tbl_delito
+                where ndelitoid in 
+                (select ndelito from mini_sedi.tbl_imputado_delito 
+                where tpersonaid in ($imputados))";        
+    }
+    
+    $resActividad=$objConexion->ejecutarComando($sql);
+    $PrimerRegistro= 1;
+    $json= "[";
+    while ($Registro= pg_fetch_array($resActividad)){
+        $delitoid= $Registro[ndelitoid];  
+        $delitodesc = $Registro[cdescripcion];
+
+        if ($PrimerRegistro== 1){
+            $PrimerRegistro= 0;            
+        }
+        else{
+            $json .= ",";
+        }
+        $json .= "{\"delitoid\":\"$delitoid\",\"delito\":\"$delitodesc\"}";                        
+    }
+    $json .="]";
+    echo $json; 
+}
+
+if($opcion== "subetapa"){
+    $sql= "select s.nsubetapaid, cdescripcion
+            from mini_sedi.tbl_subetapa as s
+            inner join mini_sedi.tbl_subetapa_actividad as sa on s.nsubetapaid= sa.nsubetapaid
+            where nactividadid= $subetapa
+            order by cdescripcion";
+
+    $resSubEtapa=$objConexion->ejecutarComando($sql);
+    $PrimerRegistro= 1;
+    $json= "[";
+    while ($Registro= pg_fetch_array($resSubEtapa)){
+        $subetapaidid= $Registro[nsubetapaid];  
+        $descripcion = $Registro[cdescripcion];
+
+        if ($PrimerRegistro== 1){
+            $PrimerRegistro= 0;            
+        }
+        else{
+            $json .= ",";
+        }
+        $json .= "{\"subetapaid\":\"$subetapaidid\",\"descripcion\":\"$descripcion\"}";                        
+    }
+    $json .="]";
+    echo $json; 
+}
+
+if($opcion== "etapa"){
+    $sql= "select e.cdescripcion, e.netapaid
+        from mini_Sedi.tbl_subetapa as se
+        inner join mini_Sedi.tbl_etapa as e on se.netapaid = e.netapaid
+        where se.nsubetapaid=  $subetapa";
+
+    $resEtapa=$objConexion->ejecutarComando($sql);
+    $PrimerRegistro= 1;
+    $json= "[";
+    while ($Registro= pg_fetch_array($resEtapa)){
+        $descripcion = $Registro["cdescripcion"];
+        $netapaid= $Registro["netapaid"];
+
+        if ($PrimerRegistro== 1){
+            $PrimerRegistro= 0;            
+        }
+        else{
+            $json .= ",";
+        }
+        $json .= "{\"etapaid\":\"$netapaid\",\"descripcion\":\"$descripcion\"}";                        
+    }
+    $json .="]";
+    echo $json; 
+}
+
+if($opcion== "materia"){
+    $sql= "select nmateria, cdescripcion from mini_sedi.tbl_materia
+            order by cdescripcion";
+
+    $resSubEtapa=$objConexion->ejecutarComando($sql);
+    $PrimerRegistro= 1;
+    $json= "[";
+    while ($Registro= pg_fetch_array($resSubEtapa)){
+        $materiaid= $Registro[nmateria];  
+        $descripcion = $Registro[cdescripcion];
+
+        if ($PrimerRegistro== 1){
+            $PrimerRegistro= 0;            
+        }
+        else{
+            $json .= ",";
+        }
+        $json .= "{\"materiaid\":\"$materiaid\",\"descripcion\":\"$descripcion\"}";                        
+    }
+    $json .="]";
+    echo $json; 
+}
+
+if($opcion== "cmbetapa"){
+    $sql= "select netapaid, cdescripcion from mini_sedi.tbl_etapa
+            order by netapaid";
+
+    $resSubEtapa=$objConexion->ejecutarComando($sql);
+    $PrimerRegistro= 1;
+    $json= "[";
+    while ($Registro= pg_fetch_array($resSubEtapa)){
+        $netapaid= $Registro[netapaid];  
+        $descripcion = $Registro[cdescripcion];
+
+        if ($PrimerRegistro== 1){
+            $PrimerRegistro= 0;            
+        }
+        else{
+            $json .= ",";
+        }
+        $json .= "{\"etapaid\":\"$netapaid\",\"descripcion\":\"$descripcion\"}";                        
+    }
+    $json .="]";
+    echo $json; 
+}
+?>

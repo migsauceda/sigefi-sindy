@@ -1,0 +1,105 @@
+
+/* 
+    Document   : Estilos
+    Created on : 07-24-2012, 02:40:46 PM
+    Author     : miguel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+	table.TablaCaja
+	{
+		border-collapse:collapse;
+		border-style: solid;
+		border-width: 1px;
+		border-color: black;
+                /*width: 1100px;*/
+	}
+
+	table.TablaCaja caption.Centro
+	{
+		font-family: Arial,Helvetica,sans-serif;
+		font-weight: normal;
+		font-style: normal;
+		font-variant: normal;
+		font-size: 1em;
+		line-height: 1.5em;
+		text-align: center;
+		color: black;	
+	}
+
+	table.TablaCaja caption.Izquierda
+	{
+		font-family: Arial,Helvetica,sans-serif;
+		font-weight: normal;
+		font-style: normal;
+		font-variant: normal;
+		font-size: 1em;
+		line-height: 1.5em;
+		text-align: left;
+		color: black;	
+	}
+
+	table.TablaCaja tr.SubTituloCentro th
+	{
+		font-family: Arial,Helvetica,sans-serif;
+		font-weight: bold;
+		font-style: normal;
+		font-variant: normal;
+		font-size: 1em;
+		line-height: 1.5em;
+		text-align: center;
+		color: black;
+                background-image: url('./smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png');
+                background-repeat:repeat-x;                
+	}
+       
+	table.TablaCaja tr.SubTituloDerecha th
+	{
+		font-family: Arial,Helvetica,sans-serif;
+		font-weight: normal;
+		font-style: normal;
+		font-variant: normal;
+		font-size: 1em;
+		line-height: 1.5em;
+		text-align: left;
+		color: black;	
+/*                background-image: url('./smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png');
+                background-repeat:repeat-x;                 */
+	}
+
+	table.TablaCaja tr.Grid td
+	{		
+		border-style: solid;
+		border-width: 1px;
+		border-color: black;	
+		font-family: "Arial,Helvetica,sans-serif;";	
+	}
+        
+        table.TablaCaja tr.Par
+        {
+		font-family: Arial,Helvetica,sans-serif;
+		font-weight: normal;
+		font-style: normal;
+		font-variant: normal;
+		font-size: 1em;
+		line-height: 1.5em;
+		text-align: left;
+		color: black;	
+                /*background-color: #FFFFFF*/
+                background-color:blue;
+        }
+        
+        table.TablaCaja tr.ImPar
+        {
+		font-family: Arial,Helvetica,sans-serif;
+		font-weight: normal;
+		font-style: normal;
+		font-variant: normal;
+		font-size: 1em;
+		line-height: 1.5em;
+		text-align: left;
+		color: black;	
+                /*background-color: #F8F8FF*/
+                background-color:red;
+        }        

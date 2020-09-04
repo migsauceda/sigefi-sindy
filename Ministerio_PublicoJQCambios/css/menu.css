@@ -1,0 +1,16 @@
+#menu{
+    background-color: steelblue;;
+    
+}
+.navbar-default .navbar-nav>li>a {
+    color:white !important;
+    
+}
+
+.select{
+    width: 250px;
+}
+/*.borde{
+    border: 1px solid blue;
+   
+}*/

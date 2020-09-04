@@ -1,0 +1,8 @@
+diff a/api/.htaccess b/api/.htaccess	(rejected hunks)
+@@ -1,5 +0,0 @@
+-<IfModule mod_rewrite.c>
+-	RewriteEngine on
+-	RewriteCond %{REQUEST_FILENAME} !-f
+-    RewriteRule ^((?s).*)$ index.php?_url=/$1 [QSA,L]
+-</IfModule>
+\ No newline at end of file

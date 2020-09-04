@@ -1,0 +1,727 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1">
+        <file>
+            <url>busqueda.php</url>
+            <line>193</line>
+            <line>822</line>
+        </file>
+        <file>
+            <url>relacion/relacion.php</url>
+            <line>132</line>
+            <line>295</line>
+        </file>
+        <file>
+            <url>imputado/imputado.php</url>
+            <line>120</line>
+            <line>766</line>
+            <line>988</line>
+        </file>
+        <file>
+            <url>denunciante/denunciante.php</url>
+            <line>83</line>
+            <line>108</line>
+            <line>217</line>
+            <line>638</line>
+        </file>
+        <file>
+            <url>funciones/php_funciones.php</url>
+            <line>656</line>
+            <line>680</line>
+            <line>813</line>
+            <line>941</line>
+        </file>
+        <file>
+            <url>actividad/actividad.php</url>
+            <line>89</line>
+            <line>219</line>
+        </file>
+        <file>
+            <url>administracion/ProcesaCambiarClave.php</url>
+            <line>39</line>
+        </file>
+        <file>
+            <url>actividad/asignarfiscal.php</url>
+            <line>36</line>
+            <line>80</line>
+            <line>129</line>
+            <line>207</line>
+        </file>
+        <file>
+            <url>java_script/funciones.js</url>
+            <line>293</line>
+            <line>396</line>
+            <line>589</line>
+        </file>
+    </editor-bookmarks>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="318">
+        <file>
+            <url>reportes/reporte1b.php</url>
+            <bookmark id="27">
+                <name/>
+                <line>65</line>
+                <key/>
+            </bookmark>
+            <bookmark id="259">
+                <name/>
+                <line>128</line>
+                <key/>
+            </bookmark>
+            <bookmark id="260">
+                <name/>
+                <line>600</line>
+                <key/>
+            </bookmark>
+            <bookmark id="261">
+                <name/>
+                <line>733</line>
+                <key/>
+            </bookmark>
+            <bookmark id="277">
+                <name/>
+                <line>890</line>
+                <key/>
+            </bookmark>
+            <bookmark id="262">
+                <name/>
+                <line>937</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>imputado/procesaimputado.php</url>
+            <bookmark id="101">
+                <name/>
+                <line>129</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>clases/ORM_Denunciante.php</url>
+            <bookmark id="20">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>actividad/asignarfiscalia.php</url>
+            <bookmark id="111">
+                <name/>
+                <line>85</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>denuncia/denunciante.php</url>
+            <bookmark id="177">
+                <name/>
+                <line>103</line>
+                <key/>
+            </bookmark>
+            <bookmark id="179">
+                <name/>
+                <line>1083</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>funciones/funciones.js</url>
+            <bookmark id="218">
+                <name/>
+                <line>77</line>
+                <key/>
+            </bookmark>
+            <bookmark id="217">
+                <name/>
+                <line>794</line>
+                <key/>
+            </bookmark>
+            <bookmark id="283">
+                <name/>
+                <line>1095</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>actividad/asignarfiscal.php</url>
+            <bookmark id="0">
+                <name/>
+                <line>107</line>
+                <key/>
+            </bookmark>
+            <bookmark id="0">
+                <name/>
+                <line>156</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>denuncia/frmGenerales.php</url>
+            <bookmark id="265">
+                <name/>
+                <line>75</line>
+                <key/>
+            </bookmark>
+            <bookmark id="199">
+                <name/>
+                <line>281</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>actividad/BandejaContenido.php</url>
+            <bookmark id="264">
+                <name/>
+                <line>88</line>
+                <key/>
+            </bookmark>
+            <bookmark id="263">
+                <name/>
+                <line>143</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>generales/generales.php</url>
+            <bookmark id="157">
+                <name/>
+                <line>194</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>actividad/actividadb.php</url>
+            <bookmark id="317">
+                <name/>
+                <line>418</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>imputado/imputado.php</url>
+            <bookmark id="165">
+                <name/>
+                <line>283</line>
+                <key/>
+            </bookmark>
+            <bookmark id="113">
+                <name/>
+                <line>551</line>
+                <key/>
+            </bookmark>
+            <bookmark id="167">
+                <name/>
+                <line>642</line>
+                <key/>
+            </bookmark>
+            <bookmark id="114">
+                <name/>
+                <line>810</line>
+                <key/>
+            </bookmark>
+            <bookmark id="164">
+                <name/>
+                <line>1078</line>
+                <key/>
+            </bookmark>
+            <bookmark id="166">
+                <name/>
+                <line>1114</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>funciones/php_funciones.php</url>
+            <bookmark id="159">
+                <name/>
+                <line>53</line>
+                <key/>
+            </bookmark>
+            <bookmark id="55">
+                <name/>
+                <line>113</line>
+                <key/>
+            </bookmark>
+            <bookmark id="303">
+                <name/>
+                <line>777</line>
+                <key/>
+            </bookmark>
+            <bookmark id="1">
+                <name/>
+                <line>791</line>
+                <key/>
+            </bookmark>
+            <bookmark id="0">
+                <name/>
+                <line>847</line>
+                <key/>
+            </bookmark>
+            <bookmark id="152">
+                <name/>
+                <line>910</line>
+                <key/>
+            </bookmark>
+            <bookmark id="0">
+                <name/>
+                <line>986</line>
+                <key/>
+            </bookmark>
+            <bookmark id="56">
+                <name/>
+                <line>1049</line>
+                <key/>
+            </bookmark>
+            <bookmark id="0">
+                <name/>
+                <line>1137</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>RealizarBusqueda.php</url>
+            <bookmark id="132">
+                <name/>
+                <line>24</line>
+                <key/>
+            </bookmark>
+            <bookmark id="133">
+                <name/>
+                <line>47</line>
+                <key/>
+            </bookmark>
+            <bookmark id="131">
+                <name/>
+                <line>144</line>
+                <key/>
+            </bookmark>
+            <bookmark id="304">
+                <name/>
+                <line>168</line>
+                <key/>
+            </bookmark>
+            <bookmark id="30">
+                <name/>
+                <line>173</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>clases/Denunciante.php</url>
+            <bookmark id="19">
+                <name/>
+                <line>168</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>denunciante/denunciante.php</url>
+            <bookmark id="175">
+                <name/>
+                <line>114</line>
+                <key/>
+            </bookmark>
+            <bookmark id="176">
+                <name/>
+                <line>222</line>
+                <key/>
+            </bookmark>
+            <bookmark id="150">
+                <name/>
+                <line>576</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>denuncia/frmOfendido.php</url>
+            <bookmark id="241">
+                <name/>
+                <line>352</line>
+                <key/>
+            </bookmark>
+            <bookmark id="248">
+                <name/>
+                <line>920</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>actividad/actividad.php</url>
+            <bookmark id="0">
+                <name/>
+                <line>89</line>
+                <key/>
+            </bookmark>
+            <bookmark id="0">
+                <name/>
+                <line>219</line>
+                <key/>
+            </bookmark>
+            <bookmark id="6">
+                <name/>
+                <line>250</line>
+                <key/>
+            </bookmark>
+            <bookmark id="8">
+                <name/>
+                <line>332</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>java_script/funciones.js</url>
+            <bookmark id="0">
+                <name/>
+                <line>358</line>
+                <key/>
+            </bookmark>
+            <bookmark id="98">
+                <name/>
+                <line>725</line>
+                <key/>
+            </bookmark>
+            <bookmark id="2">
+                <name/>
+                <line>810</line>
+                <key/>
+            </bookmark>
+            <bookmark id="0">
+                <name/>
+                <line>907</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>clases/Ofendido.php</url>
+            <bookmark id="125">
+                <name/>
+                <line>255</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>administracion/AdmonUsr.php</url>
+            <bookmark id="174">
+                <name/>
+                <line>127</line>
+                <key/>
+            </bookmark>
+            <bookmark id="173">
+                <name/>
+                <line>176</line>
+                <key/>
+            </bookmark>
+            <bookmark id="171">
+                <name/>
+                <line>194</line>
+                <key/>
+            </bookmark>
+            <bookmark id="307">
+                <name/>
+                <line>366</line>
+                <key/>
+            </bookmark>
+            <bookmark id="169">
+                <name/>
+                <line>443</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>denuncia/frmDenunciado.php</url>
+            <bookmark id="285">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="294">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="295">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="287">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="288">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="229">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="297">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="279">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="280">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="247">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="250">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="252">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="214">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="298">
+                <name/>
+                <line>444</line>
+                <key/>
+            </bookmark>
+            <bookmark id="309">
+                <name/>
+                <line>1119</line>
+                <key/>
+            </bookmark>
+            <bookmark id="312">
+                <name/>
+                <line>1429</line>
+                <key/>
+            </bookmark>
+            <bookmark id="310">
+                <name/>
+                <line>2068</line>
+                <key/>
+            </bookmark>
+            <bookmark id="311">
+                <name/>
+                <line>2215</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>denuncia/frmExpediente.php</url>
+            <bookmark id="201">
+                <name/>
+                <line>214</line>
+                <key/>
+            </bookmark>
+            <bookmark id="237">
+                <name/>
+                <line>290</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>reportes/clases/mostrarReporte.php</url>
+            <bookmark id="62">
+                <name/>
+                <line>65</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>relacion/relacion.php</url>
+            <bookmark id="33">
+                <name/>
+                <line>145</line>
+                <key/>
+            </bookmark>
+            <bookmark id="38">
+                <name/>
+                <line>206</line>
+                <key/>
+            </bookmark>
+            <bookmark id="37">
+                <name/>
+                <line>253</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>crear_denuncia.php</url>
+            <bookmark id="146">
+                <name/>
+                <line>279</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>ofendido/ofendido.php</url>
+            <bookmark id="160">
+                <name/>
+                <line>66</line>
+                <key/>
+            </bookmark>
+            <bookmark id="149">
+                <name/>
+                <line>473</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>denuncia/ofendido.php</url>
+            <bookmark id="183">
+                <name/>
+                <line>211</line>
+                <key/>
+            </bookmark>
+            <bookmark id="178">
+                <name/>
+                <line>264</line>
+                <key/>
+            </bookmark>
+            <bookmark id="182">
+                <name/>
+                <line>650</line>
+                <key/>
+            </bookmark>
+            <bookmark id="184">
+                <name/>
+                <line>768</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>clases/Imputado.php</url>
+            <bookmark id="103">
+                <name/>
+                <line>21</line>
+                <key/>
+            </bookmark>
+            <bookmark id="281">
+                <name/>
+                <line>260</line>
+                <key/>
+            </bookmark>
+            <bookmark id="102">
+                <name/>
+                <line>318</line>
+                <key/>
+            </bookmark>
+            <bookmark id="40">
+                <name/>
+                <line>444</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>administracion/ProcesaCambiarClave.php</url>
+            <bookmark id="0">
+                <name/>
+                <line>39</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>denuncia/frmRelacion.php</url>
+            <bookmark id="313">
+                <name/>
+                <line>285</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>denuncia/frmDenunciante.php</url>
+            <bookmark id="275">
+                <name/>
+                <line>142</line>
+                <key/>
+            </bookmark>
+            <bookmark id="255">
+                <name/>
+                <line>310</line>
+                <key/>
+            </bookmark>
+            <bookmark id="291">
+                <name/>
+                <line>354</line>
+                <key/>
+            </bookmark>
+            <bookmark id="296">
+                <name/>
+                <line>400</line>
+                <key/>
+            </bookmark>
+            <bookmark id="308">
+                <name/>
+                <line>873</line>
+                <key/>
+            </bookmark>
+            <bookmark id="267">
+                <name/>
+                <line>964</line>
+                <key/>
+            </bookmark>
+            <bookmark id="290">
+                <name/>
+                <line>1083</line>
+                <key/>
+            </bookmark>
+            <bookmark id="266">
+                <name/>
+                <line>1176</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>clases/ORM_Imputado.php</url>
+            <bookmark id="39">
+                <name/>
+                <line>226</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>denuncia/frmProcesaFinalizarDenuncia.php</url>
+            <bookmark id="232">
+                <name/>
+                <line>250</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>clases/Denuncia.php</url>
+            <bookmark id="158">
+                <name/>
+                <line>143</line>
+                <key/>
+            </bookmark>
+            <bookmark id="163">
+                <name/>
+                <line>148</line>
+                <key/>
+            </bookmark>
+            <bookmark id="162">
+                <name/>
+                <line>184</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group/>
+    </open-files>
+</project-private>

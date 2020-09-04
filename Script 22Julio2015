@@ -1,0 +1,1106 @@
+﻿--agregar a tablas las columnas --
+
+
+-- funciones ---
+
+CREATE OR REPLACE FUNCTION  mini_sedi.actividad_delito_insert(ndelito integer[], pnactividadid integer, ptpersonaid integer, pcfiscalid character varying, pmateriaid integer, pdfecha date, pnetapa integer, ptdenunciaid integer, pnactividad2 integer, pthora time with time zone, pip character varying, piddoc integer, ddescripcion character varying, ddoc bytea, dtipo character varying, dsize double precision, destado boolean) RETURNS SETOF mini_sedi.terror
+    LANGUAGE plpgsql
+    AS $$
+declare
+	mierror mini_sedi.terror%rowtype;
+
+	n int;
+	i integer;
+	delito integer;
+	arreglo_soundex character varying[];
+	cadena_soundex character varying(20);
+begin
+	begin
+
+		INSERT INTO mini_sedi.tbl_documentos(
+            iddoc, tdenunciaid, descripcion, documento, tipo, size, estado)
+		VALUES (piddoc, ptdenunciaid, ddescripcion, ddoc, dtipo, dsize, destado);
+	
+			INSERT INTO mini_sedi.tbl_imputado_actividad(
+            nactividadid, tpersonaid, cfiscalid, nmateriaid, dfecha, netapa, 
+            tdenunciaid, nactividadid2, thora)
+		VALUES (pnactividadid, ptpersonaid, pcfiscalid, pmateriaid, pdfecha, pnetapa, 
+			ptdenunciaid, pnactividad2, pthora);
+
+	
+n:= array_length(ndelito, 1);
+		--validar si el arreglo esta vacio
+		if n= 1 then
+			if ndelito[1]= 0 then
+				n:= -1;
+			end if;
+		end if;
+		
+		for i in 1..n loop
+			delito:= ndelito[i];
+
+			INSERT INTO mini_sedi.tbl_imputado_actividad_delito(ndelito, nactividadid, tpersonaid, 
+			cfiscalid, nmateriaid, dfecha, netapa, tdenunciaid, nactividadid2, thora, iddoc)
+			VALUES (delito, pnactividadid, ptpersonaid, pcfiscalid, pmateriaid, pdfecha, 
+            pnetapa, ptdenunciaid, pnactividad2, pthora, piddoc);
+		end loop;
+	exception
+		when others then
+		for mierror in select SQLSTATE, SQLERRM loop return next mierror; end loop;
+		return;
+	end;
+end;
+
+ $$;
+
+
+ALTER FUNCTION mini_sedi.actividad_delito_insert(ndelito integer[], pnactividadid integer, ptpersonaid integer, pcfiscalid character varying, pmateriaid integer, pdfecha date, pnetapa integer, ptdenunciaid integer, pnactividad2 integer, pthora time with time zone, pip character varying, piddoc integer, ddescripcion character varying, ddoc bytea, dtipo character varying, dsize double precision, destado boolean) OWNER TO mini_sedi_login;
+
+
+CREATE OR REPLACE FUNCTION  mini_sedi.cambiar_numero_denuncia(pdenunciaok integer, pdenunciamalo integer) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $$
+  begin
+
+	update mini_sedi.tbl_denuncia set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;
+
+	update mini_sedi.tbl_denunciante set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;	
+
+	update mini_sedi.tbl_imputado set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;	
+
+	update mini_sedi.tbl_ofendido set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;		
+
+	update mini_sedi.tbl_imputado_actividad set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;			
+
+	update mini_sedi.tbl_imputado_actividad_delito set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;		
+
+	update mini_sedi.tbl_imputado_ofendido set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;		
+
+	update mini_sedi.tbl_log_denuncia set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;	
+
+	update mini_sedi.tbl_log_denunciante set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;  
+
+	update mini_sedi.tbl_log_imputado set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;  	
+
+	update mini_sedi.tbl_log_imputado_actividad set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo;  	
+
+	update mini_sedi.tbl_log_imputado_actividad_delito set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo; 	
+
+	update mini_sedi.tbl_log_imputado_alias set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo; 	
+
+	update mini_sedi.tbl_log_imputado_delito set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo; 
+
+	update mini_sedi.tbl_log_ofendido set tdenunciaid= pdenunciaok
+	where tdenunciaid= pdenunciamalo; 	
+
+	return 'ok';
+  end;
+  $$;
+
+
+ALTER FUNCTION mini_sedi.cambiar_numero_denuncia(pdenunciaok integer, pdenunciamalo integer) OWNER TO postgres;
+
+--
+-- TOC entry 314 (class 1255 OID 139274)
+-- Dependencies: 6 971
+-- Name: claves(); Type: FUNCTION; Schema: mini_sedi; Owner: mini_sedi_login
+--
+
+
+CREATE OR REPLACE FUNCTION  mini_sedi.denunciante_insert(tdenunciaid integer, cdocumentoid character varying, cnombres character varying, capellidos character varying, cgenero character varying, nestadocivil integer, nprofesionid integer, nocupacionid integer, nescolaridadid integer, cnacionalidadid character varying, netniaid integer, ndiscapacidadid integer, nconocido integer, iedad integer, cunidadmedidaedad character varying, crangoedad character varying, cdepartamentoid character varying, cmunicipioid character varying, caldeaid character varying, cdetalle character varying, cbarrioid character varying, corientacionsexual character varying, cdireccion character varying, tpersonaid integer, ptipodoc integer, ctelefono character varying, pusr character varying, pip character varying, psoundexnombre character varying, psoundexapellido character varying, pbapoderadolegal boolean, pcapoderadolegal character varying, pccolegioabogado character varying, pbpersonanatural boolean, pcnombreasumido character varying, pcrtn character varying, paplicalgbti boolean) RETURNS SETOF mini_sedi.terror
+    LANGUAGE plpgsql
+    AS $$
+declare
+	mierror mini_sedi.terror%rowtype;
+begin
+	begin
+		insert into mini_sedi.tbl_denunciante (
+			tdenunciaid, cdocumentoid, cnombres, capellidos, cgenero, nestadocivil, 
+			nprofesionid, nocupacionid, nescolaridadid, cnacionalidadid, netniaid,
+			ndiscapacidadid, nconocido, iedad, cunidadmedidaedad, crangoedad, 
+			cdepartamentoid, cmunicipioid, caldeaid, cdetalle, cbarrioid, corientacionsexual, 
+			cdireccion, ctelefono, tpersonaid, ntipodocumento, cmetanombre, cmetaapellido,
+			bapoderadolegal, capoderadolegal, ccolegioabogado, bpersonanatural, cnombreasumido, crtn,
+			aplicalgbti) 
+		values (
+			tdenunciaid,
+			cdocumentoid,
+			cnombres,
+			capellidos,
+			cgenero,
+			nestadocivil,
+			nprofesionid,
+			nocupacionid,
+			nescolaridadid,
+			cnacionalidadid,
+			netniaid,
+			ndiscapacidadid,
+			nconocido,
+			iedad,
+			cunidadmedidaedad,
+			crangoedad,
+			cdepartamentoid,
+			cmunicipioid,
+			caldeaid,
+			cdetalle,
+			cbarrioid,
+			corientacionsexual,
+			cdireccion,
+			ctelefono,
+			tpersonaid,
+			ptipodoc,
+			psoundexnombre,
+			psoundexapellido,
+			pbapoderadolegal,
+			pcapoderadolegal, 
+			pccolegioabogado,
+			pbpersonanatural,
+			pcnombreasumido,
+			pcrtn,
+			paplicalgbti);
+
+/*
+		insert into mini_sedi.tbl_pdf_denunciante (
+			tdenunciaid, cdocumentoid, cnombres, capellidos, cgenero, nestadocivil, 
+			nprofesionid, nocupacionid, nescolaridadid, cnacionalidadid, netniaid,
+			ndiscapacidadid, nconocido, iedad, cunidadmedidaedad, crangoedad, 
+			cdepartamentoid, cmunicipioid, caldeaid, cdetalle, cbarrioid, corientacionsexual, 
+			cdireccion, ctelefono, tpersonaid, ntipodocumento,
+			bapoderadolegal, capoderadolegal, ccolegioabogado, bpersonanatural, cnombreasumido) 
+		values (
+			tdenunciaid,
+			cdocumentoid,
+			cnombres,
+			capellidos,
+			cgenero,
+			nestadocivil,
+			nprofesionid,
+			nocupacionid,
+			nescolaridadid,
+			cnacionalidadid,
+			netniaid,
+			ndiscapacidadid,
+			nconocido,
+			iedad,
+			cunidadmedidaedad,
+			crangoedad,
+			cdepartamentoid,
+			cmunicipioid,
+			caldeaid,
+			cdetalle,
+			cbarrioid,
+			corientacionsexual,
+			cdireccion,
+			ctelefono,
+			tpersonaid,
+			ptipodoc,
+			pbapoderadolegal,
+			pcapoderadolegal, 
+			pccolegioabogado,
+			pbpersonanatural,
+			pcnombreasumido);
+*/			
+		--estados
+		UPDATE mini_sedi.tbl_controlestados
+		SET usr=pusr, fecha=now(), denunciante='t'
+		WHERE denuncia=tdenunciaid; 
+
+		--log       
+		INSERT INTO mini_sedi.tbl_log_denunciante(
+			cdocumentoid, cnombres, capellidos, cgenero, nestadocivil, nprofesionid, 
+			nocupacionid, nescolaridadid, cnacionalidadid, netniaid, ndiscapacidadid, 
+			iedad, cunidadmedidaedad, crangoedad, cdepartamentoid, cmunicipioid, 
+			caldeaid, cdetalle, cbarrioid, corientacionsexual, tpersonaid, 
+			nconocido, tdenunciaid, ctelefono, usuario, fechahoramod, ip_adress, ntipodocumento,
+			bapoderadolegal, capoderadolegal, ccolegioabogado, bpersonanatural, cnombreasumido, crtn,
+			aplicalgbti)
+		VALUES (cdocumentoid, cnombres, capellidos, cgenero, nestadocivil, 
+			nprofesionid, nocupacionid, nescolaridadid, cnacionalidadid, 
+			netniaid, ndiscapacidadid, iedad, cunidadmedidaedad, 
+			crangoedad, cdepartamentoid, cmunicipioid, caldeaid, 
+			cdetalle, cbarrioid, corientacionsexual, tpersonaid, 
+			nconocido, tdenunciaid, ctelefono, pusr, now(), pip, ptipodoc,
+			pbapoderadolegal, pcapoderadolegal, pccolegioabogado, pbpersonanatural, pcnombreasumido, pcrtn,
+			paplicalgbti);
+
+		for mierror in select '0', 'exito' loop return next mierror; end loop;
+		return;
+	exception
+		when others then
+		for mierror in select SQLSTATE, SQLERRM loop return next mierror; end loop;
+		return;
+	end;
+end;
+
+ $$;
+
+
+ALTER FUNCTION mini_sedi.denunciante_insert(tdenunciaid integer, cdocumentoid character varying, cnombres character varying, capellidos character varying, cgenero character varying, nestadocivil integer, nprofesionid integer, nocupacionid integer, nescolaridadid integer, cnacionalidadid character varying, netniaid integer, ndiscapacidadid integer, nconocido integer, iedad integer, cunidadmedidaedad character varying, crangoedad character varying, cdepartamentoid character varying, cmunicipioid character varying, caldeaid character varying, cdetalle character varying, cbarrioid character varying, corientacionsexual character varying, cdireccion character varying, tpersonaid integer, ptipodoc integer, ctelefono character varying, pusr character varying, pip character varying, psoundexnombre character varying, psoundexapellido character varying, pbapoderadolegal boolean, pcapoderadolegal character varying, pccolegioabogado character varying, pbpersonanatural boolean, pcnombreasumido character varying, pcrtn character varying, paplicalgbti boolean) OWNER TO mini_sedi_login;
+
+
+
+CREATE OR REPLACE FUNCTION  mini_sedi.denunciante_update(ptdenunciaid integer, pcdocumentoid character varying, pcnombres character varying, pcapellidos character varying, pcgenero character varying, pnestadocivil integer, pnprofesionid integer, pnocupacionid integer, pnescolaridadid integer, pcnacionalidadid character varying, pnetniaid integer, pndiscapacidadid integer, pnconocido integer, piedad integer, pcunidadmedidaedad character varying, pcrangoedad character varying, pcdepartamentoid character varying, pcmunicipioid character varying, pcaldeaid character varying, pcdetalle character varying, pcbarrioid character varying, pcorientacionsexual character varying, pcdireccion character varying, ptpersonaid integer, ptipodoc integer, pctelefono character varying, pusr character varying, pip character varying, psoundexnombre character varying, psoundexapellido character varying, pbapoderadolegal boolean, pcapoderadolegal character varying, pccolegioabogado character varying, pbpersonanatural boolean, pcnombreasumido character varying, pcrtn character varying, paplicalgbti boolean) RETURNS SETOF mini_sedi.terror
+    LANGUAGE plpgsql
+    AS $$
+declare 
+	cestado varchar(25);
+	mierror mini_sedi.terror%rowtype;
+	
+begin
+	begin
+		--saber si se ingreso el nuevo registro para controlar las denuncias incompletas
+		INSERT INTO mini_sedi.tbl_log_denunciante(
+			cdocumentoid, cnombres, capellidos, cgenero, nestadocivil, nprofesionid, 
+			nocupacionid, nescolaridadid, cnacionalidadid, netniaid, ndiscapacidadid, 
+			iedad, cunidadmedidaedad, crangoedad, cdepartamentoid, cmunicipioid, 
+			caldeaid, cdetalle, cbarrioid, corientacionsexual, tpersonaid, 
+			nconocido, tdenunciaid, ctelefono, usuario, fechahoramod, ip_adress, ntipodocumento,
+			capoderadolegal, ccolegioabogado, bapoderadolegal, cnombreasumido, crtn, aplicalgbti)
+		select  cdocumentoid, cnombres, capellidos, cgenero, nestadocivil, 
+			nprofesionid, nocupacionid, nescolaridadid, cnacionalidadid, 
+			netniaid, ndiscapacidadid, iedad, cunidadmedidaedad, 
+			crangoedad, cdepartamentoid, cmunicipioid, caldeaid, 
+			cdetalle, cbarrioid, corientacionsexual, tpersonaid, 
+			nconocido, tdenunciaid, ctelefono, pusr, now(), pip, ptipodoc,
+			capoderadolegal, ccolegioabogado, bapoderadolegal, cnombreasumido, crtn, aplicalgbti
+		from mini_sedi.tbl_denunciante
+		where tdenunciaid= ptdenunciaid and tpersonaid= ptpersonaid;
+
+		--guarda
+		update mini_sedi.tbl_denunciante set		
+			cdocumentoid= pcdocumentoid,
+			cnombres= pcnombres,
+			capellidos= pcapellidos,
+			cgenero= pcgenero,
+			nestadocivil= pnestadocivil,
+			nprofesionid= pnprofesionid,
+			nocupacionid= pnocupacionid,
+			nescolaridadid= pnescolaridadid,
+			cnacionalidadid= pcnacionalidadid,
+			netniaid= pnetniaid,
+			ndiscapacidadid= pndiscapacidadid,
+			nconocido= pnconocido,
+			iedad= piedad,
+			cunidadmedidaedad= pcunidadmedidaedad,
+			crangoedad= pcrangoedad,
+			cdepartamentoid= pcdepartamentoid,
+			cmunicipioid= pcmunicipioid,
+			caldeaid= pcaldeaid,
+			cdetalle= pcdetalle,
+			cbarrioid= pcbarrioid,
+			corientacionsexual= pcorientacionsexual,
+			ctelefono= pctelefono,
+			ntipodocumento= ptipodoc,
+			cmetanombre= psoundexnombre,
+			cmetaapellido= psoundexapellido,
+			capoderadolegal= pcapoderadolegal, 
+			ccolegioabogado= pccolegioabogado,
+			bapoderadolegal= pbapoderadolegal,
+			bpersonanatural= pbpersonanatural,
+			cnombreasumido= pcnombreasumido,
+			crtn= pcrtn,
+			aplicalgbti= paplicalgbti
+		where tdenunciaid= ptdenunciaid and tpersonaid= ptpersonaid;	
+
+		--modifica tabla pdf si el estado en la tabla es "Nueva" pues unicamente
+		--se permite la modificacion al momento de ingresar una nueva, despues no
+		select estado into cestado from mini_sedi.tbl_controlestados where usr= pusr and denuncia= ptdenunciaid;
+
+		if cestado = 'Nueva' then
+			/*
+			update mini_sedi.tbl_pdf_denunciante set		
+				cdocumentoid= pcdocumentoid,
+				cnombres= pcnombres,
+				capellidos= pcapellidos,
+				cgenero= pcgenero,
+				nestadocivil= pnestadocivil,
+				nprofesionid= pnprofesionid,
+				nocupacionid= pnocupacionid,
+				nescolaridadid= pnescolaridadid,
+				cnacionalidadid= pcnacionalidadid,
+				netniaid= pnetniaid,
+				ndiscapacidadid= pndiscapacidadid,
+				nconocido= pnconocido,
+				iedad= piedad,
+				cunidadmedidaedad= pcunidadmedidaedad,
+				crangoedad= pcrangoedad,
+				cdepartamentoid= pcdepartamentoid,
+				cmunicipioid= pcmunicipioid,
+				caldeaid= pcaldeaid,
+				cdetalle= pcdetalle,
+				cbarrioid= pcbarrioid,
+				corientacionsexual= pcorientacionsexual,
+				ctelefono= pctelefono,
+				ntipodocumento= ptipodoc,
+				capoderadolegal= pcapoderadolegal, 
+				ccolegioabogado= pccolegioabogado,
+				bapoderadolegal= pbapoderadolegal,
+				bpersonanatural= pbpersonanatural,
+				cnombreasumido= pcnombreasumido
+			where tdenunciaid= ptdenunciaid and tpersonaid= ptpersonaid;
+			*/
+		end if;
+
+		for mierror in select '0', 'exito' loop return next mierror; end loop;
+		return;
+	exception
+		when others then
+		for mierror in select SQLSTATE, SQLERRM loop return next mierror; end loop;
+		return;
+	end;
+end;
+
+ $$;
+
+
+ALTER FUNCTION mini_sedi.denunciante_update(ptdenunciaid integer, pcdocumentoid character varying, pcnombres character varying, pcapellidos character varying, pcgenero character varying, pnestadocivil integer, pnprofesionid integer, pnocupacionid integer, pnescolaridadid integer, pcnacionalidadid character varying, pnetniaid integer, pndiscapacidadid integer, pnconocido integer, piedad integer, pcunidadmedidaedad character varying, pcrangoedad character varying, pcdepartamentoid character varying, pcmunicipioid character varying, pcaldeaid character varying, pcdetalle character varying, pcbarrioid character varying, pcorientacionsexual character varying, pcdireccion character varying, ptpersonaid integer, ptipodoc integer, pctelefono character varying, pusr character varying, pip character varying, psoundexnombre character varying, psoundexapellido character varying, pbapoderadolegal boolean, pcapoderadolegal character varying, pccolegioabogado character varying, pbpersonanatural boolean, pcnombreasumido character varying, pcrtn character varying, paplicalgbti boolean) OWNER TO mini_sedi_login;
+
+
+CREATE OR REPLACE FUNCTION  mini_sedi.generales_insert(ptdenunciaid integer, pcexpedientesedi character varying, pcexpedientejudicial character varying, pcexpedientepolicial character varying, pfechadenuncia date, pfechahecho date, pcdeptodenuncia character varying, pcmunicipiodenuncia character varying, pcdeptohecho character varying, pcmunicipiohecho character varying, pcaldeahecho character varying, pccaseriohecho character varying, pnlugarrecepcion integer, pcestadodenuncia character varying, pcdetalledireccionhecho character varying, pcnarracionhecho text, pcdirecciondenuncia character varying, pcdireccionhecho character varying, pccreada character varying, pibandejaid integer, pip character varying, phoradenuncia time with time zone, phorahecho time with time zone, pclaselugarhecho integer) RETURNS SETOF mini_sedi.terror
+    LANGUAGE plpgsql
+    AS $$
+declare
+	mierror mini_sedi.terror%rowtype;
+
+begin
+	begin
+		--estados
+		insert into mini_sedi.tbl_controlestados (usr, fecha, denuncia, generales) 
+		values (pccreada,now(),ptdenunciaid,'t');
+
+		--log
+		insert into mini_sedi.tbl_log_general(usuario,ip_address,time_date,descripcion)
+		values(pccreada,pip,now(),'Creacion de Nueva Denuncia Numero: ' || ptdenunciaid);
+
+		--denuncia
+		insert into mini_sedi.tbl_denuncia (tdenunciaid,
+			cexpedientesedi, cexpedientejudicial, cexpedientepolicial,
+			dfechadenuncia, dfechahecho, cdeptodenuncia, 
+			cmunicipiodenuncia, cdeptohecho, cmunicipiohecho, 
+			caldeahecho, ccaseriohecho, nlugarrecepcion, 
+			cestadodenuncia, cdetalledireccionhecho, 
+			cnarracionhecho, cdirecciondenuncia, cdireccionhecho, 
+			ibandejaid, ccreada, thoradenuncia, thorahecho, nlugarid)
+		values (ptdenunciaid, pcexpedientesedi, pcexpedientejudicial,
+			pcexpedientepolicial, pfechadenuncia, pfechahecho, pcdeptodenuncia,
+			pcmunicipiodenuncia, pcdeptohecho, pcmunicipiohecho,
+			pcaldeahecho, pccaseriohecho, pnlugarrecepcion,
+			pcestadodenuncia, pcdetalledireccionhecho, 
+			pcnarracionhecho, pcdirecciondenuncia, pcdireccionhecho, 
+			pibandejaid, pccreada, phoradenuncia, phorahecho, pclaselugarhecho);
+
+		--guardar en tabla denuncia		
+		--insert into tbl_denuncia_original select * from tbl_denuncia where tdenunciaid= ptdenunciaid;
+		/*
+		insert into mini_sedi.tbl_pdf_denuncia (tdenunciaid,
+			cexpedientesedi, cexpedientejudicial, cexpedientepolicial,
+			dfechadenuncia, dfechahecho, cdeptodenuncia, 
+			cmunicipiodenuncia, cdeptohecho, cmunicipiohecho, 
+			caldeahecho, ccaseriohecho, nlugarrecepcion, 
+			cestadodenuncia, cdetalledireccionhecho, 
+			cnarracionhecho, cdirecciondenuncia, cdireccionhecho, 
+			ibandejaid, ccreada, thoradenuncia, thorahecho)
+		values (ptdenunciaid, pcexpedientesedi, pcexpedientejudicial,
+			pcexpedientepolicial, pfechadenuncia, pfechahecho, pcdeptodenuncia,
+			pcmunicipiodenuncia, pcdeptohecho, pcmunicipiohecho,
+			pcaldeahecho, pccaseriohecho, pnlugarrecepcion,
+			pcestadodenuncia, pcdetalledireccionhecho, 
+			pcnarracionhecho, pcdirecciondenuncia, pcdireccionhecho, 
+			pibandejaid, pccreada, phoradenuncia, phorahecho);
+		*/				
+		for mierror in select '0', 'exito' loop return next mierror; end loop;
+		return;
+	exception
+		when others then
+		for mierror in select SQLSTATE, SQLERRM loop return next mierror; end loop;
+		return;
+	end;
+end;
+
+ $$;
+
+
+ALTER FUNCTION mini_sedi.generales_insert(ptdenunciaid integer, pcexpedientesedi character varying, pcexpedientejudicial character varying, pcexpedientepolicial character varying, pfechadenuncia date, pfechahecho date, pcdeptodenuncia character varying, pcmunicipiodenuncia character varying, pcdeptohecho character varying, pcmunicipiohecho character varying, pcaldeahecho character varying, pccaseriohecho character varying, pnlugarrecepcion integer, pcestadodenuncia character varying, pcdetalledireccionhecho character varying, pcnarracionhecho text, pcdirecciondenuncia character varying, pcdireccionhecho character varying, pccreada character varying, pibandejaid integer, pip character varying, phoradenuncia time with time zone, phorahecho time with time zone, pclaselugarhecho integer) OWNER TO mini_sedi_login;
+
+
+CREATE OR REPLACE FUNCTION  mini_sedi.generales_update(ptdenunciaid integer, pcexpedientesedi character varying, pcexpedientejudicial character varying, pcexpedientepolicial character varying, pfechadenuncia date, pfechahecho date, pcdeptodenuncia character varying, pcmunicipiodenuncia character varying, pcdeptohecho character varying, pcmunicipiohecho character varying, pcaldeahecho character varying, pccaseriohecho character varying, pnlugarrecepcion integer, pcestadodenuncia character varying, pcdetalledireccionhecho character varying, pcnarracionhecho text, pcdirecciondenuncia character varying, pcdireccionhecho character varying, pusr character varying, pip character varying, phoradenuncia time with time zone, phorahecho time with time zone, pclaselugarhecho integer) RETURNS SETOF mini_sedi.terror
+    LANGUAGE plpgsql
+    AS $$
+declare 
+	cestado varchar(25);
+	mierror mini_sedi.terror%rowtype;
+	
+begin
+	begin
+		--guarda en el log el registro original antes de la modificacion
+		INSERT INTO mini_sedi.tbl_log_denuncia  (dfechadenuncia, dfechahecho, 
+			   cdeptodenuncia, cmunicipiodenuncia, cdeptohecho, cmunicipiohecho,
+			   caldeahecho, ccaseriohecho, nlugarrecepcion, cestadodenuncia, 
+			   cnarracionhecho, cexpedientesedi, cexpedientejudicial,
+			   cdetalledireccionhecho, tdenunciaid, cexpedientepolicial,
+			   fechahoramod, ccreada, usuario, thoradenuncia, thorahecho, nlugarid)
+			SELECT dfechadenuncia, dfechahecho, 
+			   cdeptodenuncia, cmunicipiodenuncia, cdeptohecho, cmunicipiohecho,
+			   caldeahecho, ccaseriohecho, nlugarrecepcion, cestadodenuncia, 
+			   cnarracionhecho, cexpedientesedi, cexpedientejudicial,
+			   cdetalledireccionhecho, tdenunciaid, cexpedientepolicial,
+			   now(), ccreada, pusr, thoradenuncia, thorahecho, claselugarhecho
+			FROM mini_sedi.tbl_denuncia 
+			WHERE tdenunciaid= ptdenunciaid;  
+
+		--modifica el contenido de la tabla
+		update mini_sedi.tbl_denuncia set 
+			cexpedientesedi= pcexpedientesedi, 
+			cexpedientejudicial= pcexpedientejudicial, 
+			cexpedientepolicial= pcexpedientepolicial, 
+			dfechadenuncia= pfechadenuncia, 
+			dfechahecho= pfechahecho, 
+			cdeptodenuncia= pcdeptodenuncia, 
+			cmunicipiodenuncia= pcmunicipiodenuncia, 
+			cdeptohecho= pcdeptohecho, 
+			cmunicipiohecho= pcmunicipiohecho, 
+			caldeahecho= pcaldeahecho, 
+			ccaseriohecho= pccaseriohecho, 
+			nlugarrecepcion= pnlugarrecepcion, 
+			cestadodenuncia= pcestadodenuncia, 
+			cdetalledireccionhecho= pcdetalledireccionhecho, 
+			cnarracionhecho= pcnarracionhecho, 
+			cdirecciondenuncia= pcdirecciondenuncia, 
+			cdireccionhecho= pcdireccionhecho,
+			thoradenuncia= phoradenuncia, 
+			thorahecho= phorahecho,
+			nlugarid= pclaselugarhecho
+		where tdenunciaid= ptdenunciaid;
+
+		--modifica tabla pdf si el estado en la tabla es "Nueva" pues unicamente
+		--se permite la modificacion al momento de ingresar una nueva, despues no
+		select estado into cestado from mini_sedi.tbl_controlestados where usr= pusr and denuncia= ptdenunciaid;
+
+		if cestado = 'Nueva' then
+			--modifica el contenido de la tabla pdf
+			/*
+			update mini_sedi.tbl_pdf_denuncia set 
+				cexpedientesedi= pcexpedientesedi, 
+				cexpedientejudicial= pcexpedientejudicial, 
+				cexpedientepolicial= pcexpedientepolicial, 
+				dfechadenuncia= pfechadenuncia, 
+				dfechahecho= pfechahecho, 
+				cdeptodenuncia= pcdeptodenuncia, 
+				cmunicipiodenuncia= pcmunicipiodenuncia, 
+				cdeptohecho= pcdeptohecho, 
+				cmunicipiohecho= pcmunicipiohecho, 
+				caldeahecho= pcaldeahecho, 
+				ccaseriohecho= pccaseriohecho, 
+				nlugarrecepcion= pnlugarrecepcion, 
+				cestadodenuncia= pcestadodenuncia, 
+				cdetalledireccionhecho= pcdetalledireccionhecho, 
+				cnarracionhecho= pcnarracionhecho, 
+				cdirecciondenuncia= pcdirecciondenuncia, 
+				cdireccionhecho= pcdireccionhecho,
+				thoradenuncia= phoradenuncia, 
+				thorahecho= phorahecho				
+			where tdenunciaid= ptdenunciaid;		
+			*/
+		end if;
+
+		for mierror in select '0', 'exito' loop return next mierror; end loop;
+		return;
+	exception
+		when others then
+		for mierror in select SQLSTATE, SQLERRM loop return next mierror; end loop;
+		return;
+	end;	
+end;
+
+ $$;
+
+
+ALTER FUNCTION mini_sedi.generales_update(ptdenunciaid integer, pcexpedientesedi character varying, pcexpedientejudicial character varying, pcexpedientepolicial character varying, pfechadenuncia date, pfechahecho date, pcdeptodenuncia character varying, pcmunicipiodenuncia character varying, pcdeptohecho character varying, pcmunicipiohecho character varying, pcaldeahecho character varying, pccaseriohecho character varying, pnlugarrecepcion integer, pcestadodenuncia character varying, pcdetalledireccionhecho character varying, pcnarracionhecho text, pcdirecciondenuncia character varying, pcdireccionhecho character varying, pusr character varying, pip character varying, phoradenuncia time with time zone, phorahecho time with time zone, pclaselugarhecho integer) OWNER TO mini_sedi_login;
+
+
+CREATE TABLE mini_sedi.tbl_documentos
+(
+  iddoc integer NOT NULL,
+  tdenunciaid integer NOT NULL,
+  descripcion character varying(200),
+  documento bytea,
+  tipo character varying(100),
+  size double precision,
+  estado boolean,
+  CONSTRAINT tbl_documentos_pkey PRIMARY KEY (iddoc )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE mini_sedi.tbl_documentos
+  OWNER TO mini_sedi_login;
+
+--crear tabla de tipos
+--arma
+CREATE TABLE tbl_tipo_arma
+(
+  cdescripcion character varying(50),
+  narmaid serial NOT NULL,
+  CONSTRAINT pk_tipo_arma PRIMARY KEY (narmaid )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_tipo_arma
+  OWNER TO mini_sedi_login;
+
+--movil
+CREATE TABLE tbl_tipo_movil
+(
+  cdescripcion character varying(50),
+  nmovilid serial NOT NULL,
+  CONSTRAINT pk_tipo_movil PRIMARY KEY (nmovilid )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_tipo_movil
+  OWNER TO mini_sedi_login;
+
+--transporte
+CREATE TABLE tbl_tipo_transporte
+(
+  cdescripcion character varying(50),
+  ntransporteid serial NOT NULL,
+  CONSTRAINT pk_tipo_transporte PRIMARY KEY (ntransporteid )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_tipo_transporte
+  OWNER TO mini_sedi_login;
+
+--objeto
+CREATE TABLE tbl_tipo_objeto
+(
+  cdescripcion character varying(50),
+  nobjetoid serial NOT NULL,
+  CONSTRAINT pk_tipo_objeto PRIMARY KEY (nobjetoid )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_tipo_objeto
+  OWNER TO mini_sedi_login;
+  
+
+--documento
+CREATE TABLE tbl_tipodocumento
+(
+  ndocumentoid serial NOT NULL,
+  cdescripcion character varying(50),
+  CONSTRAINT pk_tipodocumento PRIMARY KEY (ndocumentoid )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_tipodocumento
+  OWNER TO mini_sedi_login;
+
+-- modificar tablas que usan campos arma, movil, objeto, transporte
+alter table mini_sedi.tbl_imputado add column ccondicion character varying(50);
+alter table mini_sedi.tbl_imputado add column ctrabajoremunerado character varying(2);
+alter table mini_sedi.tbl_imputado add column casisteeducacion character varying(2);
+
+alter table mini_sedi.tbl_log_imputado add column ccondicion character varying(50);
+alter table mini_sedi.tbl_log_imputado add column ctrabajoremunerado character varying(2);
+alter table mini_sedi.tbl_log_imputado add column casisteeducacion character varying(2);
+
+alter table mini_sedi.tbl_pdf_imputado add column ccondicion character varying(50);
+alter table mini_sedi.tbl_pdf_imputado add column ctrabajoremunerado character varying(2);
+alter table mini_sedi.tbl_pdf_imputado add column casisteeducacion character varying(2);
+
+CREATE TABLE tbl_imputado_movil
+(
+  nmovilid integer NOT NULL,
+  tpersonaid integer NOT NULL,
+  tdenunciaid integer NOT NULL,
+  CONSTRAINT pk_imputado_movil PRIMARY KEY (nmovilid , tpersonaid ),
+  CONSTRAINT fk_imputado_movil_movilo FOREIGN KEY (nmovilid)
+      REFERENCES tbl_tipo_movil (nmovilid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_imputado_movil FOREIGN KEY (tpersonaid)
+      REFERENCES tbl_imputado (tpersonaid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_imputado_movil
+  OWNER TO mini_sedi_login;
+
+--
+CREATE TABLE tbl_imputado_objeto
+(
+  nobjetoid integer NOT NULL,
+  tpersonaid integer NOT NULL,
+  tdenunciaid integer NOT NULL,
+  CONSTRAINT pk_imputado_objeto PRIMARY KEY (nobjetoid , tpersonaid ),
+  CONSTRAINT fk_imputado_objeto_objeto FOREIGN KEY (nobjetoid)
+      REFERENCES tbl_tipo_objeto (nobjetoid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_imputado_objeto FOREIGN KEY (tpersonaid)
+      REFERENCES tbl_imputado (tpersonaid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_imputado_objeto
+  OWNER TO mini_sedi_login;  
+
+---
+CREATE TABLE tbl_imputado_transporte
+(
+  ntransporteid integer NOT NULL,
+  tpersonaid integer NOT NULL,
+  tdenunciaid integer NOT NULL,
+  CONSTRAINT pk_imputado_transporte PRIMARY KEY (ntransporteid , tpersonaid ),
+  CONSTRAINT fk_imputado_transporte_transporte FOREIGN KEY (ntransporteid)
+      REFERENCES tbl_tipo_transporte (ntransporteid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_imputado_transporte FOREIGN KEY (tpersonaid)
+      REFERENCES tbl_imputado (tpersonaid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_imputado_transporte
+  OWNER TO mini_sedi_login;    
+
+---
+CREATE TABLE tbl_imputado_arma
+(
+  narmaid integer NOT NULL,
+  tpersonaid integer NOT NULL,
+  tdenunciaid integer NOT NULL,
+  CONSTRAINT pk_imputado_arma PRIMARY KEY (narmaid , tpersonaid ),
+  CONSTRAINT fk_imputado_arma_arma FOREIGN KEY (narmaid)
+      REFERENCES tbl_tipo_arma (narmaid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_imputado_persona FOREIGN KEY (tpersonaid)
+      REFERENCES tbl_imputado (tpersonaid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_imputado_arma
+  OWNER TO mini_sedi_login;
+
+--logs
+CREATE TABLE tbl_log_imputado_arma
+(
+  armaid integer,
+  tpersonaid integer,
+  tdenunciaid integer,
+  usuario character varying(150),
+  fechahoramod timestamp without time zone,
+  ip_address character varying(100),
+  serial serial NOT NULL,
+  CONSTRAINT pk_log_imputado_movil PRIMARY KEY (serial )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_log_imputado_arma
+  OWNER TO mini_sedi_login;  
+
+CREATE TABLE tbl_log_imputado_movil
+(
+  movilid integer,
+  tpersonaid integer,
+  tdenunciaid integer,
+  usuario character varying(150),
+  fechahoramod timestamp without time zone,
+  ip_address character varying(100),
+  serial serial NOT NULL,
+  CONSTRAINT pk_log_imputado_movil PRIMARY KEY (serial )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_log_imputado_movil
+  OWNER TO mini_sedi_login;  
+
+CREATE TABLE tbl_log_imputado_objeto
+(
+  objetoid integer,
+  tpersonaid integer,
+  tdenunciaid integer,
+  usuario character varying(150),
+  fechahoramod timestamp without time zone,
+  ip_address character varying(100),
+  serial serial NOT NULL,
+  CONSTRAINT pk_log_imputado_objeto PRIMARY KEY (serial )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_log_imputado_objeto
+  OWNER TO mini_sedi_login;  
+
+CREATE TABLE tbl_log_imputado_transporte
+(
+  transporteid integer,
+  tpersonaid integer,
+  tdenunciaid integer,
+  usuario character varying(150),
+  fechahoramod timestamp without time zone,
+  ip_address character varying(100),
+  serial serial NOT NULL,
+  CONSTRAINT pk_log_imputado_transporte PRIMARY KEY (serial )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE tbl_log_imputado_transporte
+  OWNER TO mini_sedi_login;  
+
+
+-- Crear tabla imputado_actividad_delito
+CREATE TABLE mini_sedi.tbl_imputado_actividad_delito
+(
+  ndelito integer NOT NULL,
+  nactividadid integer NOT NULL,
+  tpersonaid integer NOT NULL,
+  cfiscalid character varying(15) NOT NULL,
+  nmateriaid integer,
+  dfecha date NOT NULL,
+  netapa integer NOT NULL,
+  tdenunciaid integer NOT NULL,
+  nactividadid2 integer,
+  thora time without time zone NOT NULL DEFAULT '00:00:00'::time without time zone,
+  iddoc integer,
+  CONSTRAINT pk_imputado_actividad_fiscal PRIMARY KEY (ndelito , tdenunciaid , tpersonaid , netapa , nactividadid , dfecha , thora ),
+  CONSTRAINT fk_actividad_fiscal FOREIGN KEY (tdenunciaid, tpersonaid, dfecha, netapa, nactividadid, thora)
+      REFERENCES mini_sedi.tbl_imputado_actividad (tdenunciaid, tpersonaid, dfecha, netapa, nactividadid, thora) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT,
+  CONSTRAINT fk_documentos FOREIGN KEY (iddoc)
+      REFERENCES mini_sedi.tbl_documentos (iddoc) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_imputado_delito_fiscal FOREIGN KEY (ndelito, tdenunciaid, tpersonaid)
+      REFERENCES mini_sedi.tbl_imputado_delito (ndelito, tdenunciaid, tpersonaid) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+-- Permiso de usuario tabla imputado_Actividad_delito
+ALTER TABLE mini_sedi.tbl_imputado_actividad_delito
+  OWNER TO mini_sedi_login;
+  
+-- Crear tabla log_imputado_actividad_delito
+CREATE TABLE mini_sedi.tbl_log_imputado_actividad_delito
+(
+  serial serial NOT NULL,
+  ndelito integer NOT NULL,
+  nactividadid integer NOT NULL,
+  tpersonaid integer NOT NULL,
+  cfiscalid character varying(15) NOT NULL,
+  nmateriaid integer,
+  dfecha date,
+  netapa integer NOT NULL,
+  tdenunciaid integer NOT NULL,
+  nactividadid2 integer,
+  usuario character varying(150),
+  fechahoramod timestamp without time zone,
+  ip_adress character varying(100),
+  thora time without time zone,
+  iddoc integer,
+  CONSTRAINT pk_log_actividad_delito PRIMARY KEY (serial )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE mini_sedi.tbl_log_imputado_actividad_delito
+  OWNER TO mini_sedi_login;
+  
+  -- Insertar valores en la tabla nueva
+INSERT INTO mini_sedi.tbl_imputado_actividad_delito(
+            ndelito, nactividadid, tpersonaid, cfiscalid, nmateriaid, dfecha, 
+            netapa, tdenunciaid, nactividadid2, thora)
+SELECT 
+  tbl_imputado_delito.ndelito, 
+  tbl_imputado_actividad.nactividadid, 
+  tbl_imputado_actividad.tpersonaid, 
+  tbl_imputado_actividad.cfiscalid, 
+  tbl_imputado_actividad.nmateriaid, 
+  tbl_imputado_actividad.dfecha, 
+  tbl_imputado_actividad.netapa, 
+  tbl_imputado_actividad.tdenunciaid, 
+  tbl_imputado_actividad.nactividadid2, 
+  tbl_imputado_actividad.thora
+FROM 
+  mini_sedi.tbl_imputado_actividad inner join  
+  mini_sedi.tbl_imputado_delito on  
+  tbl_imputado_actividad.tpersonaid = tbl_imputado_delito.tpersonaid;
+
+  
+ALTER TABLE mini_sedi.tbl_denuncia ADD COLUMN nlugarid INTEGER;
+-- Crear campo "lugarid" en tabla denuncia
+ALTER TABLE mini_sedi.tbl_denuncia ADD FOREIGN KEY(nlugarid) REFERENCES mini_sedi.tbl_clase_lugar_hecho(nlugarid);
+-- Dar valor por default al campo lugarid
+ALTER TABLE mini_sedi.tbl_denuncia ALTER COLUMN nlugarid SET DEFAULT 0;
+-- Crear campo "lugarid" en tabla log_denuncia
+ALTER TABLE mini_sedi.tbl_log_denuncia ADD COLUMN nlugarid INTEGER;
+ALTER TABLE mini_sedi.tbl_log_denuncia ADD FOREIGN KEY(nlugarid) REFERENCES mini_sedi.tbl_clase_lugar_hecho(nlugarid) ;
+-- Dar valor por default al campo lugarid
+ALTER TABLE mini_sedi.tbl_log_denuncia ALTER COLUMN nlugarid SET DEFAULT 0;
+
+-- modificar persona y los logs
+ALTER TABLE mini_sedi.tbl_persona ADD COLUMN aplicalgbti boolean DEFAULT FALSE;
+ALTER TABLE mini_sedi.tbl_log_denunciante ADD COLUMN aplicalgbti boolean DEFAULT FALSE;
+ALTER TABLE mini_sedi.tbl_log_imputado ADD COLUMN aplicalgbti boolean DEFAULT FALSE;
+ALTER TABLE mini_sedi.tbl_log_ofendido ADD COLUMN aplicalgbti boolean DEFAULT FALSE;
+
+-- tabla ofendido
+ALTER TABLE mini_sedi.tbl_ofendido ADD COLUMN embarazo character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_ofendido ADD COLUMN frecuencia character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_ofendido ADD COLUMN trabajoremunerado character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_ofendido ADD COLUMN estudia character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_ofendido ADD COLUMN cantidadhijos integer;
+ALTER TABLE mini_sedi.tbl_ofendido ADD COLUMN intentosuicidio character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_ofendido ADD COLUMN enfermedadmental character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_ofendido ADD COLUMN mecanismomuerte character varying(30) DEFAULT 'NA'::character varying;
+
+-- log tabla ofendido
+ALTER TABLE mini_sedi.tbl_log_ofendido ADD COLUMN embarazo character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_log_ofendido ADD COLUMN frecuencia character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_log_ofendido ADD COLUMN trabajoremunerado character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_log_ofendido ADD COLUMN estudia character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_log_ofendido ADD COLUMN cantidadhijos integer;
+ALTER TABLE mini_sedi.tbl_log_ofendido ADD COLUMN intentosuicidio character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_log_ofendido ADD COLUMN enfermedadmental character varying(2) DEFAULT 'NA'::character varying;
+ALTER TABLE mini_sedi.tbl_log_ofendido ADD COLUMN mecanismomuerte character varying(30) DEFAULT 'NA'::character varying;
+
+--Funcion Almacenamiento diligencias.
+CREATE OR REPLACE FUNCTION mini_sedi.actividad_delito_insert(ndelito integer[], pnactividadid integer, ptpersonaid integer, pcfiscalid character varying, pmateriaid integer, pdfecha date, pnetapa integer, ptdenunciaid integer, pnactividad2 integer, pthora time with time zone, pip character varying, piddoc integer, ddescripcion character varying, ddoc bytea, dtipo character varying, dsize double precision, destado boolean)
+  RETURNS SETOF mini_sedi.terror AS
+$BODY$
+declare
+	mierror mini_sedi.terror%rowtype;
+
+	n int;
+	i integer;
+	delito integer;
+	arreglo_soundex character varying[];
+	cadena_soundex character varying(20);
+begin
+	begin
+
+		INSERT INTO mini_sedi.tbl_documentos(
+            iddoc, tdenunciaid, descripcion, documento, tipo, size, estado)
+		VALUES (piddoc, ptdenunciaid, ddescripcion, ddoc, dtipo, dsize, destado);
+	
+			INSERT INTO mini_sedi.tbl_imputado_actividad(
+            nactividadid, tpersonaid, cfiscalid, nmateriaid, dfecha, netapa, 
+            tdenunciaid, nactividadid2, thora)
+		VALUES (pnactividadid, ptpersonaid, pcfiscalid, pmateriaid, pdfecha, pnetapa, 
+			ptdenunciaid, pnactividad2, pthora);
+
+	
+n:= array_length(ndelito, 1);
+		--validar si el arreglo esta vacio
+		if n= 1 then
+			if ndelito[1]= 0 then
+				n:= -1;
+			end if;
+		end if;
+		
+		for i in 1..n loop
+			delito:= ndelito[i];
+
+			INSERT INTO mini_sedi.tbl_imputado_actividad_delito(ndelito, nactividadid, tpersonaid, 
+			cfiscalid, nmateriaid, dfecha, netapa, tdenunciaid, nactividadid2, thora, iddoc)
+			VALUES (delito, pnactividadid, ptpersonaid, pcfiscalid, pmateriaid, pdfecha, 
+            pnetapa, ptdenunciaid, pnactividad2, pthora, piddoc);
+		end loop;
+	exception
+		when others then
+		for mierror in select SQLSTATE, SQLERRM loop return next mierror; end loop;
+		return;
+	end;
+end;
+
+ $BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;
+ALTER FUNCTION mini_sedi.actividad_delito_insert(integer[], integer, integer, character varying, integer, date, integer, integer, integer, time with time zone, character varying, integer, character varying, bytea, character varying, double precision, boolean)
+  OWNER TO mini_sedi_login;
+
+
+
+-- Crear Vista actividad_fiscal;
+
+CREATE OR REPLACE VIEW mini_sedi.actividad_fiscal AS 
+ SELECT tbl_fiscal.cfiscalid, (tbl_fiscal.cnombres::text || ' '::text) || tbl_fiscal.capellidos::text AS fiscal, tbl_denuncia.tdenunciaid, tbl_actividad.cdescripcion, tbl_imputado_actividad.dfecha, (tbl_imputado.cnombres::text || ' '::text) || tbl_imputado.capellidos::text AS imputado
+   FROM mini_sedi.tbl_denuncia, mini_sedi.tbl_fiscal, mini_sedi.tbl_actividad, mini_sedi.tbl_imputado_actividad, mini_sedi.tbl_imputado
+  WHERE tbl_denuncia.tdenunciaid = tbl_imputado_actividad.tdenunciaid AND tbl_fiscal.cfiscalid::text = tbl_imputado_actividad.cfiscalid::text AND tbl_actividad.nactividadid = tbl_imputado_actividad.nactividadid AND tbl_imputado_actividad.tpersonaid = tbl_imputado.tpersonaid;
+
+ALTER TABLE mini_sedi.actividad_fiscal
+  OWNER TO mini_sedi_login;
+
+
+-- Crear VIEW actividad_imputado;
+
+CREATE OR REPLACE VIEW mini_sedi.actividad_imputado AS 
+ SELECT tbl_actividad.cdescripcion, tbl_imputado_actividad.dfecha, (tbl_fiscal.cnombres::text || ' '::text) || tbl_fiscal.capellidos::text AS fiscal, tbl_imputado_actividad.tdenunciaid, tbl_imputado.tpersonaid, (tbl_imputado.cnombres::text || ' '::text) || tbl_imputado.capellidos::text AS imputado
+   FROM mini_sedi.tbl_actividad, mini_sedi.tbl_imputado, mini_sedi.tbl_imputado_actividad, mini_sedi.tbl_fiscal
+  WHERE tbl_actividad.nactividadid = tbl_imputado_actividad.nactividadid AND tbl_imputado.tpersonaid = tbl_imputado_actividad.tpersonaid AND tbl_imputado_actividad.cfiscalid::text = tbl_fiscal.cfiscalid::text;
+
+ALTER TABLE mini_sedi.actividad_imputado
+  OWNER TO mini_sedi_login;
+
+-- Crear VIEW denuncia_por_fiscal;
+
+CREATE OR REPLACE VIEW mini_sedi.denuncia_por_fiscal AS 
+ SELECT tbl_denuncia.tdenunciaid, tbl_imputado_fiscal.cfiscal, (tbl_fiscal.cnombres::text || ' '::text) || tbl_fiscal.capellidos::text AS fiscal
+   FROM mini_sedi.tbl_denuncia, mini_sedi.tbl_imputado_fiscal, mini_sedi.tbl_fiscal
+  WHERE tbl_imputado_fiscal.tdenunciaid = tbl_denuncia.tdenunciaid AND tbl_fiscal.cfiscalid::text = tbl_imputado_fiscal.cfiscal::text;
+
+ALTER TABLE mini_sedi.denuncia_por_fiscal
+  OWNER TO mini_sedi_login;
+
+
+-- Crear VIEW imputado_delito_actividad;
+
+CREATE OR REPLACE VIEW mini_sedi.imputado_delito_actividad AS 
+ SELECT tbl_imputado_delito.ndelito, tbl_imputado_actividad.nactividadid, tbl_imputado_actividad.tpersonaid, tbl_imputado_actividad.cfiscalid, tbl_imputado_actividad.nmateriaid, tbl_imputado_actividad.dfecha, tbl_imputado_actividad.netapa, tbl_imputado_actividad.tdenunciaid, tbl_imputado_actividad.nactividadid2, tbl_imputado_actividad.thora
+   FROM mini_sedi.tbl_imputado_actividad
+   LEFT JOIN mini_sedi.tbl_imputado_delito ON tbl_imputado_actividad.tdenunciaid = tbl_imputado_delito.tdenunciaid AND tbl_imputado_actividad.tpersonaid = tbl_imputado_delito.tpersonaid
+  ORDER BY tbl_imputado_actividad.dfecha, tbl_imputado_actividad.tdenunciaid, tbl_imputado_actividad.tpersonaid, tbl_imputado_actividad.nactividadid;
+
+ALTER TABLE mini_sedi.imputado_delito_actividad
+  OWNER TO mini_sedi_login;
+
+-- Crear VIEW reporte_remision_de_denuncia;
+
+CREATE OR REPLACE VIEW mini_sedi.reporte_remision_de_denuncia AS 
+ SELECT tbl_denuncia.tdenunciaid, tbl_fiscalia.cdescripcion, tbl_bandejas.ibandejaid, tbl_denuncia.dfechadenuncia, tbl_imputado_fiscalia.basignadofiscal
+   FROM mini_sedi.tbl_bandejas, mini_sedi.tbl_fiscalia, mini_sedi.tbl_denuncia, mini_sedi.tbl_imputado_fiscalia
+  WHERE tbl_fiscalia.nfiscaliaid = tbl_imputado_fiscalia.nfiscaliaid AND tbl_denuncia.ibandejaid = tbl_bandejas.ibandejaid AND tbl_imputado_fiscalia.tdenunciaid = tbl_denuncia.tdenunciaid;
+
+ALTER TABLE mini_sedi.reporte_remision_de_denuncia
+  OWNER TO mini_sedi_login;
+
+-- Crear VIEW lugar_denuncia;
+
+CREATE OR REPLACE VIEW mini_sedi.lugar_denuncia AS 
+ SELECT tbl_denuncia.tdenunciaid, tbl_departamentopais.cdescripcion AS deptodenuncia, tbl_municipio.cdescripcion AS municipiodenuncia
+   FROM mini_sedi.tbl_denuncia
+   JOIN mini_sedi.tbl_departamentopais ON tbl_denuncia.cdeptodenuncia::text = tbl_departamentopais.cdepartamentoid::text
+   LEFT JOIN mini_sedi.tbl_municipio ON tbl_municipio.cmunicipioid::text = tbl_denuncia.cmunicipiodenuncia::text AND tbl_municipio.cdepartamentoid::text = tbl_departamentopais.cdepartamentoid::text;
+
+ALTER TABLE mini_sedi.lugar_denuncia
+  OWNER TO mini_sedi_login;
+
+
+-- Crear VIEW observatorio_denuncia;
+
+CREATE OR REPLACE VIEW mini_sedi.observatorio_denuncia AS 
+ SELECT tbl_denuncia.tdenunciaid, tbl_denuncia.dfechadenuncia, tbl_denuncia.thoradenuncia, lugar_denuncia.deptodenuncia, lugar_denuncia.municipiodenuncia, tbl_denuncia.dfechahecho, tbl_denuncia.thorahecho, tbl_departamentopais.cdescripcion AS deptohechos, tbl_municipio.cdescripcion AS municipiohechos, tbl_aldea.cdescripcion AS aldeahechos, tbl_barrio.cdescripcion AS barriohechos, tbl_clase_lugar_hecho.cdescripcion AS claselugar, tbl_denuncia.cnarracionhecho
+   FROM mini_sedi.tbl_denuncia
+   JOIN mini_sedi.lugar_denuncia ON lugar_denuncia.tdenunciaid = tbl_denuncia.tdenunciaid
+   JOIN mini_sedi.tbl_departamentopais ON tbl_departamentopais.cdepartamentoid::text = tbl_denuncia.cdeptohecho::text
+   LEFT JOIN mini_sedi.tbl_municipio ON tbl_municipio.cdepartamentoid::text = tbl_departamentopais.cdepartamentoid::text AND tbl_municipio.cmunicipioid::text = tbl_denuncia.cmunicipiohecho::text
+   LEFT JOIN mini_sedi.tbl_aldea ON tbl_municipio.cmunicipioid::text = tbl_aldea.cmunicipioid::text AND tbl_departamentopais.cdepartamentoid::text = tbl_aldea.cdepartamentoid::text AND tbl_aldea.caldeaid::text = tbl_denuncia.caldeahecho::text
+   LEFT JOIN mini_sedi.tbl_barrio ON tbl_aldea.caldeaid::text = tbl_barrio.caldeaid::text AND tbl_barrio.cbarrioid::text = tbl_denuncia.ccaseriohecho::text AND tbl_municipio.cmunicipioid::text = tbl_barrio.cmunicipioid::text AND tbl_departamentopais.cdepartamentoid::text = tbl_barrio.cdepartamentoid::text
+   LEFT JOIN mini_sedi.tbl_clase_lugar_hecho ON tbl_denuncia.nlugarid = tbl_clase_lugar_hecho.nlugarid
+  ORDER BY tbl_denuncia.dfechadenuncia;
+
+ALTER TABLE mini_sedi.observatorio_denuncia
+  OWNER TO mini_sedi_login;
+
+
+-- crear VIEW "observatorio ofendido";
+
+CREATE OR REPLACE VIEW mini_sedi."observatorio ofendido" AS 
+ SELECT tbl_ofendido.cgenero, tbl_ofendido.iedad, tbl_estadoscivil.cdescripcion AS estado_civil, tbl_escolaridad.cdescripcion AS escolaridad, tbl_departamentopais.cdescripcion AS departamentoof, tbl_municipio.cdescripcion AS municipioof, tbl_aldea.cdescripcion AS aldeaof, tbl_barrio.cdescripcion AS barrioof, tbl_ofendido.cdetalle, tbl_tipodocumento.cdescripcion AS tipo_documento, tbl_nacionalidad.cdescripcion AS nacionalidad, tbl_discapacidad.cdescripcion AS discapacidad, tbl_ofendido.embarazo, tbl_ofendido.cantidadhijos, tbl_ofendido.trabajoremunerado, tbl_ofendido.intentosuicidio, tbl_ofendido.enfermedadmental, tbl_ofendido.bvive, tbl_denuncia.tdenunciaid
+   FROM mini_sedi.tbl_ofendido
+   LEFT JOIN mini_sedi.tbl_denuncia ON tbl_ofendido.tdenunciaid = tbl_denuncia.tdenunciaid
+   LEFT JOIN mini_sedi.tbl_escolaridad ON tbl_ofendido.nescolaridadid = tbl_escolaridad.nescolaridadid
+   LEFT JOIN mini_sedi.tbl_departamentopais ON tbl_ofendido.cdepartamentoid::text = tbl_departamentopais.cdepartamentoid::text
+   LEFT JOIN mini_sedi.tbl_municipio ON tbl_departamentopais.cdepartamentoid::text = tbl_municipio.cdepartamentoid::text AND tbl_ofendido.cmunicipioid::text = tbl_municipio.cmunicipioid::text
+   LEFT JOIN mini_sedi.tbl_aldea ON tbl_municipio.cmunicipioid::text = tbl_aldea.cmunicipioid::text AND tbl_departamentopais.cdepartamentoid::text = tbl_aldea.cdepartamentoid::text AND tbl_ofendido.caldeaid::text = tbl_aldea.caldeaid::text
+   LEFT JOIN mini_sedi.tbl_barrio ON tbl_aldea.caldeaid::text = tbl_barrio.caldeaid::text AND tbl_municipio.cmunicipioid::text = tbl_barrio.cmunicipioid::text AND tbl_departamentopais.cdepartamentoid::text = tbl_barrio.cdepartamentoid::text AND tbl_ofendido.cbarrioid::text = tbl_barrio.cbarrioid::text
+   LEFT JOIN mini_sedi.tbl_estadoscivil ON tbl_ofendido.nestadocivil = tbl_estadoscivil.ncivil
+   LEFT JOIN mini_sedi.tbl_tipodocumento ON tbl_ofendido.ntipodocumento = tbl_tipodocumento.ndocumentoid
+   LEFT JOIN mini_sedi.tbl_nacionalidad ON tbl_ofendido.cnacionalidadid::text = tbl_nacionalidad.cnacionalidadid::text
+   LEFT JOIN mini_sedi.tbl_discapacidad ON tbl_ofendido.ndiscapacidadid = tbl_discapacidad.ndiscapacidadid;
+
+ALTER TABLE mini_sedi."observatorio ofendido"
+  OWNER TO mini_sedi_login;
+
+-- Crear VIEW observatorio_general;
+
+CREATE OR REPLACE VIEW mini_sedi.observatorio_general AS 
+ SELECT observatorio_denuncia.tdenunciaid, observatorio_denuncia.dfechadenuncia, observatorio_denuncia.thoradenuncia, observatorio_denuncia.deptodenuncia, observatorio_denuncia.municipiodenuncia, observatorio_denuncia.dfechahecho, observatorio_denuncia.thorahecho, observatorio_denuncia.deptohechos, observatorio_denuncia.municipiohechos, observatorio_denuncia.aldeahechos, observatorio_denuncia.barriohechos, observatorio_denuncia.claselugar, observatorio_denuncia.cnarracionhecho, "observatorio ofendido".cgenero, "observatorio ofendido".iedad, "observatorio ofendido".estado_civil, "observatorio ofendido".escolaridad, "observatorio ofendido".departamentoof, "observatorio ofendido".municipioof, "observatorio ofendido".aldeaof, "observatorio ofendido".barrioof, "observatorio ofendido".cdetalle, "observatorio ofendido".tipo_documento, "observatorio ofendido".nacionalidad, "observatorio ofendido".discapacidad, "observatorio ofendido".embarazo, "observatorio ofendido".cantidadhijos, "observatorio ofendido".trabajoremunerado, "observatorio ofendido".intentosuicidio, "observatorio ofendido".enfermedadmental, "observatorio ofendido".bvive
+   FROM mini_sedi."observatorio ofendido"
+   LEFT JOIN mini_sedi.observatorio_denuncia ON "observatorio ofendido".tdenunciaid = observatorio_denuncia.tdenunciaid;
+
+ALTER TABLE mini_sedi.observatorio_general
+  OWNER TO mini_sedi_login;
+
+
+
+--Insert en tabla bandejas
+DELETE FROM mini_sedi.tbl_bandejas
+ WHERE cdescripcion = 'Propiedad Intelectual';
+
+ INSERT INTO mini_sedi.tbl_bandejas(
+            ibandejaid, cdescripcion)
+    VALUES (15, 'Superior General');
+    
+INSERT INTO mini_sedi.tbl_bandejas(
+            ibandejaid, cdescripcion)
+    VALUES (16, 'Propiedad Intelectual');
+
+/*
+
+  CONSTRAINT fk_fiscalia FOREIGN KEY (nfiscaliaid)
+      REFERENCES mini_sedi.tbl_fiscalia (nfiscaliaid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+*/
+--Insert en tabla Fiscalia
+alter table mini_sedi.tbl_imputado_fiscalia drop 
+  CONSTRAINT fk_fiscalia;
+
+alter table mini_sedi.tbl_imputado_fiscalia add
+  CONSTRAINT fk_fiscalia FOREIGN KEY (nfiscaliaid)
+      REFERENCES mini_sedi.tbl_fiscalia (nfiscaliaid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE;
+      
+DELETE FROM mini_sedi.tbl_fiscalia
+ WHERE cdescripcion = 'FUSINA';
+
+INSERT INTO mini_sedi.tbl_fiscalia(
+            nfiscaliaid, cdescripcion)
+    VALUES (40, 'GENERAL');
+    
+INSERT INTO mini_sedi.tbl_fiscalia(
+            nfiscaliaid, cdescripcion)
+    VALUES (41, 'FUSINA');
+
+--Insertar tareas de 1 a 9
+INSERT INTO mini_sedi.tbl_rol_tarea(
+            rolid, tarea)
+    VALUES (5, 1);

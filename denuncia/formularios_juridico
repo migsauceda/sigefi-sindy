@@ -1,0 +1,439 @@
+denunciante
+===========
+
+<form action="procesadenunciante.php" method="POST"
+        id="frmDenuncianteJuridico" onsubmit="return ValidarDenuncianteJuridico(this);">  
+    <input type="hidden" id='DenuncianteJur' name='DenuncianteJur'>
+    <input type="hidden" name="txtPersonaId" id="txtPersonaId"
+                   value="<?php if (isset($_SESSION['oDenunciante']))
+                       { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 't') echo($oDenunciante->getPersonaId());} ?>"/>
+    
+    <table id="tblPersonaJuridica" align="center" width="95%" border= "0"
+           class="TablaCaja" summary="datos persona natural">
+        
+    <tr class="SubTituloCentro"><th colspan="4">Datos generales de la empresa</th></tr>
+       
+        <td align="right">Nombre de empresa o institución</td>
+        
+        <td><input list="txtEmpresasHn" name="txtEmpresasHn" size="30" maxlength="99" 
+                   onblur="document.getElementById('DenuncianteJur').value= 'juridico';"
+                   value="<?php if (isset($_SESSION['oDenunciante']))
+                        { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 't') echo($oDenunciante->getNombreCompleto());  } ?>"/>
+            <datalist id="txtEmpresasHn">
+                <?php
+                    $resEmpresas= CargarEmpresasHN();
+                    while ($Rol= pg_fetch_array($resEmpresas)) {
+                        echo "<option value='$Rol[cdescripcion]'>";
+                    }
+                ?>
+            </datalist>    
+        </td>
+        <td align="right">RTN</td>
+        <td>            
+            <input type="text" id="txtRtn" name="txtRtn" size="15" maxlength="19"
+                   value="<?php if (isset($_SESSION['oDenunciante']))
+                        { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 't') echo($oDenunciante->getIdentidad());  } ?>">
+        </td> 
+    <tr>
+        <td align="right">Nacionalidad</td>
+        <td>
+            <?php
+            $resNacionJ= CargarNacionalidad();
+            combo("cboNacionalidadJ",$resNacionJ,"cnacionalidadid","cdescripcion");
+            ?>
+            <script type="text/javascript">
+                $("#cboNacionalidadJ").attr("value","<?php if (isset($_SESSION['oDenunciante']))
+                       { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 't') echo($oDenunciante->getNacionalidad()); } else { echo('HN'); } ?>");
+            </script>         
+        </td>        
+        <td align="right">Teléfonos</td>
+        <td>
+            <input type="text" id="txtTelefono" name="txtTelefono" size="15" maxlength="59"
+                   value="<?php if (isset($_SESSION['oDenunciante']))
+                       { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 't') echo($oDenunciante->getTelefono()); } ?>">
+        </td>
+        <td></td>
+    </tr>
+        <tr class="Grid">
+        <td align="right">Departamento</td>
+        <td>
+            <?php
+                    $resDeptoJ= CargarDepto();
+                    combo("cboDeptoJ",$resDeptoJ,"cdepartamentoid","cdescripcion","",
+                            "onchange='llena_muni(".'"cboDeptoJ"'.",".'"cboMuniJ"'.",
+                                ".'"tdMuniJ"'.",".'"23"'.",".'"cboAldeaJ"'.",".'"cboBarrioJ"'.")'");
+            ?>
+        </td>
+        <td align="right">Municipio</td>
+        <td id="tdMuniJ">
+            <?php
+//                $resMuniJ= CargarMunicipio();                
+            ?>
+        </td>
+        </tr>
+        <tr class="Grid">
+        <td align="right">Aldea</td>
+        <td id="tdAldeaJ">
+            <?php
+//                $resAldeaJ= CargarAldea();
+		combo("cboAldeaJ","","caldeaid","cdescripcion","",
+                      "onchange='llena_barrio(".'"cboDeptoJ"'.",".'"cboMuniJ"'.",
+                      ".'"cboAldeaJ"'.",".'"cboBarrioJ"'.",".'"tdBarrioJ"'.",".'"6"'.")'");                
+            ?>
+        </td>
+        <td align="right">Barrio</td>
+        <td id="tdBarrioJ">
+            <?php
+                //$resBarrio= CargarBarrio();
+                combo("cboBarrioJ","","cbarrioId","cdescripcion","","");
+            ?>
+        </td>
+        </tr>
+     <tr>
+        <td align="right">Detalle dirección</td>
+        <td colspan="3">
+            <input list="txtDireccionJuridica" name="txtDireccionJuridica" size="80" maxlength="199" required
+                   value="<?php if (isset($_SESSION['oDenunciante']))
+                       { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 't') echo($oDenunciante->getTxtDireccion());} ?>">
+        </td>
+     </tr>    
+    </table>  
+    <br><br>
+        <table id="tblApoderado" align="center" width="95%" border="0" 
+               class="TablaCaja" summary="apoderado legal">
+            <tr class="SubTituloCentro"><th colspan="4">Representante o apoderado Legal</th></tr>
+            <tr class=" Grid">
+                <td align="right">Nombre completo</td>
+                <td>            
+                    <input name="txtApoderadoJ" type="text" id="txtApoderadoJ" size="25" maxlength="50"
+                           value="<?php if (isset($_SESSION['oDenunciante']))
+                           { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 't') echo($oDenunciante->getApoderadoNombre()); } ?>"/> 
+                </td>
+                <td align="right">Identificación</td>
+                <td>            
+                    <input name="txtColegioJ" type="text" id="txtColegioJ" size="15" maxlength="20"
+                           value="<?php if (isset($_SESSION['oDenunciante']))
+                           { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 't') 
+                               if ($oDenunciante->getTipoDocumento() != 5)
+                                   echo($oDenunciante->getIdentidad());
+                               else
+                                   echo($oDenunciante->getApoderadoColegio());                                
+                           } ?>"/>                     
+                    <input name="rdTipoDoc" id="rdTipoDoc" type="radio" type="radio" value="colegio" checked>Número colegiado
+                    <input name="rdTipoDoc" id="rdTipoDoc" type="radio" type="radio" value="identidad">Identidad
+                    <input name="rdTipoDoc" id="rdTipoDoc" type="radio" type="radio" value="pasaporte">Pasaporte
+                </td>            
+            </tr>
+        </table>     
+    <!--los botones para guardar-->
+    <br>
+    <table align="center" summary="botones persona natural">
+        <tr>     
+        <td><INPUT type="submit" name="btnSubmit" value="Guardar datos"></td>
+        <td><INPUT type="button" name="btnNuevo" value="Agregar nuevo" 
+                   onClick="window.location='denunciante.php?btn=nuevo';"></td>  
+        </tr>
+    </table>   
+</form>      
+
+denunciado
+===========
+<form action="procesaimputado.php" method="POST"
+        id="frmDenunciadoJuridico" onsubmit="return ValidarDenunciadoJuridico(this);">  
+    <input type="hidden" id='DenunciadoJur' name='DenunciadoJur'>
+    <input type="input" name="txtPersonaIdj" id="txtPersonaIdj"
+                   value="<?php if (isset($_SESSION['oDenunciado']))
+                       { if ($oDenunciado->getPersonaNatural()== '0') echo($oDenunciado->getPersonaId());} ?>"/>
+    
+    <table id="tblPersonaJuridica" align="center" width="95%" border= "0"
+           class="TablaCaja" summary="datos persona natural">
+        
+    <tr class="SubTituloCentro"><th colspan="4">Datos generales de la empresa</th></tr>
+    <tr>   
+        <td align="right">Nombre de empresa o institución</td>
+        
+        <td><input list="txtEmpresasHn" name="txtEmpresasHn" size="30" maxlength="99" 
+                   onblur="document.getElementById('DenunciadoJur').value= 'juridico';"
+                   value="<?php if (isset($_SESSION['oDenunciado']))
+                        { if ($oDenunciado->getPersonaNatural()== '0') echo($oDenunciado->getNombreCompleto());  } ?>"/>
+            <datalist id="txtEmpresasHn">
+                <?php
+                    $resEmpresas= CargarEmpresasHN();
+                    while ($Rol= pg_fetch_array($resEmpresas)) {
+                        echo "<option value='$Rol[cdescripcion]'>";
+                    }
+                ?>
+            </datalist>    
+        </td>
+        <td align="right">RTN</td>
+        <td>            
+            <input type="text" id="txtRtn" name="txtRtn" size="15" maxlength="19"
+                   value="<?php if (isset($_SESSION['oDenunciado']))
+                        { if ($oDenunciado->getPersonaNatural()== '0') echo($oDenunciado->getIdentidad());  } ?>">
+        </td> 
+    </tr>
+    
+    <tr>
+        <td align="right">Nacionalidad</td>
+        <td>
+            <?php
+            $resNacionJ= CargarNacionalidad();
+            combo("cboNacionalidad3J",$resNacionJ,"cnacionalidadid","cdescripcion");
+            ?>
+            <script type="text/javascript">
+                document.getElementById('cboNacionalidad3').value= 
+                "<?php if (isset($_SESSION['oDenunciado'])) 
+                    {
+                        if ($oDenunciado->getPersonaNatural()== '1' || $oDenunciado->getPersonaNatural()== 't')
+                            echo $oDenunciado->getNacionalidad();
+                    }
+                    else
+                    {
+                        echo 'HN'; 
+                    }
+                ?>";                    
+            </script>                     
+        </td>        
+        <td align="right">Teléfonos</td>
+        <td>
+            <input type="text" id="txtTelefono" name="txtTelefono" size="15" maxlength="59"
+                   value="<?php if (isset($_SESSION['oDenunciado']))
+                       { if ($oDenunciado->getPersonaNatural()== '0') echo($oDenunciado->getTelefono()); } ?>">
+        </td>
+        <td></td>
+    </tr>
+        <tr class="Grid">
+        <td align="right">Departamento</td>
+        <td>
+            <?php
+                    $resDepto3J= CargarDepto();
+                    combo("cboDepto3J",$resDepto3J,"cdepartamentoid","cdescripcion","",
+                            "onchange='llena_muni(".'"cboDepto3J"'.",".'"cboMuni3J"'.",
+                                ".'"tdMuni3J"'.",".'"32"'.",".'"cboAldea3J"'.",".'"cboBarrio3J"'.")'");
+            ?>
+        </td>
+        <td align="right">Municipio</td>
+        <td id="tdMuni3J">
+            <?php
+//                $resMuniJ= CargarMunicipio();                
+            ?>
+        </td>
+        </tr>
+        <tr class="Grid">
+        <td align="right">Aldea</td>
+        <td id="tdAldea3J">
+            <?php
+//                $resAldeaJ= CargarAldea();
+		combo("cboAldea3J","","caldeaid","cdescripcion","",
+                      "onchange='llena_barrio(".'"cboDepto3J"'.",".'"cboMuni3J"'.",
+                      ".'"cboAldea3J"'.",".'"cboBarrio3J"'.",".'"tdBarrio3J"'.",".'"6"'.")'");                
+            ?>
+        </td>
+        <td align="right">Barrio</td>
+        <td id="tdBarrio3J">
+            <?php
+                //$resBarrio= CargarBarrio();
+                combo("cboBarrio3J","","cbarrioId","cdescripcion","","");
+            ?>
+        </td>
+        </tr>
+     <tr>
+        <td align="right">Detalle dirección</td>
+        <td colspan="3">
+            <input list="txtDireccionJuridica" name="txtDireccionJuridica" size="100" maxlength="199" required
+                   value="<?php if (isset($_SESSION['oDenunciado']))
+                       { if ($oDenunciado->getPersonaNatural()== '0') echo($oDenunciado->getTxtDireccion());} ?>">
+        </td>
+     </tr>    
+    </table>  
+    
+    <br><br>
+        <table id="tblApoderado" align="center" width="95%" border="0" 
+               class="TablaCaja" summary="apoderado legal">
+            <tr class="SubTituloCentro"><th colspan="4">Representante o apoderado Legal</th></tr>
+            <tr class=" Grid">
+                <td align="right">Nombre completo</td>
+                <td>            
+                    <input name="txtApoderadoJ" type="text" id="txtApoderadoJ" size="25" maxlength="50"
+                           value="<?php if (isset($_SESSION['oDenunciado']))
+                           { if ($oDenunciado->getPersonaNatural()== '0') echo($oDenunciado->getApoderadoNombre()); } ?>"/> 
+                </td>
+                <td align="right">Identificación</td>
+                <td>            
+                    <input name="txtColegioJ" type="text" id="txtColegioJ" size="15" maxlength="20"
+                           value="<?php if (isset($_SESSION['oDenunciado']))
+                           { if ($oDenunciado->getPersonaNatural()== '0') 
+                               if ($oDenunciado->getTipoDocumento() != 5)
+                                   echo($oDenunciado->getIdentidad());
+                               else
+                                   echo($oDenunciado->getApoderadoColegio());                                
+                           } ?>"/>                     
+                    <input name="rdTipoDoc" id="rdTipoDoc" type="radio" type="radio" value="colegio" checked>Número colegiado
+                    <input name="rdTipoDoc" id="rdTipoDoc" type="radio" type="radio" value="identidad">Identidad
+                    <input name="rdTipoDoc" id="rdTipoDoc" type="radio" type="radio" value="pasaporte">Pasaporte
+                </td>                
+            </tr>
+        </table>     
+    <br>
+    <br>
+    
+    <! --delitos y faltas-- >   
+    <table id="delitoj" align="center" width="95%" border="0" 
+           class="TablaCaja" summary="delitosj">    
+        <tr class="SubTituloCentro"><TH colspan="4">Delitos y Faltas</TH></tr>     
+        <tr class="Grid">
+        <td colspan="2">
+            <INPUT type="button" id="delito_agrej" name="delito_agrej" value="Agregar delitos y faltas" onclick=AgregarFila("delitoj");>           
+        </td>            
+        </tr>
+    </table>    
+    <!--los botones para guardar-->
+    <br>
+    <table align="center" summary="botones persona natural">
+        <tr>     
+        <td><INPUT type="submit" name="btnSubmit" value="Guardar datos"></td>
+        <td><INPUT type="button" name="btnNuevo" value="Agregar nuevo" 
+                   onClick=";"></td>  
+        </tr>
+    </table>   
+</form>            
+
+ofendido
+========
+        
+<form action="procesaofendido.php" method="POST"
+        id="frmDenuncianteJuridico" onsubmit="return ValidarDenuncianteJuridico(this);">  
+    <input type="hidden" id='OfendidoJur' name='OfendidoJur'>
+    <input type="hidden" name="txtPersonaId" id="txtPersonaId"
+                   value="<?php if (isset($_SESSION['oOfendido']))
+                       { if ($oOfendido->getPersonaNatural()== '0' || $oOfendido->getPersonaNatural()== 'f') echo($oOfendido->getPersonaId());} ?>"/>
+    
+    <table id="tblPersonaJuridica" align="center" width="95%" border= "0"
+           class="TablaCaja" summary="datos persona natural">
+        
+    <tr class="SubTituloCentro"><th colspan="4">Datos generales de la empresa</th></tr>
+       
+        <td align="right">Nombre de empresa o institución</td>
+        
+        <td><input list="txtEmpresasHn" name="txtEmpresasHn" size="30" maxlength="99" 
+                   onblur="document.getElementById('OfendidoJur').value= 'juridico';"
+                   value="<?php if (isset($_SESSION['oOfendido']))
+                        { if ($oOfendido->getPersonaNatural()== '0' || $oOfendido->getPersonaNatural()== 'f') echo($oOfendido->getNombreCompleto());  } ?>"/>
+            <datalist id="txtEmpresasHn">
+                <?php
+                    $resEmpresas= CargarEmpresasHN();
+                    while ($Rol= pg_fetch_array($resEmpresas)) {
+                        echo "<option value='$Rol[cdescripcion]'>";
+                    }
+                ?>
+            </datalist>    
+        </td>
+        <td align="right">RTN</td>
+        <td>            
+            <input type="text" id="txtRtn" name="txtRtn" size="15" maxlength="19"
+                   value="<?php if (isset($_SESSION['oOfendido']))
+                        { if ($oOfendido->getPersonaNatural()== '0' || $oOfendido->getPersonaNatural()== 'f') echo($oOfendido->getIdentidad());  } ?>">
+        </td> 
+    <tr>
+        <td align="right">Nacionalidad</td>
+        <td>
+            <?php
+            $resNacion4J= CargarNacionalidad();
+            combo("cboNacionalidad4J",$resNacion4J,"cnacionalidadid","cdescripcion");
+            ?>
+            <script type="text/javascript">
+                $("#cboNacionalidad4J").attr("value","<?php if (isset($_SESSION['oOfendido']))
+                       { if ($oOfendido->getPersonaNatural()== '0' || $oOfendido->getPersonaNatural()== 'f') 
+                           echo($oOfendido->getNacionalidad()); } 
+                           else { echo('HN'); } ?>");
+            </script>         
+        </td>        
+        <td align="right">Teléfonos</td>
+        <td>
+            <input type="text" id="txtTelefono" name="txtTelefono" size="15" maxlength="59"
+                   value="<?php if (isset($_SESSION['oOfendido']))
+                       { if ($oOfendido->getPersonaNatural()== '0' || $oOfendido->getPersonaNatural()== 'f') echo($oOfendido->getTelefono()); } ?>">
+        </td>
+        <td></td>
+    </tr>
+        <tr class="Grid">
+        <td align="right">Departamento</td>
+        <td>
+            <?php
+                    $resDepto4J= CargarDepto();
+                    combo("cboDepto4J",$resDepto4J,"cdepartamentoid","cdescripcion","",
+                            "onchange='llena_muni(".'"cboDepto4J"'.",".'"cboMuni4J"'.",
+                                ".'"tdMuni4J"'.",".'"32"'.",".'"cboAldea4J"'.",".'"cboBarrio4J"'.")'");
+            ?>
+        </td>
+        <td align="right">Municipio</td>
+        <td id="tdMuniJ">
+            <?php
+//                $resMuniJ= CargarMunicipio();                
+            ?>
+        </td>
+        </tr>
+        <tr class="Grid">
+        <td align="right">Aldea</td>
+        <td id="tdAldeaJ">
+            <?php
+//                $resAldeaJ= CargarAldea();
+		combo("cboAldea4J","","caldeaid","cdescripcion","",
+                      "onchange='llena_barrio(".'"cboDepto4J"'.",".'"cboMuni4J"'.",
+                      ".'"cboAldea4J"'.",".'"cboBarrio4J"'.",".'"tdBarrio4J"'.",".'"6"'.")'");                
+            ?>
+        </td>
+        <td align="right">Barrio</td>
+        <td id="tdBarrioJ">
+            <?php
+                //$resBarrio= CargarBarrio();
+                combo("cboBarrio4J","","cbarrioId","cdescripcion","","");
+            ?>
+        </td>
+        </tr>
+     <tr>
+        <td align="right">Detalle dirección</td>
+        <td colspan="3">
+            <input list="txtDireccionJuridica" name="txtDireccionJuridica" size="100" maxlength="199" required
+                   value="<?php if (isset($_SESSION['oOfendido']))
+                       { if ($oOfendido->getPersonaNatural()== '0' || $oOfendido->getPersonaNatural()== 'f') echo($oOfendido->getTxtDireccion());} ?>">
+        </td>
+     </tr>    
+    </table>  
+    <br><br>
+        <table id="tblApoderado" align="center" width="95%" border="0" 
+               class="TablaCaja" summary="apoderado legal">
+            <tr class="SubTituloCentro"><th colspan="4">Representante o apoderado Legal</th></tr>
+            <tr class=" Grid">
+                <td align="right">Nombre completo</td>
+                <td>            
+                    <input name="txtApoderadoJ" type="text" id="txtApoderadoJ" size="25" maxlength="50"
+                           value="<?php if (isset($_SESSION['oOfendido']))
+                           { if ($oOfendido->getPersonaNatural()== '0' || $oOfendido->getPersonaNatural()== 'f') echo($oOfendido->getApoderadoNombre()); } ?>"/> 
+                </td>
+                <td align="right">Identificación</td>
+                <td>            
+                    <input name="txtColegioJ" type="text" id="txtColegioJ" size="15" maxlength="20"
+                           value="<?php if (isset($_SESSION['oOfendido']))
+                           { if ($oOfendido->getPersonaNatural()== '0' || $oOfendido->getPersonaNatural()== 'f') 
+                               if ($oOfendido->getTipoDocumento() != 5)
+                                   echo($oOfendido->getIdentidad());
+                               else
+                                   echo($oOfendido->getApoderadoColegio());                                
+                           } ?>"/>                     
+                    <input name="rdTipoDoc" id="rdTipoDoc" type="radio" type="radio" value="colegio" checked>Número colegiado
+                    <input name="rdTipoDoc" id="rdTipoDoc" type="radio" type="radio" value="identidad">Identidad
+                    <input name="rdTipoDoc" id="rdTipoDoc" type="radio" type="radio" value="pasaporte">Pasaporte
+                </td>            
+            </tr>
+        </table>     
+    <!--los botones para guardar-->
+    <br>
+    <table align="center" summary="botones persona natural">
+        <tr>     
+        <td><INPUT type="submit" name="btnSubmit" value="Guardar datos"></td>
+        <td><INPUT type="button" name="btnNuevo" value="Agregar nuevo" 
+                   onClick="window.location='ofendido.php?btn=nuevo';"></td>  
+        </tr>
+    </table>   
+</form>                         
