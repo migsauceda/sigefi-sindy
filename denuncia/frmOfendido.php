@@ -121,7 +121,7 @@
 
         function QuitarAnoRango(){
                 $('#rdAno4')[0].checked= false;	
-                $('#txtEdad').value= "";
+                $('#txtEdad4').value= "";
                 for(i= 0; i <= 4; i++){
                         $('input:radio[name=rdRangoEdad4]')[i].checked= false;
                 }
@@ -311,6 +311,14 @@
             
             var frm= document.forms.frmOfendido;
             llenarsexo('selSexo4',datos.sexo, frm, datos.orientacionsex);  
+           
+            if (datos.lgbti== 't'){
+                document.getElementById('rdLGBTI4_Si').checked= true;
+            }else{
+                document.getElementById('rdLGBTI4_No').checked= true;
+            }        
+            
+            document.getElementById('txtEdad4').value= datos.edad;
       
             if (TipoPersona== 'f') //persona juridica
             {
@@ -394,7 +402,7 @@
                 <td><INPUT type="submit" name="btnSubmit" value="Guardar datos"></td>
                 <td><pre>    </pre></td>
                 <td><INPUT type="button" name="btnBorrar" value="Borrar actual" 
-                   onClick="BorrarRegistro(document.getElementById('txtPersonaId').value);">              
+                   onClick="BorrarRegistro(document.getElementById('txtPersonaId').value);"/>              
                 </tr>
             </table>             
             
@@ -426,9 +434,9 @@
 <!--                        <input type="radio" name="rdSexo4" id="rdSexo0" value="m" onClick="llenarsexo('selSexo4','m', forms.frmOfendido);"/>Masculino<br>
                         <input type="radio" name="rdSexo4" id="rdSexo1" value="f" onClick="llenarsexo('selSexo4','f', forms.frmOfendido);"/>Femenino<br>    
                         <input type="radio" name="rdSexo4" id="rdSexo2" value="x" onClick="llenarsexo('selSexo4','x', forms.frmOfendido);"/>No consignado<br>-->
-                        <input type="radio" name="rdSexo4" id="rdSexo0" value="m" onclick="txtEdad.disabled= false;"/>Masculino<br>
-                        <input type="radio" name="rdSexo4" id="rdSexo1" value="f" onclick="txtEdad.disabled= false;"/>Femenino<br>    
-                        <input type="radio" name="rdSexo4" id="rdSexo2" value="x" onclick="txtEdad.disabled= false;"/>No consignado<br>                        
+                        <input type="radio" name="rdSexo4" id="rdSexo0" value="m" onclick="txtEdad4.disabled= false;"/>Masculino<br>
+                        <input type="radio" name="rdSexo4" id="rdSexo1" value="f" onclick="txtEdad4.disabled= false;"/>Femenino<br>    
+                        <input type="radio" name="rdSexo4" id="rdSexo2" value="x" onclick="txtEdad4.disabled= false;"/>No consignado<br>                        
                     </td>
 
                     <td>
@@ -440,8 +448,10 @@
 //                            llenarsexo('selSexo1','y', frm.name);     
                         </script>  
                         <br>   -->
-                        <input type="checkbox" name="AplicaLGBTI" id="AplicaLGBTI" value="0"/>Integra comunidad
-                        <br><br>                                        
+                        <input type="radio" name="rdAplicaLGBTI4" value="si" id="rdLGBTI4_Si"/>Si Integra comunidad
+                            <br>
+                        <input type="radio" name="rdAplicaLGBTI4" value="no" id="rdLGBTI4_No"/>No Integra comunidad
+                            <br>                                       
                         <input type="checkbox" name="NombAsumido" id="NombAsumido" value="0" onclick="NombreAsumido();"/>Nombre asumido
                     </td>                        
                     <td>
@@ -624,11 +634,9 @@
                 <!--<input type="txtEdad2" onkeypress="return ValidarNumeros(event)">-->
 <!--                OJO no se debe modificar el nombre y id de este campo pq lo usa la
                 funcion javascript llenarsexo, que se dispara de los radios sexo-->
-                <input name="txtEdad" type="text" id="txtEdad" size="5" maxlength="3"
-                    onkeypress="return ValidarNumeros(event);" disabled="disabled"
-                    onfocus="QuitarAnoRango()"
-                    value="<?php if (isset($_SESSION['oOfendido']))
-                        { if ($oOfendido->getPersonaNatural()== '1' || $oOfendido->getPersonaNatural()== 't') echo($oOfendido->getEdad()); } else { echo "0";} ?>"/>   
+                <input name="txtEdad4" type="text" id="txtEdad4" size="5" maxlength="3"
+                    onkeypress="return ValidarNumeros(event);" 
+                    onfocus="QuitarAnoRango()"/>   
 
                 <!-- ojo valores en value con/des afectan "procesaofendido.php"-->
                 <input type="radio" name="rdAno4" id="rdAno0" value="con" 
@@ -779,7 +787,7 @@
 	<?php
 		combo("cboMuni4","","cmunicipioid","cdescripcion","",
                       "onchange='llena_aldea(".'"cboDepto4"'.",".'"cboMuni4"'.",
-                      ".'"cboAldea4"'.",".'"tdAldea4"'.",".'"43"'.",".'"cboBarrio"'.")'");
+                      ".'"cboAldea4"'.",".'"tdAldea4"'.",".'"43"'.",".'"cboBarrio4"'.")'");
 	?>
       </td>
       <td id="tdAldea4">
@@ -788,7 +796,7 @@
 	?>
       </td>
       <td id="tdBarrio4">
-
+          <select name="cboBarrio4" id="cboBarrio4"></select>
       </td>
     </tr>
     <tr>
@@ -1144,9 +1152,21 @@
                              
             datos.sexo= "<?php if ($oOfendido->getPersonaNatural()== '1' || $oOfendido->getPersonaNatural()== 't') 
                                    echo($oOfendido->getGenero()); ?>"; 
+    
+            datos.lgbti= "<?php if (isset($oOfendido))
+                                    echo($oOfendido->getIntegraLGBTI()); ?>";
                                        
             datos.orientacionsex= "<?php if ($oOfendido->getPersonaNatural()== '1' || $oOfendido->getPersonaNatural()== 't') 
-                                   echo($oOfendido->getOrientacionSex()); ?>";                                       
+                                   echo($oOfendido->getOrientacionSex()); ?>";      
+    
+            datos.edad= "<?php if (isset($oOfendido)){
+                                    echo($oOfendido->getEdad());
+                                }
+                                ?>"
+            datos.umedidaedad= "<?php if (isset($oOfendido)){
+                                    echo($oOfendido->getUmeDidaEdad());
+                                }
+                                ?>"    
 
             frm= document.forms.frmOfendido; 
             LlenarCampos(frm, datos); 

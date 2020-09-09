@@ -367,7 +367,7 @@ class Imputado extends Persona {
   {
 
 	$objORM= new ORM_Imputado;
-
+      
 	$objORM->ModificarImputado($this);
   }
 
@@ -437,7 +437,8 @@ class Imputado extends Persona {
                 $this->setCondicionAgresor($row["ccondicion"]);
                 $this->setTrabajoRemunerado($row["ctrabajoremunerado"]);
                 $this->setAsisteEducacion($row["casisteeducacion"]);                
-                
+                $this->setIntegraLGBTI($row["aplicalgbti"]);
+                $this->setSexo($row["csexo"]);
                 //recostruir la lista de imputados existentes
 		$rsCursor= $objORM->RecuperarListaImputados($value);
                 
@@ -503,13 +504,12 @@ class Imputado extends Persona {
                 $this->setApoderadoNombre($row["capoderadolegal"]);
                 $this->setApoderadoColegio($row["ccolegioabogado"]);
                 $this->setPersonaNatural($row["bpersonanatural"]);
-                $this->setApoderadoNombre($row["capoderadolegal"]);
                 $this->setRTN($row["crtn"]);
                 $this->setCondicionAgresor($row["ccondicion"]);
                 $this->setTrabajoRemunerado($row["ctrabajoremunerado"]);
                 $this->setAsisteEducacion($row["casisteeducacion"]);                
-                
-
+                $this->setIntegraLGBTI($row["aplicalgbti"]);
+                $this->setSexo($row["csexo"]);
                 //recostruir la lista de imputados existentes
 		$rsCursor= $objORM->RecuperarListaImputados($valdenuncia);
                 

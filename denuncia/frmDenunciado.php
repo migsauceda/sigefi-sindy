@@ -1398,7 +1398,16 @@
             frm.cboNacionalidad3.value= datos.nacionalidad;
             
             if (TipoPersona== 't') //persona natural
-            {                      
+            {       
+                frm.txtEdad3.value= datos.edad;
+                if (datos.umedidaedad == "a"){
+                    //edad en años
+                    document.getElementById('rdAno30').checked= true;
+                }
+                else{
+                    //edad desconocida
+                    document.getElementById('rdAno31').checked= true;
+                }
                 frm.rdCondicion.value= datos.ccondicion;
                 frm.rdTrabajo.value= datos.ctrabajoremunerado;
                 frm.rdEstudia.value= datos.casisteeducacion;
@@ -1415,7 +1424,36 @@
 //            llenaarmas(datos.personaid);
             
             var frm= document.forms.frmImputado;
-            llenarsexo('selSexo2', datos.sexo, frm, datos.orientacionsex);             
+            //llenarsexo('selSexo33', datos.sexo, frm, datos.orientacionsex);    
+            
+            //sexo
+            if (datos.genero== 'x'){
+                document.getElementById('rdSexo2').checked= true; //x
+            }            
+            if (datos.genero== 'm'){
+                document.getElementById('rdSexo0').checked= true; //m
+            }
+            if (datos.genero== 'f'){
+                document.getElementById('rdSexo1').checked= true; //f
+            }
+            
+            //genero
+            if (datos.sexo== 'x'){
+                document.getElementById('rdGenero2').checked= true; //x
+            }             
+            if (datos.sexo== 'm'){
+                document.getElementById('rdGenero0').checked= true; //m
+            }
+            if (datos.sexo== 'f'){
+                document.getElementById('rdGenero1').checked= true; //f
+            }
+           
+                
+            if (datos.lgbti== 't'){
+                document.getElementById('rdLGBTI3_Si').checked= true;
+            }else{
+                document.getElementById('rdLGBTI3_No').checked= true;
+            }
             
             document.getElementById('txtPersonaId').value= datos.personaid;
           
@@ -1578,17 +1616,19 @@
 
                 <!--Sexo-->
                 <td>
-                    <input type="radio" name="rdSexo33" id="rdSexo00" value="m" />Hombre<br>
-                    <input type="radio" name="rdSexo33" id="rdSexo11" value="f" />Mujer<br>    
-                    <input type="radio" name="rdSexo33" id="rdSexo22" value="x" checked />No consignado<br>
+                    <input type="radio" name="rdSexo33" id="rdGenero0" value="m" />Hombre<br>
+                    <input type="radio" name="rdSexo33" id="rdGenero1" value="f" />Mujer<br>    
+                    <input type="radio" name="rdSexo33" id="rdGenero2" value="x" />No consignado<br>
                 </td>                
                 <td>
 <!--                    Orientación sexual<br>
                     <select name="selSexo2" id="selSexo2"></select>
                     <span id="selSexo2"></span>              
                     <br>                -->
-                        <input type="checkbox" name="AplicaLGBTI" id="AplicaLGBTI" value="0"/>Integra comunidad
-                        <br><br>                                        
+                <input type="radio" name="rdAplicaLGBTI3" value="si" id="rdLGBTI3_Si"/>Si Integra comunidad
+                    <br>
+                <input type="radio" name="rdAplicaLGBTI3" value="no" id="rdLGBTI3_No"/>No Integra comunidad
+                    <br>                                       
                 </td>
                 
                 <td>
@@ -1622,38 +1662,6 @@
     }
     ?>
     <!--Orientacion sexual-->
-    <script type="text/javascript">         
-//        var frm= document.forms.frmImputado;
-//        llenarsexo('selSexo2','f', frm);
-    </script>
-
-    <?php if (isset($_SESSION['oDenunciado'])) {
-        if ($oDenunciado->getGenero()== 'm')
-        {
-    ?>
-        <script type="text/javascript">
-            $('input:radio[name=rdSexo3]')[0].checked= true;        
-        </script>
-    <?php 
-        }
-        elseif($oDenunciado->getGenero()== 'f')
-        {
-    ?>          
-        <script type="text/javascript">
-            $('input:radio[name=rdSexo3]')[1].checked= true; 
-        </script>
-    <?php 
-        }
-        elseif($oDenunciado->getGenero()== 'x') 
-        {
-    ?>          
-        <script type="text/javascript">
-            $('input:radio[name=rdSexo3]')[2].checked= true; 
-        </script>                
-    <?php
-        }
-    }
-    ?>      
   
     <script type="text/javascript">
     //llenar el combo denunciantes ingresados
@@ -1744,10 +1752,8 @@
 <!--                OJO no se debe modificar el nombre y id de este campo pq lo usa la
                 funcion javascript llenarsexo, que se dispara de los radios sexo-->            
              <input name="txtEdad3" type="text" id="txtEdad3" size="5" maxlength="3"
-                   onkeypress="return ValidarNumeros(event);" disabled="disabled"
-                   onfocus="QuitarAnoRango();"
-                   value="<?php if (isset($_SESSION['oDenunciado']))
-                       { if ($oDenunciado->getPersonaNatural()== '1' || $oDenunciado->getPersonaNatural()== 't') echo($oDenunciado->getEdad()); } else {echo "0" ;}?>"/> 
+                   onkeypress="return ValidarNumeros(event);" 
+                   onfocus="QuitarAnoRango();"/> 
 
             &nbsp;&nbsp; 
             <!-- ojo valores en value con/des afectan "procesaDenunciado.php"-->
@@ -2269,7 +2275,7 @@
     
  <?php if (isset($_SESSION['oDenunciado']))
         { ?>                                     
-            datos= new Array();
+            var datos= new Array();
     
             datos.civil= "<?php 
             if ($oDenunciado->getPersonaNatural() == '1' || $oDenunciado->getPersonaNatural() == 't') {
@@ -2345,8 +2351,16 @@
 
                              
             datos.sexo= "<?php if ($oDenunciado->getPersonaNatural()== '1' || $oDenunciado->getPersonaNatural()== 't') 
+                                   echo($oDenunciado->getSexo()); ?>"; 
+    
+            datos.genero= "<?php if ($oDenunciado->getPersonaNatural()== '1' || $oDenunciado->getPersonaNatural()== 't') 
                                    echo($oDenunciado->getGenero()); ?>"; 
-                                       
+
+            datos.lgbti= "<?php if (isset($oDenunciado)){
+                                    echo($oDenunciado->getIntegraLGBTI());
+                                }
+                            ?>";
+                                    
             datos.orientacionsex= "<?php if ($oDenunciado->getPersonaNatural()== '1' || $oDenunciado->getPersonaNatural()== 't') 
                                    echo($oDenunciado->getOrientacionSex()); ?>";                                       
 
@@ -2373,7 +2387,16 @@
                                    echo($oDenunciado->getAsisteEducacion()); 
                                 }
                                 ?>";
-
+    
+            datos.edad= "<?php if (isset($oDenunciado)){
+                                    echo($oDenunciado->getEdad());
+                                }
+                                ?>"
+            datos.umedidaedad= "<?php if (isset($oDenunciado)){
+                                    echo($oDenunciado->getUmeDidaEdad());
+                                }
+                                ?>"
+    
             frm= document.forms.frmImputado;            
 
             LlenarCampos(frm, datos); 

@@ -321,9 +321,9 @@
             frm.cboNacionalidad.value= datos.nacionalidad;             
             
             if (datos.lgbti== "t") 
-                document.getElementById('AplicaLGBTI').checked = true;
+                document.getElementById('rdLGBTI_Si').checked = true;
             else
-                document.getElementById('AplicaLGBTI').checked = false;
+                document.getElementById('rdLGBTI_No').checked = true;
 
          
             if (esVacio(datos.nombreasumido)){
@@ -515,8 +515,10 @@
                 <select name="selSexo1" id="selSexo1"></select>-->
                 <!--<span id="selSexo1"></span>-->
 
-                <input type="checkbox" name="AplicaLGBTI" id="AplicaLGBTI"/>Integra comunidad
-                <br><br>                
+                <input type="radio" name="rdAplicaLGBTI" value="si" id="rdLGBTI_Si"/>Si Integra comunidad
+                    <br>
+                <input type="radio" name="rdAplicaLGBTI" value="no" id="rdLGBTI_No"/>No Integra comunidad
+                    <br>
                 <input type="checkbox" name="NombAsumido" id="NombAsumido" value="0" onclick="NombreAsumido();"/>Nombre asumido
             
                 </td>

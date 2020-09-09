@@ -118,7 +118,8 @@ class ORM_Imputado {
                 ."'".$objImputado->getAsisteEducacion()."', "
                 ."array[".$Transporte."], "
                 ."array[".$Armas."], "
-                ."array[".$Objetos."]"
+                ."array[".$Objetos."], "
+                ."'".$objImputado->getIntegraLGBTI()."' "
 		.")";
 
         $objConexion= new Conexion();
@@ -207,9 +208,9 @@ class ORM_Imputado {
                 $soundex_apellido= soundex($nombre_array[$i]);
             else
                 $soundex_apellido= $soundex_apellido . ";" . soundex($nombre_array[$i]);            
-        }         
-        
-	$sql= "SELECT codigo, descripcion from mini_sedi.denunciado_update("
+        }   
+      
+        $sql= "SELECT codigo, descripcion from mini_sedi.denunciado_update("
 		.$gall.", "
 		."'".$objImputado->getIdentidad()."', "
 		."'".$objImputado->getNombreCompleto()."', "
@@ -234,7 +235,7 @@ class ORM_Imputado {
 		."'".$objImputado->getOrientacionSex()."', "
 		."'".$objImputado->getTxtDireccion()."', "
 		.$objImputado->getPersonaId().", "
-                .$objImputado->getTipoDocumento().", "
+        .$objImputado->getTipoDocumento().", "
                 ."'".$objImputado->getTelefono()."', "
 		."'".$usuario."', "
                 ."array[".$Alias."], "
@@ -245,7 +246,7 @@ class ORM_Imputado {
                 ."'".$soundex_apellido."', "                
 		."'".$_SERVER['REMOTE_ADDR']."', "
                 ."'".$objImputado->getPersonaNatural()."', "
-                ."'".$objImputado->setApoderadoNombre()."', "
+                ."'".$objImputado->getApoderadoNombre()."', "
                 ."'".$objImputado->getRTN()."', "
                 ."'".$objImputado->getSexo()."', "
                 .$objImputado->getMovil().", "                
@@ -254,10 +255,10 @@ class ORM_Imputado {
                 ."'".$objImputado->getAsisteEducacion()."', "
                 ."array[".$Transporte."], "
                 ."array[".$Armas."], "
-                ."array[".$Objetos."]"                
+                ."array[".$Objetos."], "
+                ."'".$objImputado->getIntegraLGBTI()."' "
 		.")";
-
-//        exit($sql);
+      
         $objConexion= new Conexion();
         $reg= $objConexion->ejecutarProcedimiento($sql);
         $err= pg_fetch_array($reg);  
@@ -287,7 +288,7 @@ class ORM_Imputado {
                 ."ntipodocumento, ctelefono, cmetanombre, cmetaapellido, "
                 ."bpersonanatural, crtn, capoderadolegal, csexo, ccolegioabogado, "
                 . "ccondicion, ctrabajoremunerado, casisteeducacion, crepresentantelegalmenor,"
-                . " bmenorinfractor "
+                . " bmenorinfractor, aplicalgbti "
 		."from tbl_imputado where "
 		."tdenunciaid= ".$value.";";               
                 
@@ -309,7 +310,7 @@ class ORM_Imputado {
                 ."ntipodocumento, ctelefono, cmetanombre, cmetaapellido, "
                 ."bpersonanatural, crtn, capoderadolegal, csexo, ccolegioabogado,"
                 . "ccondicion, ctrabajoremunerado, casisteeducacion, crepresentantelegalmenor, "
-                 . " bmenorinfractor "
+                 . " bmenorinfractor, aplicalgbti "
 		."from tbl_imputado where "
 		."tdenunciaid= ".$valdenuncia." and tpersonaid= ".$valdenunciado.";";
 	

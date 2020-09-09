@@ -157,10 +157,13 @@ if(isset($_POST["DenuncianteJur"]) && $_POST["DenuncianteJur"]== 'juridico'){
 
     $objDenunciante->setTelefono($_POST["txtTelefono"]); 
     
-    if(!empty($_POST["AplicaLGBTI"]))
-        $objDenunciante->setIntegraLGBTI('t'); 
-    else
+    $lgbti= $_POST["rdAplicaLGBTI"];
+    if($lgbti== "si"){
+        $objDenunciante->setIntegraLGBTI('t');
+    }
+    else{
         $objDenunciante->setIntegraLGBTI('f'); 
+    }
     
     $objDenunciante->setNombreAsumido($_POST["txtNombreAsum"]); 
 

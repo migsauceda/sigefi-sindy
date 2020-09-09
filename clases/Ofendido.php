@@ -177,12 +177,14 @@ class Ofendido extends Persona {
   }
 
   //otros metodos
-  public function Guardar($copiado)
+  //public function Guardar($copiado)
+  public function Guardar()
   { 
 
 	$objORM= new ORM_Ofendido;
 
-	$objORM->GuardarOfendido($this, $copiado);
+	//$objORM->GuardarOfendido($this, $copiado);
+      $objORM->GuardarOfendido($this);
   }
 
 
@@ -258,6 +260,7 @@ class Ofendido extends Persona {
                 $this->setbApoderado($row["bapoderadolegal"]);
                 $this->setApoderadoNombre($row["capoderadolegal"]);
                 $this->setApoderadoColegio($row["ccolegioabogado"]);
+                $this->setIntegraLGBTI($row["aplicalgbti"]);
                                
                 //recostruir la lista de ofendido existentes
 		$rsCursor= $objORM->RecuperarListaOfendidos($value);
@@ -318,6 +321,7 @@ class Ofendido extends Persona {
                 $this->setbApoderado($row["bapoderadolegal"]);
                 $this->setApoderadoNombre($row["capoderadolegal"]);
                 $this->setApoderadoColegio($row["ccolegioabogado"]);
+                $this->setIntegraLGBTI($row["aplicalgbti"]);
 //exit($row[cTelefono]);                                
                 //recostruir la lista de ofendido existentes
 		$rsCursor= $objORM->RecuperarListaOfendidos($valdenuncia);

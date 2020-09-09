@@ -474,22 +474,22 @@ function ValidarDenunciante(frm)
     }
         
 
-    Ok= true;
-    CamposFaltantes="";
+    var Ok= true;
+    var CamposFaltantes="";
 
-    if (frm.cboDepto.value== ""){ alert("d");
+    if (frm.cboDepto.value== ""){ 
         frm.cboDepto.value= "0";
     }
 
-    if (frm.cboMuni.value== ""){ alert("m");
+    if (frm.cboMuni.value== ""){ 
         frm.cboMuni.value= "0";
     }
 
-    if (frm.cboAldea.value== ""){ alert("a");
+    if (frm.cboAldea.value== ""){ 
         frm.cboAldea.value= "0";
     }
 
-    if (frm.cboBarrio.value== ""){ alert("b");
+    if (frm.cboBarrio.value== ""){ 
         frm.cboBarrio.value= "0";
     }        
 
@@ -592,6 +592,13 @@ o borrar el número en Pasaporte o Identidad.");
         frm.rdSexo[2].checked==false)
     {
         alert("Debe ingresar un valor en Sexo.");
+        Ok= false;
+    }
+    
+    if (frm.rdAplicaLGBTI[0].checked==false &&
+        frm.rdAplicaLGBTI[1].checked==false)
+    {
+        alert("Debe ingresar un valor en LGBTI.")
         Ok= false;
     }
     
@@ -698,85 +705,86 @@ function ValidarOfendido(frm)
     }        
         
     
-    Ok= true;
-    CamposFaltantes="";
+    var Ok= true;
+    var CamposFaltantes="";
 
-    if (frm.cboDepto.value== ""){
-        frm.cboDepto.value= "0";
-    }
-
-    if (frm.cboMuni.value== ""){
-        frm.cboMuni.value= "0";
+    if (frm.cboDepto4.value== ""){
+        frm.cboDepto4.value= "0";
     }
     
-    if (frm.cboAldea.value== ""){
-        frm.cboAldea.value= "0";
+    if (frm.cboMuni4.value== ""){
+        frm.cboMuni4.value= "0";
     }
     
-    if (frm.cboBarrio.value== ""){
-        frm.cboBarrio.value= "0";
+    if (frm.cboAldea4.value== ""){
+        frm.cboAldea4.value= "0";
     }
+   
+    if (frm.cboBarrio4.value== ""){
+        frm.cboBarrio4.value= "0";
+    }
+    
     
     //validar direccion de tal modo que no existan inconsistencias como 
     //ciudad sin depto, depto sin municipio, etc
-    if (frm.cboDepto.value== "0"){
-        frm.cboMuni.value= "0";
-        frm.cboAldea.value= "0";
-        frm.cboBarrio.value= "0";
-    }else if(frm.cboMuni.value== "0"){
-        frm.cboAldea.value= "0";
-        frm.cboBarrio.value= "0";
-    }else if (frm.cboAldea.value= "0"){
-        frm.cboBarrio.value= "0";
+    if (frm.cboDepto4.value== "0"){
+        frm.cboMuni4.value= "0";
+        frm.cboAldea4.value= "0";
+        frm.cboBarrio4.value= "0";
+    }else if(frm.cboMuni4.value== "0"){
+        frm.cboAldea4.value= "0";
+        frm.cboBarrio4.value= "0";
+    }else if (frm.cboAldea4.value= "0"){
+        frm.cboBarrio4.value= "0";
     }    
-    
-    if (frm.cboNacionalidad.value== 0 || frm.cboNacionalidad.value== "")
+  
+    if (frm.cboNacionalidad4.value== 0 || frm.cboNacionalidad4.value== "")
     {
             Ok= false;
             CamposFaltantes= "Nacionalidad\n";
-            frm.cboNacionalidad.value= "AA";
+            frm.cboNacionalidad4.value= "AA";
     }
 
-    if (frm.cboCivil.value== "")
+    if (frm.cboCivil4.value== "")
     {
             Ok= false;
             CamposFaltantes= CamposFaltantes + "Estado civil\n";
-            frm.cboCivil.value= "0";
+            frm.cboCivil4.value= "0";
     }
 
-    if (frm.cboEscolar.value== "")
+    if (frm.cboEscolar4.value== "")
     {
             Ok= false;
             CamposFaltantes= CamposFaltantes + "Escolaridad\n";
-            frm.cboEscolar.value= "0";
+            frm.cboEscolar4.value= "0";
     }
 
-    if (frm.cboProfe.value== "")
+    if (frm.cboProfe4.value== "")
     {
             Ok= false;
             CamposFaltantes= CamposFaltantes + "Profesión\n";
-            frm.cboProfe.value= "0";
+            frm.cboProfe4.value= "0";
     }
-
-    if (frm.cboOcupa.value== "")
+    
+    if (frm.cboOcupa4.value== "")
     {
             Ok= false;
             CamposFaltantes= CamposFaltantes + "Ocupasión\n";
-            frm.cboOcupa.value= "0";
+            frm.cboOcupa4.value= "0";
     }
 
-    if (frm.cboEtnia.value== "")
+    if (frm.cboEtnia4.value== "")
     {
             Ok= false;
             CamposFaltantes= CamposFaltantes + "Pueblo indígena\n";
-            frm.cboEtnia.value= "0";
+            frm.cboEtnia4.value= "0";
     }
 
-    if (frm.cboDiscapacidad.value== "")
+    if (frm.cboDiscapacidad4.value== "")
     {
             Ok= false;
             CamposFaltantes= CamposFaltantes + "Discapacidad\n";
-            frm.cboDiscapacidad.value= "0";
+            frm.cboDiscapacidad4.value= "0";
     }
 
     if (Ok== false)
@@ -794,36 +802,43 @@ function ValidarOfendido(frm)
             }
     }
 
-    if (frm.txtIdentidad.value!= "" && frm.cboTipoDoc.value== "0")
+    if (frm.txtIdentidad4.value!= "" && frm.cboTipoDoc4.value== "0")
     {
             Ok= false;
             alert("Debe ingresar un valor en tipo de documento,\n\
 o borrar el número en Pasaporte o Identidad.");
-            frm.cboTipoDoc.value= "0"; 
+            frm.cboTipoDoc4.value= "0"; 
     }
 
-    if ((frm.txtEdad.value== "0" ||
-        (frm.txtEdad.value== "")) &&
-        frm.rdAno[3].checked== false)
+    if ((frm.txtEdad4.value== "0" ||
+        (frm.txtEdad4.value== "")) &&
+        frm.rdAno4[3].checked== false)
     {
         alert("Debe ingresar un valor en Edad o seleccionar Desconocida.");
         Ok= false;
     }
 
-    if (frm.rdSexo[0].checked==false &&
-        frm.rdSexo[1].checked==false &&
-        frm.rdSexo[2].checked==false)
+    if (frm.rdSexo4[0].checked==false &&
+        frm.rdSexo4[1].checked==false &&
+        frm.rdSexo4[2].checked==false)
     {
         alert("Debe ingresar un valor en Sexo.");
         Ok= false;
     }
     
-    if (frm.rdRangoEdad[0].checked== false &&
-        frm.rdRangoEdad[1].checked== false &&
-        frm.rdRangoEdad[2].checked== false &&
-        frm.rdRangoEdad[3].checked== false &&
-        frm.rdRangoEdad[4].checked== false &&
-        frm.rdRangoEdad[5].checked== false)
+    if (frm.rdAplicaLGBTI4[0].checked==false &&
+        frm.rdAplicaLGBTI4[1].checked==false)
+    {
+        alert("Debe ingresar un valor en LGBTI.")
+        Ok= false;
+    }    
+    
+    if (frm.rdRangoEdad4[0].checked== false &&
+        frm.rdRangoEdad4[1].checked== false &&
+        frm.rdRangoEdad4[2].checked== false &&
+        frm.rdRangoEdad4[3].checked== false &&
+        frm.rdRangoEdad4[4].checked== false &&
+        frm.rdRangoEdad4[5].checked== false)
     {
         alert('Si la edad es desconocida debe seleccionar un rango de edad:\n\n\
             Infante, Adolescente, Menor Adulto, Adulto,  Adulto Mayor o No consignado.\n\n\
@@ -833,6 +848,8 @@ o borrar el número en Pasaporte o Identidad.");
 
     return Ok;
 
+    //alert("fin 850");
+    //return false;
 }
 /*
 Funcion: validar si es niño, adulto, etc
@@ -1152,8 +1169,8 @@ function ValidarDenunciado(frm){
         return true;
     }
     
-    Ok= true;
-    CamposFaltantes="";
+    var Ok= true;
+    var CamposFaltantes="";
 
     if (frm.cboDepto3.value== ""){
         frm.cboDepto3.value= "0";
@@ -1271,6 +1288,13 @@ function ValidarDenunciado(frm){
         alert("Debe ingresar un valor en Genero.");
         Ok= false;
     }
+    
+    if (frm.rdAplicaLGBTI3[0].checked==false &&
+        frm.rdAplicaLGBTI3[1].checked==false)
+    {
+        alert("Debe ingresar un valor en LGBTI.")
+        Ok= false;
+    }    
 
     if (frm.rdRangoEdad3[0].checked== false &&
         frm.rdRangoEdad3[1].checked== false &&

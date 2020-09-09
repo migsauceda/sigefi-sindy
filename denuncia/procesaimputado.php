@@ -98,6 +98,7 @@ if(isset($_POST["Denunciado3Jur"]) && $_POST["Denunciado3Jur"]== 'juridico'){
     $Conocido= '-1';    
     $objImputado->setConocido($Conocido);    
     $objImputado->setOrientacionSex('N');
+    $objDenunciante->setIntegraLGBTI('f'); 
     $objImputado->setPersonaNatural(0);        
     
     //movil no tiene
@@ -232,7 +233,7 @@ if(isset($_POST["Denunciado3Jur"]) && $_POST["Denunciado3Jur"]== 'juridico'){
     
     $objImputado->setRangoEdad($RangoEdad);
 
-    //se conoce o no el denunciante
+    //se conoce o no el denunciado
     //conocido= 1; anonimo= 0; oculto= 2
     $ValorConocido= $_POST['rdConocido'];
     if($ValorConocido== '1')
@@ -278,7 +279,16 @@ if(isset($_POST["Denunciado3Jur"]) && $_POST["Denunciado3Jur"]== 'juridico'){
     if($VlrOrientacion== "no")
             $OrientacionSex= "N";
 
-    $objImputado->setOrientacionSex($OrientacionSex);    
+    $objImputado->setOrientacionSex($OrientacionSex);        
+    
+    $lgbti= $_POST['rdAplicaLGBTI3'];
+
+    if ($lgbti== "si"){
+        $objImputado->setIntegraLGBTI('t');
+    }else{
+        $objImputado->setIntegraLGBTI('f');
+    }
+    
 }
 
 //guardar el objeto en una sesion
@@ -288,11 +298,11 @@ $_SESSION["oDenunciado"]= $objImputado;
     * si existe la variable de sesion $_SESSION['denunciaid']== 't'; modificar
     */    
 if (isset($_SESSION['denunciado'])){
-    if($_SESSION['denunciado']== 't'){     
+    if($_SESSION['denunciado']== 't'){  
         $objImputado->Modificar();        
     }
     else{
-        $_SESSION['denunciado']= 't';
+        $_SESSION['denunciado']= 't'; 
         $objImputado->Guardar();        
     }
 }

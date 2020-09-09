@@ -722,6 +722,12 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/var/www/html/sigefi/denuncia/procesadenunciante.php</file>
+            <file>file:/var/www/html/sigefi/denuncia/ORM_Imputado.php</file>
+            <file>file:/var/www/html/sigefi/denuncia/procesaimputado.php</file>
+            <file>file:/var/www/html/sigefi/denuncia/frmDenunciado.php</file>
+            <file>file:/var/www/html/sigefi/denuncia/frmDenunciante.php</file>
+        </group>
     </open-files>
 </project-private>

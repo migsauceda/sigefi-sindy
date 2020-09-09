@@ -37,7 +37,6 @@ class ORM_Ofendido {
             else
                 $soundex_apellido= $soundex_apellido . ";" . soundex($nombre_array[$i]);            
         }
-        
 
 	//nota: falta nrelacionimputado ke se agrega despues mediante update
 	$sql= "SELECT codigo, descripcion from ofendido_insert("
@@ -84,11 +83,12 @@ class ORM_Ofendido {
                 .$objOfendido->getNumeroHijos().", "
                 ."'".$objOfendido->getIntentoSuicidio()."', "
                 ."'".$objOfendido->getEnfermedadMental()."', "
-                ."'".$objOfendido->getMecanismoMuerte()."'"                
+                ."'".$objOfendido->getMecanismoMuerte()."', "            
+                ."'".$objOfendido->getIntegraLGBTI()."' "
 		.")";
         
 //        echo $sql; 
-//        exit($sql);        
+        //exit($sql);        
         $objConexion= new Conexion();
         $reg= $objConexion->ejecutarComando($sql);
         $err= pg_fetch_array($reg);  
@@ -202,7 +202,8 @@ class ORM_Ofendido {
                 .$objOfendido->getNumeroHijos().", "
                 ."'".$objOfendido->getIntentoSuicidio()."', "
                 ."'".$objOfendido->getEnfermedadMental()."', "
-                ."'".$objOfendido->getMecanismoMuerte()."'"                                
+                ."'".$objOfendido->getMecanismoMuerte()."', "                                
+                ."'".$objOfendido->getIntegraLGBTI()."' "
 		.")";
         
         
@@ -239,7 +240,7 @@ class ORM_Ofendido {
 		."cbarrioid, corientacionsexual, tpersonaid, cdireccion, "
                 ."ntipodocumento, ctelefono, bpersonanatural, cnombreasumido, "
                 ."crtn, bapoderadolegal, capoderadolegal, ccolegioabogado, crepresentantelegal,  "
-                . "cesmenor "                        
+                . "cesmenor, aplicalgbti "                        
 		."from tbl_ofendido where "
 		."tdenunciaid= ".$value.";";
 	
@@ -262,7 +263,7 @@ class ORM_Ofendido {
 		."cbarrioid, corientacionsexual, tpersonaid, cdireccion, "
                 ."ntipodocumento, ctelefono, bpersonanatural, cnombreasumido, "
                 ."crtn, bapoderadolegal, capoderadolegal, ccolegioabogado, crepresentantelegal,"
-                . "cesmenor "
+                . "cesmenor, aplicalgbti "
 		."from tbl_ofendido where "
 		."tdenunciaid= ".$valdenuncia." and tpersonaid= ".$valofendido.";";
 //exit("sql: ".$sql);
@@ -270,6 +271,7 @@ class ORM_Ofendido {
 		$Cursor= $objConexion->ejecutarComando($sql);
 
 		return $Cursor;
+      //exit($sql);
 		//return $sql;
   }
   

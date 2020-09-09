@@ -122,7 +122,7 @@ if(isset($_POST["OfendidoJur4"]) && $_POST["OfendidoJur4"]== 'juridico'){
 
     $objOfendido->setDiscapacidad($_POST["cboDiscapacidad4"]);
 
-    $objOfendido->setEdad($_POST["txtEdad"]);
+    $objOfendido->setEdad($_POST["txtEdad4"]);
 
     $objOfendido->setDepartamentoid($_POST["cboDepto4"]); 
 
@@ -178,6 +178,15 @@ if(isset($_POST["OfendidoJur4"]) && $_POST["OfendidoJur4"]== 'juridico'){
         $Genero= "x";
 
     $objOfendido->setGenero($Genero);
+    
+    //lgbti
+    $lgbti= $_POST["rdAplicaLGBTI4"];
+    if($lgbti== "si"){
+        $objOfendido->setIntegraLGBTI('t');
+    }
+    else{
+        $objOfendido->setIntegraLGBTI('f'); 
+    }    
 
     //umedida edad
     $VlorEdad= $_POST['rdAno4'];
@@ -243,7 +252,6 @@ if(isset($_POST["OfendidoJur4"]) && $_POST["OfendidoJur4"]== 'juridico'){
 
     $objOfendido->setConocido($Conocido);
 
-
     //orientacion sexual "no","het","gay","bis","tra", "les";
     $VlrOrientacion = $_POST['selSexo4'];
     if($VlrOrientacion== "het")
@@ -266,8 +274,6 @@ if(isset($_POST["OfendidoJur4"]) && $_POST["OfendidoJur4"]== 'juridico'){
 
     $objOfendido->setOrientacionSex($OrientacionSex); 
     
-    
-    
 }
 
 
@@ -279,7 +285,6 @@ $_SESSION["oOfendido"]= $objOfendido;
     */      
 
 if (isset($_SESSION['ofendido'])){
-//    exit($_SESSION['ofendido']);
     if($_SESSION['ofendido']== 't'){ 
         //$_SESSION['ofendido']= 'f';
         $objOfendido->Modificar();
