@@ -163,7 +163,7 @@
  
         //<!--agrega una fila y el delito correspondiente segun lo guardado en la base de datos-->
         function RecuperarDelitos(delitoid, clasificacion, tipopersona){ 
-            alert(delitoid);
+            
                 Contador= 0;
                 Delitos++;
                 Contador= Delitos;
@@ -1031,9 +1031,7 @@
                             document.getElementById("txtTodosDelitos3").value=
                             document.getElementById("txtTodosDelitos3").value + 
                             document.getElementById("delito_d"+i).value+";";                          
-                        } 
-                        alert(document.getElementById("txtTodosDelitos3").value);
-                                  
+                        }                         
                     } 
                 }catch(err){
                 }
@@ -1260,7 +1258,7 @@
                 },
                 success: function(json_obj){  
                     //nombre completo del fiscal
-//     alert("exito"+json_obj);
+
                     json_txt= JSON.parse(json_obj);
                     var i= 0;
                     for (i= 0; i < json_txt.length; i++){                        
