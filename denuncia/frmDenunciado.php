@@ -163,6 +163,7 @@
  
         //<!--agrega una fila y el delito correspondiente segun lo guardado en la base de datos-->
         function RecuperarDelitos(delitoid, clasificacion, tipopersona){ 
+            alert(delitoid);
                 Contador= 0;
                 Delitos++;
                 Contador= Delitos;
@@ -228,6 +229,25 @@
                 <?php
                 } 		
                 ?>
+            
+                <?php 
+                $resDelito= CargarDelitoD();
+                while ($fila=pg_fetch_array($resDelito)){?>
+                        opt= document.createElement("option");
+                        opt.text=  "<?php echo($fila['cdescripcion']);?>";
+                        opt.id= "opcion"+Contador;
+                        opt.value= "<?php echo($fila['ndelitoid']);?>";
+
+                        try{
+                                txt1.add(opt,null);
+                        }
+                        catch(e)
+                        {
+                                txt1.add(opt);
+                        }                        
+                <?php
+                } 		
+                ?>            
                         
                 col.appendChild(txt1);
                 fil.appendChild(col);           
@@ -543,9 +563,99 @@
                     fil.appendChild(col);
             }else if(TablaId== "delito")
             {
+                    /********************** etiquet y combo para codigo derogado ***************************
+                    ****************************************************************************************/
+                    var lblLabael= document.createElement("LABEL");
+                    var lblText= document.createTextNode("Código Derogado: ");
+                    
+                    lblLabael.appendChild(lblText);
+                
+                    col.appendChild(lblLabael);
+                    fil.appendChild(col);
+                
                     txt1= document.createElement("select");
-                    txt1.name= "delito"+Contador;
-                    txt1.id= "delito"+Contador;
+                    txt1.name= "delito_d"+Contador;
+                    txt1.id= "delito_d"+Contador;
+                    txt1.onchange= function(){InactivarComboDelitos("delito_v"+Contador);}
+               
+                    <?php 
+                    $resDelito= CargarDelitoD();
+                    while ($fila=pg_fetch_array($resDelito)){?>
+                            opt= document.createElement("option");
+                            opt.text=  "<?php echo($fila['cdescripcion']);?>";
+                            opt.id= "opcion"+Contador;
+                            opt.value= "<?php echo($fila['ndelitoid']);?>";
+
+                            try{
+                                    txt1.add(opt,null);
+                            }
+                            catch(e)
+                            { 
+                                    txt1.add(opt);
+                            }
+                    <?php
+                    } 		
+                    ?>            
+                
+                    txt1.value= Valor; 
+
+                    col.appendChild(txt1);
+                    fil.appendChild(col);
+
+                    //agregar br
+                    br= document.createElement("br");
+
+                    txt2= document.createElement("input");
+                    txt2.type= "radio";
+                    txt2.name= "campo4"+Contador;
+                    txt2.id= "campo4"+Contador;
+                    txt2.value= "Culposo";  
+
+                    lbl2= document.createElement("label");
+                    lbl2.setAttribute("for","all");
+                    lbltext= document.createTextNode("Culposo");
+
+                    col.appendChild(br);
+                    lbl2.appendChild(lbltext);
+                    col.appendChild(lbl2);
+                    col.appendChild(txt2);
+                    fil.appendChild(col);
+
+                    txt2= document.createElement("input");
+                    txt2.type= "radio";
+                    txt2.name= "campo5"+Contador;
+                    txt2.id= "campo5"+Contador;
+                    txt2.value= "Tentativa";  
+
+                    lbl2= document.createElement("label");
+                    lbl2.setAttribute("for","all");
+                    lbltext= document.createTextNode("Tentativa");
+
+                    lbl2.appendChild(lbltext);
+                    col.appendChild(txt2);
+                    col.appendChild(lbl2);                
+                    fil.appendChild(col);    
+                
+                    //agregar br
+                    br= document.createElement("br");
+                    col.appendChild(br);
+                    br= document.createElement("br");
+                    col.appendChild(br);                
+                
+                    /********************** etiquet y combo para codigo VIGENTE ***************************
+                    ****************************************************************************************/
+                    var lblLabael= document.createElement("LABEL");
+                    var lblText= document.createTextNode("Código Vigente: ");
+                    
+                    lblLabael.appendChild(lblText);
+                
+                    col.appendChild(lblLabael);
+                    fil.appendChild(col);
+                
+                    txt1= document.createElement("select");
+                    txt1.name= "delito_v"+Contador;
+                    txt1.id= "delito_v"+Contador;
+                    txt1.onchange= function(){InactivarComboDelitos("delito_d"+Contador);}
 
                     <?php 
                     $resDelito= CargarDelito();
@@ -603,7 +713,11 @@
                     lbl2.appendChild(lbltext);
                     col.appendChild(txt2);
                     col.appendChild(lbl2);                
-                    fil.appendChild(col);                        
+                    fil.appendChild(col);        
+                
+                    //agrear linea división
+                    ln = document.createElement("hr");
+                    col.appendChild(ln);
 
             }else if(TablaId== "delitoj")  //tabla delitos persona juridica (empresa)
             { 
@@ -907,9 +1021,19 @@
             { 
                 try{
                     if (TablaId == "delito"){ 
-                        document.getElementById("txtTodosDelitos3").value=
+                        if(!(document.getElementById("delito_v"+i).value == '' || document.getElementById("delito_v"+i).value == null)){
+                            document.getElementById("txtTodosDelitos3").value=
                             document.getElementById("txtTodosDelitos3").value + 
-                            document.getElementById("delito"+i).value+";";            
+                            document.getElementById("delito_v"+i).value+";";                        
+                        }
+                        
+                        if(!(document.getElementById("delito_d"+i).value == '' || document.getElementById("delito_d"+i).value == null)){
+                            document.getElementById("txtTodosDelitos3").value=
+                            document.getElementById("txtTodosDelitos3").value + 
+                            document.getElementById("delito_d"+i).value+";";                          
+                        } 
+                        alert(document.getElementById("txtTodosDelitos3").value);
+                                  
                     } 
                 }catch(err){
                 }
@@ -1076,10 +1200,11 @@
         function llenadelitos(Personaid, tipopersona){ 
 //            Persona= document.getElementById('txtPersonaId').value;
 //            alert(Personaid);
+            //"json"
             $.ajax({
                 data:       "personaid="+Personaid,
                 type:       "POST",
-                datatype:   "json",
+                datatype:   "json" ,
                 url:    "../funciones/ajax_LlenaDelitos.php",
                 error: function (XMLHttpRequest, textStatus, errorThrown){
                     alert("Error al cargar datos para los delitos");

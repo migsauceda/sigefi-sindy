@@ -23,4 +23,5 @@ while ($registro= pg_fetch_assoc($cursor)){
 //    $i++;
 }
 echo json_encode(array_values($enviar));      
+
 ?>

@@ -211,12 +211,27 @@ function CargarEmpresasHN(){
 /*
 Funcion: Retornar cursor con los delitos en la tabla tblDelitos
 Relacion: Formulario para generar reportes
-Actualizacion: 20sept2013
+Actualizacion: 20sept2013 
+Actualizado: 11 sept 2020
 */
 function CargarDelitos(){
         //session_start();
 	$objConexion=new Conexion(); 
-	$sql= "select ndelitoid, cdescripcion from tbl_delito order by cdescripcion;";
+	$sql= "select ndelitoid, cdescripcion from mini_sedi.tbl_delito where derogado= 1 order by cdescripcion;";
+	$resDelitos=$objConexion->ejecutarComando($sql);		
+	return $resDelitos;    
+}
+
+/*
+Funcion: Retornar cursor con los delitos en la tabla tblDelitos
+Relacion: Formulario para generar reportes
+Actualizacion: 20sept2013
+Actualizado: 11 sept 2020
+*/
+function CargarDelitosD(){
+        //session_start();
+	$objConexion=new Conexion(); 
+	$sql= "select ndelitoid, cdescripcion from mini_sedi.tbl_delito where derogado= 0 order by cdescripcion;";
 	$resDelitos=$objConexion->ejecutarComando($sql);		
 	return $resDelitos;    
 }
@@ -1040,7 +1055,7 @@ function ProcesaIncompleta()
 		}
 	}
 }
-
+/************************** NUEVO CATALOGO **************************
 /*
 Funcion: Cargar listado de delitos y faltas
 Relacion: Tabuladores de pantalla captura de denucia, imputado.php
@@ -1050,11 +1065,29 @@ Nota: Estos se listan en las tablas dinamicas del formulario
 function CargarDelito()
 {
     $objConexion=new Conexion(); 
-    $sql= "SELECT ndelitoid, cdescripcion FROM mini_sedi.tbl_delito where bactivo= 't' order by cdescripcion;";
+    $sql= "SELECT ndelitoid, cdescripcion FROM mini_sedi.tbl_delito where bactivo= 't' and derogado= 0 order by cdescripcion;";
     $resDelito=$objConexion->ejecutarComando($sql);	
 
     return $resDelito;        
 }
+
+/*
+Funcion: Cargar listado de delitos y faltas
+Relacion: Tabuladores de pantalla captura de denucia, imputado.php
+Actualizacion: 17jul2k12
+Nota: Estos se listan en las tablas dinamicas del formulario
+*/
+function CargarDelitoD()
+{
+    $objConexion=new Conexion(); 
+    $sql= "SELECT ndelitoid, cdescripcion FROM mini_sedi.tbl_delito where bactivo= 't' and derogado= 1 order by cdescripcion;";
+    $resDelito=$objConexion->ejecutarComando($sql);	
+
+    return $resDelito;        
+}
+
+/************************* NUEVO CATALOGO *************************
+
 
 /*Funcion: Cargar lista de bandejas
  * Relacion: Administracion de bandejas
