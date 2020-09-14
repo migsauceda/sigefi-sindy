@@ -1161,16 +1161,12 @@
             { 
                 try{
                     if (TablaId == "delito"){
-                        alert("iteracion "+i);
-                        /*alert("vigente "+document.getElementById("delito_v"+i).value);
-                        alert("derogado "+document.getElementById("delito_d"+i).value);*/
                         //si existe el combo vigente
                         if (document.getElementById("delito_v"+i)){                            
                             if(!(document.getElementById("delito_v"+i).value == '' || document.getElementById("delito_v"+i).value == null)){
                                 document.getElementById("txtTodosDelitos3").value=
                                 document.getElementById("txtTodosDelitos3").value + 
                                 document.getElementById("delito_v"+i).value+";";   
-                                alert(document.getElementById("delito_v"+i).value);
                             }
                         }
                         
@@ -1180,7 +1176,6 @@
                                 document.getElementById("txtTodosDelitos3").value=
                                 document.getElementById("txtTodosDelitos3").value + 
                                 document.getElementById("delito_d"+i).value+";";   
-                                alert(document.getElementById("delito_d"+i).value);
                             }  
                         }
                     } 
