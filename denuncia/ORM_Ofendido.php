@@ -117,7 +117,7 @@ class ORM_Ofendido {
                 echo "";
             }
             else
-            { exit("salida else");
+            { 
                 //mostrar mensaje de exito, en el formulario ofendido
 //                header("location: ../ofendido/ofendido.php?rsl2=100");
                 header("location: frmExpediente.php?tab=3&rsl=100");
