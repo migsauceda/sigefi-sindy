@@ -603,9 +603,10 @@
       
         //<!-- inactivar combo derogado o vigente al momento de selccionar el otro -->
         //<!--    son mutuamente excluyentes -->
-        function InactivarComboDelitos(Combo){
-            document.getElementById(Combo).disabled= true;
+        function InactivarComboDelitos(Combo){ 
+            document.getElementById(Combo).disabled= true; 
         }
+      
         //<!--agregar filas a las tablas-->
         function AgregarFila(TablaId, Valor)
         {   
@@ -861,9 +862,18 @@
 
             }else if(TablaId== "delitoj")  //tabla delitos persona juridica (empresa)
             { 
+                    var lblLabael= document.createElement("LABEL");
+                    var lblText= document.createTextNode("Código Vigente: ");
+                    
+                    lblLabael.appendChild(lblText);
+                
+                    col.appendChild(lblLabael);
+                    fil.appendChild(col);
+                
                     txt1= document.createElement("select");
-                    txt1.name= "delitoj"+Contadorj;
-                    txt1.id= "delitoj"+Contadorj;                            
+                    txt1.name= "delitoj_v"+Contadorj;
+                    txt1.id= "delitoj_v"+Contadorj;       
+                    txt1.onchange= function(){InactivarComboDelitos("delitoj_d"+Contadorj);}
 
                     <?php 
                     $resDelito= CargarDelito();
@@ -891,6 +901,8 @@
 
                     //agregar br
                     br= document.createElement("br");
+                    col.appendChild(br);
+                    col.appendChild(br);    
 
 
                     txt2= document.createElement("input");
@@ -922,7 +934,88 @@
                     lbl2.appendChild(lbltext);
                     col.appendChild(txt2);
                     col.appendChild(lbl2);                
-                    fil.appendChild(col);                                                
+                    fil.appendChild(col);   
+                
+                    //agregar br
+                    br= document.createElement("br");
+                    col.appendChild(br);
+                    br= document.createElement("br");
+                    col.appendChild(br);  
+                    br= document.createElement("br");
+                    col.appendChild(br);                 
+                
+                    /************CODIGO DEROGADO**********/
+                    var lblLabael= document.createElement("LABEL");
+                    var lblText= document.createTextNode("Código Derogado: ");
+                    
+                    lblLabael.appendChild(lblText);
+                
+                    col.appendChild(lblLabael);
+                    fil.appendChild(col);
+                
+                    txt1= document.createElement("select");
+                    txt1.name= "delitoj_d"+Contadorj;
+                    txt1.id= "delitoj_d"+Contadorj;    
+                    txt1.onchange= function(){InactivarComboDelitos("delitoj_v"+Contadorj);}
+
+                    <?php 
+                    $resDelito= CargarDelito();
+                    while ($fila=pg_fetch_array($resDelito)){?>                                   
+                            opt= document.createElement("option");
+                            opt.text=  "<?php echo($fila['cdescripcion']);?>";
+                            opt.id= "opcionj"+Contadorj;
+                            opt.value= "<?php echo($fila['ndelitoid']);?>";
+
+                            try{
+                                    txt1.add(opt,null);
+                            }
+                            catch(e)
+                            { 
+                                    txt1.add(opt);
+                            }
+                    <?php
+                    } 		
+                    ?>
+
+                    txt1.value= Valor; 
+
+                    col.appendChild(txt1);
+                    fil.appendChild(col);
+
+                    txt2= document.createElement("input");
+                    txt2.type= "radio";
+                    txt2.name= "campo4"+Contadorj;
+                    txt2.id= "campo4"+Contadorj;
+                    txt2.value= "Culposo";  
+
+                    lbl2= document.createElement("label");
+                    lbl2.setAttribute("for","all");
+                    lbltext= document.createTextNode("Culposo");
+
+                    col.appendChild(br);
+                    lbl2.appendChild(lbltext);
+                    col.appendChild(lbl2);
+                    col.appendChild(txt2);                        
+                    fil.appendChild(col);
+
+                    txt2= document.createElement("input");
+                    txt2.type= "radio";
+                    txt2.name= "campo5"+Contadorj;
+                    txt2.id= "campo5"+Contadorj;
+                    txt2.value= "Tentativa";  
+
+                    lbl2= document.createElement("label");
+                    lbl2.setAttribute("for","all");
+                    lbltext= document.createTextNode("Tentativa");
+
+                    lbl2.appendChild(lbltext);
+                    col.appendChild(txt2);
+                    col.appendChild(lbl2);                
+                    fil.appendChild(col);        
+                
+                    //agrear linea división
+                    ln = document.createElement("hr");
+                    col.appendChild(ln);                
             }    
             else //armas
             if(TablaId== "armas")
@@ -1252,10 +1345,22 @@
 
             for(i=1; i < Delitosj; i++)
             { 
+                //alert(i+" "+Delitosj+" "+document.getElementById("txtTodosDelitos3j").value);
                 if (TablaId == "delitoj"){ 
-                    document.getElementById("txtTodosDelitos3j").value=
-                        document.getElementById("txtTodosDelitos3j").value +
-                        document.getElementById("delitoj"+i).value+";";            
+                    if (document.getElementById("delitoj_v"+i)){
+                        if(!(document.getElementById("delitoj_v"+i).value == '' || document.getElementById("delitoj_v"+i).value == null)){
+                            document.getElementById("txtTodosDelitos3j").value=
+                                document.getElementById("txtTodosDelitos3j").value +
+                                document.getElementById("delitoj_v"+i).value+";";     
+                        }
+                    }       
+                    if (document.getElementById("delitoj_d"+i)){
+                        if(!(document.getElementById("delitoj_d"+i).value == '' || document.getElementById("delitoj_d"+i).value == null)){
+                            document.getElementById("txtTodosDelitos3j").value=
+                                document.getElementById("txtTodosDelitos3j").value +
+                                document.getElementById("delitoj_d"+i).value+";"; 
+                        }
+                    }                       
                 }
             } 
 

@@ -47,7 +47,7 @@ else{
 }
 
 if(isset($_POST["Denunciado3Jur"]) && $_POST["Denunciado3Jur"]== 'juridico'){ 
-    
+   
     $objImputado->setNombreCompleto($_POST["txtEmpresasHn3"]);    
     $objImputado->setNacionalidad($_POST["cboNacionalidad3J"]);
     $objImputado->setDepartamentoid($_POST["cboDepto3J"]); 
@@ -59,7 +59,7 @@ if(isset($_POST["Denunciado3Jur"]) && $_POST["Denunciado3Jur"]== 'juridico'){
     $objImputado->setTipoDocumento($_POST["cboTipoDoc3"]);
     $objImputado->setTelefono($_POST["txtTelefono3"]);
     $objImputado->setRTN($_POST["txtRtn3"]);
-
+ 
     //apoderado legal
     $TipoDoc= $_POST["rdTipoDoc3"];
     if ($TipoDoc== "identidad"){
@@ -94,16 +94,16 @@ if(isset($_POST["Denunciado3Jur"]) && $_POST["Denunciado3Jur"]== 'juridico'){
     $objImputado->setGenero('x');
     $objImputado->setRangoEdad('x');
     $objImputado->setUmeDidaEdad('x');
-
+  
     $Conocido= '-1';    
     $objImputado->setConocido($Conocido);    
     $objImputado->setOrientacionSex('N');
-    $objDenunciante->setIntegraLGBTI('f'); 
+    $objImputado->setIntegraLGBTI('f'); 
     $objImputado->setPersonaNatural(0);        
-    
+  
     //movil no tiene
     $objImputado->setMovil(1); 
-  
+    
     //delitos 
     $objImputado->setDelitos($_POST["txtTodosDelitos3j"]); 
 }  else 

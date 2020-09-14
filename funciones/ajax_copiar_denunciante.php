@@ -85,6 +85,8 @@ if($_SESSION['denunciante']== 't'){
     
     $oOfendido->setNumeroHijos(-1);
 
+    $oOfendido->setIntegraLGBTI($oDenunciante->getIntegraLGBTI());
+    
     $_SESSION["oOfendido"]= $oOfendido;     
     $_SESSION['ofendido']= 't';
     

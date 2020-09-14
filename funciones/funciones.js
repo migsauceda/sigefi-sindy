@@ -622,7 +622,7 @@ Funcion: validar datos entrada del frm denunciado
 Relacion: denunciado.php
 Actualizacion: 20ene2014
 */
-function ValidarDenunciadoJuridico(frm){
+function ValidarDenunciadoJuridico(frm){ 
     if (frm.txtTodosDelitos3j.value == "" || frm.txtTodosDelitos3j.value == "-1")
     {
         alert("Debe ingresar un delito");

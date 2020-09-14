@@ -178,13 +178,13 @@ class Ofendido extends Persona {
 
   //otros metodos
   //public function Guardar($copiado)
-  public function Guardar()
+  public function Guardar($copiado= "0")
   { 
 
 	$objORM= new ORM_Ofendido;
 
-	//$objORM->GuardarOfendido($this, $copiado);
-      $objORM->GuardarOfendido($this);
+      $objORM->GuardarOfendido($this, $copiado);
+      //$objORM->GuardarOfendido($this);
   }
 
 
