@@ -96,6 +96,7 @@ if(isset($_POST["OfendidoJur4"]) && $_POST["OfendidoJur4"]== 'juridico'){
     $Conocido= '-1';    
     $objOfendido->setConocido($Conocido);    
     $objOfendido->setOrientacionSex('N');
+    $objOfendido->setIntegraLGBTI('f');
     $objOfendido->setPersonaNatural(0);
 }else
 { 
