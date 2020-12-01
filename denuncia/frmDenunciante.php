@@ -79,6 +79,8 @@
 
             if (!visible){
                 div.style.display = 'none';
+                document.getElementById('txtApoderado').value= null;
+                document.getElementById('txtColegio').value= null;
             }
             else{
                 div.style.display = '';
@@ -95,6 +97,8 @@
 
             if (!visible){
                 div.style.display = 'none';
+                document.getElementById('txtNombreAsum').value= null;
+
             }
             else{
                 div.style.display = '';
@@ -997,7 +1001,7 @@
        
         <td align="right">Nombre de empresa o institución</td>
         
-        <td><input list="txtEmpresasHn" name="txtEmpresasHn" id="txtEmpresasHn" size="30" maxlength="99" 
+        <td><input list="txtEmpresasHn" name="txtEmpresasHn" id="txtEmpresasHn" size="30" maxlength="50" 
                    onblur="document.getElementById('DenuncianteJur').value= 'juridico';"
                    value="<?php if (isset($_SESSION['oDenunciante']))
                         { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 'f') echo($oDenunciante->getNombreCompleto());  } ?>"/>            
@@ -1061,7 +1065,7 @@
      <tr>
         <td align="right">Detalle dirección</td>
         <td colspan="3">
-            <input list="txtDireccionJuridica" name="txtDireccionJuridica" id="txtDireccionJuridica" size="80" maxlength="199" required
+            <input list="txtDireccionJuridica" name="txtDireccionJuridica" id="txtDireccionJuridica" size="80" maxlength="100" required
                    value="<?php if (isset($_SESSION['oDenunciante']))
                        { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 'f') echo($oDenunciante->getTxtDireccion());} ?>">
         </td>
@@ -1074,7 +1078,7 @@
             <tr class=" Grid">
                 <td align="right">Nombre completo</td>
                 <td>            
-                    <input name="txtApoderadoJ" type="text" id="txtApoderadoJ" size="45" maxlength="98"
+                    <input name="txtApoderadoJ" type="text" id="txtApoderadoJ" size="45" maxlength="60"
                            value="<?php if (isset($_SESSION['oDenunciante']))
                            { if ($oDenunciante->getPersonaNatural()== '0' || $oDenunciante->getPersonaNatural()== 'f') echo($oDenunciante->getApoderadoNombre()); } ?>"/> 
                 </td>

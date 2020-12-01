@@ -1919,7 +1919,7 @@
 <h3><a href="#">Persona Natural</a></h3>
     <!-- IMPORTANTE se usa ValidarDenunciado porque es igual  -->
     <FORM action="procesaimputado.php" method="POST" name="frmImputado" 
-        id="frmImputado">  
+        id="frmImputado" onsubmit="return ValidarDenunciado(this);">  
         
         <!-- input ocultos para guardar info sobre alias y delitos -->
         <input type="hidden" name="aliases" id="aliases" >
@@ -2521,7 +2521,7 @@
         </td>        
         <td align="right">Teléfonos</td>
         <td>
-            <input type="text" id="txtTelefono3" name="txtTelefono3" size="15" maxlength="59"
+            <input type="text" id="txtTelefono3" name="txtTelefono3" size="15" maxlength="50"
                    value="<?php if (isset($_SESSION['oDenunciado']))
                        { if ($oDenunciado->getPersonaNatural()== '0' || $oDenunciado->getPersonaNatural()== 'f') echo($oDenunciado->getTelefono()); } ?>">
         </td>

@@ -79,6 +79,8 @@
 
             if (!visible){ 
                 div.style.display = 'none';
+                document.getElementById('txtApoderado').value= null;
+                document.getElementById('txtColegio').value= null;
             }
             else{
                 div.style.display = '';
@@ -91,6 +93,7 @@
 
             if (!visible){
                 div.style.display = 'none';
+                document.getElementById('txtNombreAsum').value= null;
             }
             else{
                 div.style.display = '';

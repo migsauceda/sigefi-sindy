@@ -230,7 +230,6 @@ function ValidarConocido(valor, frm){
     //frmdenunciante, frmdenunciado, frmofendido
     if (valor== "tpr" || valor== "ano" || valor== "ofi" || valor== "fe" || valor== "des") 
     {       
-        //para denunciante
         if (valor== "ano" && frm.name == 'frmDenunciante'){
             frm.rdSexo2.checked= true;
             frm.rdRangoEdad5.checked= true;
@@ -274,9 +273,9 @@ function ValidarConocido(valor, frm){
             frm.rdAno1.checked= true;
             frm.txtNombres.value= "-- TESTIGO PROTEGIDO --";
             frm.txtApellidos.value= "-- TESTIGO PROTEGIDO --"; 
-        }                       
+        }                     
         //denuciado    
-        if (valor== "des")
+        if (valor== "des"  && frm.name == 'frmImputado')
         {  
             frm.rdSexo3.checked= true;            
             frm.txtEdad3.value= "0";
@@ -286,7 +285,7 @@ function ValidarConocido(valor, frm){
             frm.txtApellidos.value= "-- DESCONOCIDO --"; 
         }
         
-            //****//
+             //****//
         if (valor== "fe"){ 
             frm.rdSexo2.checked= true;
             frm.rdRangoEdad5.checked= true; 
@@ -306,10 +305,10 @@ function ValidarConocido(valor, frm){
         } else
         if (valor== "des")
         { 
-            frm.rdSexo2.checked= true;
-            frm.txtEdad.value= "0";
-            frm.rdAno1.checked= true;
-            frm.rdRangoEdad5.checked= true;
+            frm.rdSexo3.checked= true;
+            frm.txtEdad3.value= "0";
+            frm.rdAno3.checked= true;
+            frm.rdRangoEdad3.checked= true;
             frm.txtNombres.value= "-- DESCONOCIDO --";
             frm.txtApellidos.value= "-- DESCONOCIDO --"; 
         } else
@@ -579,6 +578,71 @@ o borrar el número en Pasaporte o Identidad.");
             frm.cboTipoDoc.value= "0"; 
     }
 
+    if (frm.cboTipoDoc.value== 1){
+
+         if (vacio(frm.txtIdentidad.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+   if (frm.cboTipoDoc.value== 2){
+
+         if (vacio(frm.txtIdentidad.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+     if (frm.cboTipoDoc.value== 3){
+
+         if (vacio(frm.txtIdentidad.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+    
+    if (frm.cboTipoDoc.value== 4){
+
+         if (vacio(frm.txtIdentidad.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+    if (frm.cboTipoDoc.value== 5){
+
+         if (vacio(frm.txtIdentidad.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+    if (frm.NombAsumido.checked){
+
+         if (vacio(frm.txtNombreAsum.value)== false) {
+            alert("Debe ingresar Nombre Asumido");
+            return false;
+    }   
+                   
+    }
+
+    if (frm.apoderado.checked){
+
+         if (vacio(frm.txtApoderado.value)== false) {
+            alert("Debe ingresar Nombre del Apoderado Legal");
+            return false;
+    }   
+                   
+    }
+
+
+
     if ((frm.txtEdad.value== "0" ||
         (frm.txtEdad.value== "")) &&
         frm.rdAno[1].checked== false)
@@ -809,6 +873,71 @@ function ValidarOfendido(frm)
 o borrar el número en Pasaporte o Identidad.");
             frm.cboTipoDoc4.value= "0"; 
     }
+
+    if (frm.cboTipoDoc4.value== 1){
+
+         if (vacio(frm.txtIdentidad4.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+   if (frm.cboTipoDoc4.value== 2){
+
+         if (vacio(frm.txtIdentidad4.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+    if (frm.cboTipoDoc4.value== 3){
+
+         if (vacio(frm.txtIdentidad4.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+    if (frm.cboTipoDoc4.value== 4){
+
+         if (vacio(frm.txtIdentidad4.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+    if (frm.cboTipoDoc4.value== 5){
+
+         if (vacio(frm.txtIdentidad4.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+    if (frm.NombAsumido.checked){
+
+         if (vacio(frm.txtNombreAsum.value)== false) {
+            alert("Debe ingresar Nombre Asumido");
+            return false;
+    }   
+                   
+    }
+
+    if (frm.apoderado.checked){
+
+         if (vacio(frm.txtApoderado.value)== false) {
+            alert("Debe ingresar Nombre del Apoderado Legal");
+            return false;
+    }   
+                   
+    }
+
+
 
     if ((frm.txtEdad4.value== "0" ||
         (frm.txtEdad4.value== "")) &&
@@ -1272,6 +1401,53 @@ function ValidarDenunciado(frm){
     o borrar el número en Pasaporte o Identidad.");
             frm.cboTipoDoc3.value= "0"; 
     }        
+
+    if (frm.cboTipoDoc3.value== 1){
+
+         if (vacio(frm.txtIdentidad3.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+   if (frm.cboTipoDoc3.value== 2){
+
+         if (vacio(frm.txtIdentidad3.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }    
+
+    if (frm.cboTipoDoc3.value== 3){
+
+         if (vacio(frm.txtIdentidad3.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+    if (frm.cboTipoDoc3.value== 4){
+
+         if (vacio(frm.txtIdentidad3.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }
+
+    if (frm.cboTipoDoc3.value== 5){
+
+         if (vacio(frm.txtIdentidad3.value)== false) {
+            alert("Debe ingresar numero de Indentificación");
+            return false;
+    }   
+                   
+    }     
+
+
 
     if ((frm.txtEdad3.value== "0" ||
         (frm.txtEdad3.value== "")) &&
