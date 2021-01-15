@@ -11,43 +11,6 @@ $denunciaid= $_SESSION['denunciaid'];
 
 $objConexion=new Conexion(); 
 
-if($opcion== "actividad"){
-    if ($etapa== 0){
-        $sql= "select act.nactividadid || ',' || et.netapaid as actividadid, act.cdescripcion || ', ' || et.cdescripcion as descripcionact
-                from mini_sedi.tbl_actividad as act 
-                inner join mini_sedi.tbl_etapa_actividad as eta on act.nactividadid= eta.nactividadid
-                inner join mini_sedi.tbl_etapa as et on et.netapaid= eta.netapaid order by descripcionact asc";
-    }
-    else{
-        $sql= "select act.nactividadid || ',' || et.netapaid as actividadid, act.cdescripcion || ', ' || et.cdescripcion as descripcionact
-                from mini_sedi.tbl_actividad as act 
-                inner join mini_sedi.tbl_etapa_actividad as eta on act.nactividadid= eta.nactividadid
-                inner join mini_sedi.tbl_etapa as et on et.netapaid= eta.netapaid 
-                where eta.netapaid= $etapa";       
-    }
-    
-//    $sql= "select distinct nactividadid as actividadid, cdescripcion as descripcionact
-//        from mini_sedi.tbl_actividad
-//        order by descripcionact asc";
-
-    $resActividad=$objConexion->ejecutarComando($sql);
-    $PrimerRegistro= 1;
-    $json= "[";
-    while ($Registro= pg_fetch_array($resActividad)){
-        $actividadid= $Registro[actividadid];  
-        $actividaddesc = $Registro[descripcionact];
-
-        if ($PrimerRegistro== 1){
-            $PrimerRegistro= 0;            
-        }
-        else{
-            $json .= ",";
-        }
-        $json .= "{\"actividadid\":\"$actividadid\",\"actividaddesc\":\"$actividaddesc\"}";                        
-    }
-    $json .="]";
-    echo $json; 
-}
 
 if($opcion== "imputados"){
     $sql= "select distinct i.tpersonaid, (cnombres || ' ' || capellidos) as nombres from mini_sedi.tbl_imputado as i
@@ -78,7 +41,7 @@ if($opcion== "delitos"){
     
     if (substr_count($imputados, ',') > 0){
         //delitos en comun
-	$countImputados= substr_count($imputados, ',') + 1;
+    $countImputados= substr_count($imputados, ',') + 1;
         $sql= "select ndelitoid, cdescripcion from mini_sedi.tbl_delito
                 where ndelitoid in (select ndelito from mini_sedi.tbl_imputado_delito 
                 where tpersonaid in ($imputados)  
@@ -137,31 +100,6 @@ if($opcion== "subetapa"){
     echo $json; 
 }
 
-if($opcion== "etapa"){
-    $sql= "select e.cdescripcion, e.netapaid
-        from mini_Sedi.tbl_subetapa as se
-        inner join mini_Sedi.tbl_etapa as e on se.netapaid = e.netapaid
-        where se.nsubetapaid=  $subetapa";
-
-    $resEtapa=$objConexion->ejecutarComando($sql);
-    $PrimerRegistro= 1;
-    $json= "[";
-    while ($Registro= pg_fetch_array($resEtapa)){
-        $descripcion = $Registro["cdescripcion"];
-        $netapaid= $Registro["netapaid"];
-
-        if ($PrimerRegistro== 1){
-            $PrimerRegistro= 0;            
-        }
-        else{
-            $json .= ",";
-        }
-        $json .= "{\"etapaid\":\"$netapaid\",\"descripcion\":\"$descripcion\"}";                        
-    }
-    $json .="]";
-    echo $json; 
-}
-
 if($opcion== "materia"){
     $sql= "select nmateria, cdescripcion from mini_sedi.tbl_materia
             order by cdescripcion";
@@ -170,7 +108,8 @@ if($opcion== "materia"){
     $PrimerRegistro= 1;
     $json= "[";
     while ($Registro= pg_fetch_array($resSubEtapa)){
-        $materiaid= $Registro[nmateria];  
+        $materiaid= $Registro[nmateria]; 
+        $_SESSION['idmateria']=$materiaid; 
         $descripcion = $Registro[cdescripcion];
 
         if ($PrimerRegistro== 1){
@@ -185,15 +124,16 @@ if($opcion== "materia"){
     echo $json; 
 }
 
-if($opcion== "cmbetapa"){
+if($opcion== "etapa"){
     $sql= "select netapaid, cdescripcion from mini_sedi.tbl_etapa
-            order by netapaid";
+            order by cdescripcion";
 
     $resSubEtapa=$objConexion->ejecutarComando($sql);
     $PrimerRegistro= 1;
     $json= "[";
     while ($Registro= pg_fetch_array($resSubEtapa)){
         $netapaid= $Registro[netapaid];  
+        $_SESSION['idetapa']=$netapaid;
         $descripcion = $Registro[cdescripcion];
 
         if ($PrimerRegistro== 1){

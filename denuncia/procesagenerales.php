@@ -3,8 +3,7 @@ include("../clases/Denuncia.php");
 
 include("../clases/class_conexion_pg.php");
 
-//iniciar session
-//session_start();
+//iniciar sessionsession_start();
 
 //crear objeto Denuncia
 $objDenuncia= new Denuncia;
@@ -53,7 +52,7 @@ $objDenuncia->setTxtDireccionDenuncia($_POST["txtDireccionDenuncia"]);
 
 $objDenuncia->setTxtDireccionHecho($_POST["txtDireccionHecho"]);
 
-$objDenuncia->setEstado("A"); 
+$objDenuncia->setEstado("D"); 
 
 $objDenuncia->setLugarHecho($_POST["cboClaseLugar"]);
 

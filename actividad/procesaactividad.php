@@ -18,17 +18,24 @@
         $HoraAnsi= substr($value,11,2).':'.substr($value,14,2);
 
         $Materia= $_POST["cboMateria"]; //una sola materia
-        $Etapa= $_POST["txtEtapa"];
+        $Etapa= $_POST["cboEtapa"];//una sola etapa
 //        $Etapa= $_POST["cboEtapa"];//una sola etapa
 //        $SubEtapa= $_POST["cboSubEtapa"]; //listado de subetapas
         $SubEtapa= 0;
-        $Actividad= $_POST["txtActividad"]; //listado de actividad
+        $Actividad= $_POST["txtTodosActividades"]; //listado de actividad
+        $tmp= str_replace(";", ",",$Actividad);
+        $tam= strlen($tmp);
+        if (substr($tmp, $tam-1,1)== ",") 
+              $tmp= substr($tmp,0, $tam-1);
+         
+        
+
         $Delito= $_POST["txtDelito"]; //listado de delitos
         $Imputados= $_POST["txtImputados"];
         $desc = $_POST["desc"]; //descripcion del anexo
 
-        if (empty($SubEtapa)) $SubEtapa= 0;
-        if (empty($Actividad)) $Actividad= 0;
+        //if (empty($SubEtapa)) $SubEtapa= 0;
+       // if (empty($Actividad)) $Actividad= 0;
 
         $nombre = $_FILES['archivoa']['name']; //este es el nombre del archivo que acabas de subir
         $type =$_FILES['archivoa']['type']; //este es el tipo de archivo que acabas de subir
@@ -76,7 +83,7 @@
 
         $sql= "SELECT mini_sedi.actividad_delito_insert("
                 ."array[".$Delito."], " //delitos
-                ."array[".$Actividad."], " //actividad listado
+                ."array[".$tmp."], " //actividad listado
                 ."array[".$Imputados."], " //imputados listado
                 ."'".$FiscalId."', " //fiscal
                 
@@ -96,7 +103,7 @@
                 .$size.", "
                 ."true "
                 .");";
-            //exit($sql);
+           //exit($sql);
         $objConexion= new Conexion();
         $reg= $objConexion->ejecutarComando($sql);
 

@@ -11,7 +11,16 @@ switch ($_GET['Parametro']){
 
         autenticar($usuario, $password, $tipoacceso);        
         break;
-    
+
+    case 'autenticarAdmin':
+        $_SESSION['usuario']= $_POST['txtUsr'];
+        $password= $_POST['txtPasswd'];
+        $usuario= $_SESSION['usuario'];
+        $tipoacceso= $_POST['cboTipoAcceso'];
+
+        autenticarAdmin($usuario, $password, $tipoacceso);        
+        break;
+
     case 'validar':
         $usuario= $_SESSION['usuario'];
         $denuncia= $_SESSION['denunciaid'];

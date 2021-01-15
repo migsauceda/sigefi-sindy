@@ -40,7 +40,19 @@ $sql="select distinct DE.tdenunciaid, DE.cexpedientesedi, DE.cexpedientepolicial
  DE.dfechadenuncia, US.nombres, US.apellidos, DL.cdescripcion, BA.cdescripcion, SUB.cdescripcion,
    case when US.nombres is null then 'Fiscal No Asignado' else 'Fiscal Asignado' end,
    case when BA.cdescripcion is null then 'Fiscalia No Asignado' else 'Fiscalia Asignado' end,
-   case when IFIS.bactivo = 't' then 'Expediente Activo' else 'Expediente No Activo' end
+   case when DE.cestadodenuncia = 'A'  then 'Activo' 
+        when DE.cestadodenuncia = 'P'  then 'Pendiente'
+        when DE.cestadodenuncia = 'D'  then 'Denuncia'
+        when DE.cestadodenuncia = 'C'  then 'Concluido'
+        when DE.cestadodenuncia = 'Ap' then 'Aprobado'
+        when DE.cestadodenuncia = 'IP' then 'Investigación Preliminar'
+        when DE.cestadodenuncia = 'CI' then 'Cierre de Investigación'
+        when DE.cestadodenuncia = 'CD' then 'Cierre Definitivo'
+        when DE.cestadodenuncia = 'Im' then 'Impugnado' 
+        when DE.cestadodenuncia = 'Pa' then 'Pasivo'
+        when DE.cestadodenuncia = 'R'  then 'Reparo'
+        when DE.cestadodenuncia = 'E'  then 'Espera'
+   else 'Inactivo' end 
 from mini_sedi.tbl_denuncia as DE
    left join mini_sedi.tbl_imputado_fiscalia as IFIS ON IFIS.tdenunciaid = DE.tdenunciaid
    left join mini_sedi.tbl_imputado_fiscal as IMF ON IMF.tdenunciaid = DE.tdenunciaid
@@ -78,7 +90,8 @@ echo "<th>Nombre del Fiscal</th>";
 echo "<th>Delito</th>";
 echo "<th>Tomado</th>";
 echo "<th>Fiscalia</th>";
-echo "<th>Expediente Activo</th>";
+echo "<th>Estado de la Denuncia</th>";
+
 echo "</tr>";
 while ($rows = pg_fetch_row($resultado))
 {

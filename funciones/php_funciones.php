@@ -24,6 +24,74 @@ if(isset($_SESSION['estado'])){
             ValidarEstado();
         }
 }  
+$op=$_POST['op'];
+if($op=='mostrar'){
+    $Etapaid=$_POST['Etapaid'];
+    $_SESSION['etapaid']=$Etapaid;
+
+    $Materiaid=$_POST['Materiaid'];
+    $_SESSION['materiaid']=$Materiaid;
+
+    $objConexion=new Conexion(); 
+    $sql= "select m.nactividadid, a.cdescripcion 
+           from mini_sedi.tbl_materia_actividad as m
+           inner join mini_sedi.tbl_actividad as a on a. nactividadid = m. nactividadid 
+           inner join mini_sedi.tbl_etapa as e on e. netapaid=m. netapaid
+           inner join mini_sedi.tbl_subetapa  as s on s. nsubetapaid= m.nsubetapaid
+           inner join mini_sedi.tbl_materia as ma on ma.nmateria= m.nmateria 
+           where e.netapaid='$Etapaid' and ma.nmateria= $Materiaid 
+           order by a.cdescripcion;";
+    $resActividad=$objConexion->ejecutarComando($sql);
+    $PrimerRegistro= 1;
+    $json= "[";
+    while ($Registro= pg_fetch_array($resActividad)){
+        $actividadid= $Registro[nactividadid];  
+        $actividad = $Registro[cdescripcion];
+
+        if ($PrimerRegistro== 1){
+            $PrimerRegistro= 0;            
+        }
+        else{
+            $json .= ",";
+        }
+        $json .= "{\"nactividadid\":\"$actividadid\",\"cdescripcion\":\"$actividad\"}";                        
+    }
+    $json .="]";
+    echo $json; 
+
+}
+if($op=='listarfila'){
+
+    $Materiaid=$_SESSION['materiaid'];
+    $Etapaid=$_SESSION['etapaid'];
+
+    $objConexion=new Conexion(); 
+    $sql= "select m.nactividadid, a.cdescripcion 
+           from mini_sedi.tbl_materia_actividad as m
+           inner join mini_sedi.tbl_actividad as a on a. nactividadid = m. nactividadid 
+           inner join mini_sedi.tbl_etapa as e on e. netapaid=m. netapaid
+           inner join mini_sedi.tbl_subetapa  as s on s. nsubetapaid= m.nsubetapaid
+           inner join mini_sedi.tbl_materia as ma on ma.nmateria= m.nmateria 
+           where e.netapaid='$Etapaid' and ma.nmateria= $Materiaid 
+           order by a.cdescripcion;";
+    $resActividad=$objConexion->ejecutarComando($sql);
+    $PrimerRegistro= 1;
+    $json= "[";
+    while ($Registro= pg_fetch_array($resActividad)){
+        $actividadid= $Registro[nactividadid];  
+        $actividad = $Registro[cdescripcion];
+
+        if ($PrimerRegistro== 1){
+            $PrimerRegistro= 0;            
+        }
+        else{
+            $json .= ",";
+        }
+        $json .= "{\"nactividadid\":\"$actividadid\",\"cdescripcion\":\"$actividad\"}";                        
+    }
+    $json .="]";
+    echo $json; 
+}
 
 /*
 Funcion: Llamar a la funcion cambiar variable de session validar_estado
@@ -202,10 +270,10 @@ Actualizacion: 20dic2013
 */
 function CargarEmpresasHN(){
         //session_start();
-	$objConexion=new Conexion(); 
-	$sql= "select iempresaid, cdescripcion from tbl_empresashn order by cdescripcion;";
-	$resEmpresashn=$objConexion->ejecutarComando($sql);		
-	return $resEmpresashn;    
+    $objConexion=new Conexion(); 
+    $sql= "select iempresaid, cdescripcion from tbl_empresashn order by cdescripcion;";
+    $resEmpresashn=$objConexion->ejecutarComando($sql);     
+    return $resEmpresashn;    
 }
 
 /*
@@ -216,10 +284,10 @@ Actualizado: 11 sept 2020
 */
 function CargarDelitos(){
         //session_start();
-	$objConexion=new Conexion(); 
-	$sql= "select ndelitoid, cdescripcion from mini_sedi.tbl_delito where derogado= 1 order by cdescripcion;";
-	$resDelitos=$objConexion->ejecutarComando($sql);		
-	return $resDelitos;    
+    $objConexion=new Conexion(); 
+    $sql= "select ndelitoid, cdescripcion from mini_sedi.tbl_delito where derogado= 1 order by cdescripcion;";
+    $resDelitos=$objConexion->ejecutarComando($sql);        
+    return $resDelitos;    
 }
 
 /*
@@ -230,10 +298,10 @@ Actualizado: 11 sept 2020
 */
 function CargarDelitosD(){
         //session_start();
-	$objConexion=new Conexion(); 
-	$sql= "select ndelitoid, cdescripcion from mini_sedi.tbl_delito where derogado= 0 order by cdescripcion;";
-	$resDelitos=$objConexion->ejecutarComando($sql);		
-	return $resDelitos;    
+    $objConexion=new Conexion(); 
+    $sql= "select ndelitoid, cdescripcion from mini_sedi.tbl_delito where derogado= 0 order by cdescripcion;";
+    $resDelitos=$objConexion->ejecutarComando($sql);        
+    return $resDelitos;    
 }
 
 /*
@@ -243,11 +311,31 @@ Actualizacion: 27ago2015
 */
 function CargarArmas(){
         //session_start();
-	$objConexion=new Conexion(); 
-	$sql= "select narmaid, cdescripcion from tbl_tipo_arma order by cdescripcion;";
-	$resArmas=$objConexion->ejecutarComando($sql);		
-	return $resArmas;    
+    $objConexion=new Conexion(); 
+    $sql= "select narmaid, cdescripcion from tbl_tipo_arma order by cdescripcion;";
+    $resArmas=$objConexion->ejecutarComando($sql);      
+    return $resArmas;    
 }
+
+
+function CargarEtap(){
+        //session_start();
+   
+    $objConexion=new Conexion(); 
+    $sql= "select netapaid, cdescripcion from mini_sedi.tbl_etapa 
+       order by cdescripcion;";
+    $resEtapa=$objConexion->ejecutarComando($sql);      
+    return $resEtapa;    
+}
+
+function CargarActividad($id){
+    
+    $objConexion=new Conexion(); 
+    $sql= "select nactividadid, cdescripcion from mini_sedi.tbl_actividad where netapaid='$id' order by cdescripcion;";
+    $resActividad=$objConexion->ejecutarComando($sql);      
+    return $resActividad;    
+}
+
 
 /*
 Funcion: Retornar cursor con los transportes
@@ -256,10 +344,10 @@ Actualizacion: 27ago2015
 */
 function CargarTransporte(){
         //session_start();
-	$objConexion=new Conexion(); 
+    $objConexion=new Conexion(); 
         $sql= "select ntransporteid, cdescripcion from tbl_tipo_transporte order by cdescripcion;";
-	$resTransporte=$objConexion->ejecutarComando($sql);		
-	return $resTransporte;    
+    $resTransporte=$objConexion->ejecutarComando($sql);     
+    return $resTransporte;    
 }
 
 /*
@@ -269,10 +357,10 @@ Actualizacion: 02ago2015
 */
 function CargarMovil(){
         //session_start();
-	$objConexion=new Conexion(); 
+    $objConexion=new Conexion(); 
         $sql= "select nmovilid, cdescripcion from tbl_tipo_movil order by cdescripcion;";
-	$resMovil=$objConexion->ejecutarComando($sql);		
-	return $resMovil;    
+    $resMovil=$objConexion->ejecutarComando($sql);      
+    return $resMovil;    
 }
 
 /*
@@ -282,10 +370,10 @@ Actualizacion: 02ago2015
 */
 function CargarObjeto(){
         //session_start();
-	$objConexion=new Conexion(); 
+    $objConexion=new Conexion(); 
         $sql= "select nobjetoid, cdescripcion from tbl_tipo_objeto order by cdescripcion;";
-	$resObjeto=$objConexion->ejecutarComando($sql);		
-	return $resObjeto;    
+    $resObjeto=$objConexion->ejecutarComando($sql);     
+    return $resObjeto;    
 }
 /*
 Funcion: Retornar cursor con los lugares de recepcion en el MP
@@ -294,11 +382,11 @@ Actualizacion: 12abr2012
 */
 function CargarDenunciante(){
         //session_start();
-	$objConexion=new Conexion(); 
-	$sql= "select tpersonaid, tdenunciaid from tbl_denunciante
+    $objConexion=new Conexion(); 
+    $sql= "select tpersonaid, tdenunciaid from tbl_denunciante
                 where tdenunciaid=".$_SESSION['denunciaid'].";";
-	$resTipodoc=$objConexion->ejecutarComando($sql);		
-	return $resTipodoc;    
+    $resTipodoc=$objConexion->ejecutarComando($sql);        
+    return $resTipodoc;    
 }
 
 /*
@@ -307,10 +395,10 @@ Relacion: Formulario para crear nueva denuncia y modificarla
 Actualizacion: 12abr2012
 */
 function CargarTipoDocumento(){
-	$objConexion=new Conexion(); 
-	$sql= "SELECT ndocumentoid, cdescripcion FROM tbl_tipodocumento order by cdescripcion;";
-	$resTipodoc=$objConexion->ejecutarComando($sql);		
-	return $resTipodoc;    
+    $objConexion=new Conexion(); 
+    $sql= "SELECT ndocumentoid, cdescripcion FROM tbl_tipodocumento order by cdescripcion;";
+    $resTipodoc=$objConexion->ejecutarComando($sql);        
+    return $resTipodoc;    
 }
 
 /*
@@ -320,10 +408,10 @@ Actualizacion: 12abr2012
 */
 function CargarLugarRecepcion()
 {
-	$objConexion=new Conexion(); 
-	$sql= "SELECT nlugarid, cdescripcion FROM tbl_lugarrecepcion;";
-	$resRecepcion=$objConexion->ejecutarComando($sql);		
-	return $resRecepcion;
+    $objConexion=new Conexion(); 
+    $sql= "SELECT nlugarid, cdescripcion FROM tbl_lugarrecepcion;";
+    $resRecepcion=$objConexion->ejecutarComando($sql);      
+    return $resRecepcion;
 }
 
 /*
@@ -363,9 +451,9 @@ Actualizacion: 12abr2012
 */
 function CargarDepto()
 {
-	$objConexion=new Conexion();
-	$resDepto=$objConexion->ejecutarComando("select cdepartamentoid, cdescripcion from tbl_departamentopais order by cdescripcion;");
-	return $resDepto;
+    $objConexion=new Conexion();
+    $resDepto=$objConexion->ejecutarComando("select cdepartamentoid, cdescripcion from tbl_departamentopais order by cdescripcion;");
+    return $resDepto;
 }
 
 /*
@@ -375,10 +463,10 @@ Actualizacion: 30may2012
 */
 function CargarMunicipio()
 {
-	$objConexion=new Conexion(); 
-	$sql= "select cmunicipioid, cdescripcion from tbl_municipio
-		where cdepartamentoid= '".$_POST[txtDeptoPHP]."';";
-	$resMuni=$objConexion->ejecutarComando($sql);	
+    $objConexion=new Conexion(); 
+    $sql= "select cmunicipioid, cdescripcion from tbl_municipio
+        where cdepartamentoid= '".$_POST[txtDeptoPHP]."';";
+    $resMuni=$objConexion->ejecutarComando($sql);   
         
         return $resMuni;
 }
@@ -390,11 +478,11 @@ Actualizacion: 30may2012
 */
 function CargarAldea()
 {
-	$objConexion=new Conexion(); 
-	$sql="select caldeaid, cdescripcion from tbl_aldea
-	where cdepartamentoid= '".$_POST[txtDeptoPHP]."' and cmunicipioid= '"
+    $objConexion=new Conexion(); 
+    $sql="select caldeaid, cdescripcion from tbl_aldea
+    where cdepartamentoid= '".$_POST[txtDeptoPHP]."' and cmunicipioid= '"
             .$_POST[txtMuniPHP]."';";
-	$resAldea=$objConexion->ejecutarComando($sql);
+    $resAldea=$objConexion->ejecutarComando($sql);
         
         return $resAldea;
 }
@@ -406,12 +494,12 @@ Actualizacion: 30may2012
 */
 function CargarBarrio()
 {
-	$objConexion=new Conexion(); 
-	$sql="select cbarrioid, cdescripcion from tbl_barrio
-	where cdepartamentoid= '".$_POST[txtDeptoPHP]."' and cmunicipioid= '"
+    $objConexion=new Conexion(); 
+    $sql="select cbarrioid, cdescripcion from tbl_barrio
+    where cdepartamentoid= '".$_POST[txtDeptoPHP]."' and cmunicipioid= '"
             .$_POST[txtMuniPHP]."' and caldeaid= '".$_POST[txtAldeaPHP]."' "
             ."order by cdescripcion;";
-	$resBarrio=$objConexion->ejecutarComando($sql);		
+    $resBarrio=$objConexion->ejecutarComando($sql);     
         
         return $resBarrio;
 }
@@ -424,9 +512,9 @@ Actualizacion: 30may2012
 */
 function CargarEtnia()
 {
-	$objConexion=new Conexion(); 
-	$sql="SELECT netniaid, cdescripcion FROM tbl_etnia order by cdescripcion;";
-	$resEtnia=$objConexion->ejecutarComando($sql);	
+    $objConexion=new Conexion(); 
+    $sql="SELECT netniaid, cdescripcion FROM tbl_etnia order by cdescripcion;";
+    $resEtnia=$objConexion->ejecutarComando($sql);  
         
         return $resEtnia;
 }
@@ -439,9 +527,9 @@ Actualizacion: 30may2012
 */
 function CargarDiscapacidad()
 {
-	$objConexion=new Conexion(); 
-	$sql="SELECT ndiscapacidadid, cdescripcion FROM tbl_discapacidad order by cdescripcion;";
-	$resDisca=$objConexion->ejecutarComando($sql);
+    $objConexion=new Conexion(); 
+    $sql="SELECT ndiscapacidadid, cdescripcion FROM tbl_discapacidad order by cdescripcion;";
+    $resDisca=$objConexion->ejecutarComando($sql);
         
         return $resDisca;
 }
@@ -454,10 +542,10 @@ Actualizacion: 30may2012
 */
 function CargarNacionalidad()
 {
-	$objConexion=new Conexion(); 
-	$sql= "SELECT cnacionalidadid, cdescripcion FROM tbl_nacionalidad;";
-	$resNacion=$objConexion->ejecutarComando($sql);   
-	return $resNacion;
+    $objConexion=new Conexion(); 
+    $sql= "SELECT cnacionalidadid, cdescripcion FROM tbl_nacionalidad;";
+    $resNacion=$objConexion->ejecutarComando($sql);   
+    return $resNacion;
 }
 
 
@@ -469,9 +557,9 @@ Actualizacion: 30may2012
 */
 function CargarEstadoCivil()
 {
-	$objConexion=new Conexion(); 
-	$sql= "SELECT ncivil, cdescripcion FROM tbl_estadoscivil order by cdescripcion;";
-	$resCivil=$objConexion->ejecutarComando($sql);	
+    $objConexion=new Conexion(); 
+    $sql= "SELECT ncivil, cdescripcion FROM tbl_estadoscivil order by cdescripcion;";
+    $resCivil=$objConexion->ejecutarComando($sql);  
         
         return $resCivil;
 }
@@ -484,9 +572,9 @@ Actualizacion: 30may2012
 */
 function CargarEscolaridad()
 {
-	$objConexion=new Conexion(); 
-	$sql= "SELECT nescolaridadid, cdescripcion FROM tbl_escolaridad order by cdescripcion;";
-	$resEscolar=$objConexion->ejecutarComando($sql);
+    $objConexion=new Conexion(); 
+    $sql= "SELECT nescolaridadid, cdescripcion FROM tbl_escolaridad order by cdescripcion;";
+    $resEscolar=$objConexion->ejecutarComando($sql);
         
         return $resEscolar;
 }
@@ -499,9 +587,9 @@ Actualizacion: 30may2012
 */
 function CargarProfesion()
 {
-	$objConexion=new Conexion(); 
-	$sql= "SELECT nprofesionid, cdescripcion FROM tbl_profesion order by cdescripcion;";
-	$resProfe=$objConexion->ejecutarComando($sql);
+    $objConexion=new Conexion(); 
+    $sql= "SELECT nprofesionid, cdescripcion FROM tbl_profesion order by cdescripcion;";
+    $resProfe=$objConexion->ejecutarComando($sql);
 
         return $resProfe;
 }
@@ -514,11 +602,11 @@ Actualizacion: 30may2012
 */
 function CargarFiscalia()
 {
-	$objConexion=new Conexion(); 
-	$sql= "SELECT ibandejaid, cdescripcion FROM mini_sedi.tbl_bandejas "
+    $objConexion=new Conexion(); 
+    $sql= "SELECT ibandejaid, cdescripcion FROM mini_sedi.tbl_bandejas "
                 . "where esfiscalia= 1 order by cdescripcion;";
        
-	$resFiscalia=$objConexion->ejecutarComando($sql);
+    $resFiscalia=$objConexion->ejecutarComando($sql);
 
         return $resFiscalia;
 }
@@ -531,9 +619,9 @@ Actualizacion: 30may2012
 */
 function CargarOcupacion()
 {
-	$objConexion=new Conexion(); 
-	$sql= "SELECT nocupacionid, cdescripcion FROM tbl_ocupacion order by cdescripcion;";
-	$resOcupa=$objConexion->ejecutarComando($sql);	
+    $objConexion=new Conexion(); 
+    $sql= "SELECT nocupacionid, cdescripcion FROM tbl_ocupacion order by cdescripcion;";
+    $resOcupa=$objConexion->ejecutarComando($sql);  
         
         return $resOcupa;
 }
@@ -546,12 +634,12 @@ Actualizacion: 30may2012
 */
 function CargarDenunciados($denunciaid)
 {
-	$objConexion=new Conexion(); 
-	$sql= "select p.tpersonaid as personaid, btrim(cnombres, ' ') || ' ' || btrim(capellidos, ' ') as nombrecompleto "
+    $objConexion=new Conexion(); 
+    $sql= "select p.tpersonaid as personaid, btrim(cnombres, ' ') || ' ' || btrim(capellidos, ' ') as nombrecompleto "
             ."from mini_sedi.tbl_imputado p, mini_sedi.tbl_imputado_denuncia id "
             ."where p.tpersonaid= id.tpersonaid and id.tdenunciaid= '"
             .$denunciaid."';";
-	$resDenunciados=$objConexion->ejecutarComando($sql);	
+    $resDenunciados=$objConexion->ejecutarComando($sql);    
         
 //        exit($sql);
 //        echo $sql;
@@ -566,13 +654,13 @@ Actualizacion: 18mar2012
 */
 function CargarFiscalFiscalia($fiscalia)
 {
-	$objConexion=new Conexion(); 
-	$sql= "SELECT trim(tbl_usuarios.nombres) || ' ' || trim(tbl_usuarios.apellidos) as nombrecompleto, "
+    $objConexion=new Conexion(); 
+    $sql= "SELECT trim(tbl_usuarios.nombres) || ' ' || trim(tbl_usuarios.apellidos) as nombrecompleto, "
               ."tbl_usuarios.identidad, tbl_usuarios.ibandejaid "
               ."FROM mini_sedi.tbl_usuarios WHERE "
               ."tbl_usuarios.isubbandejaid = ".$fiscalia." and fiscal= true order by nombrecompleto;";
         
-        $resFiscales=$objConexion->ejecutarComando($sql);	
+        $resFiscales=$objConexion->ejecutarComando($sql);   
         return $resFiscales;
 }
 
@@ -584,14 +672,14 @@ Actualizacion: 30may2012
 */
 function CargarFiscaliaActual($denunciaid, $imputado)
 {
-	$objConexion=new Conexion(); 
-	$sql= "select f.ibandejaid as fiscaliaid, cdescripcion "
+    $objConexion=new Conexion(); 
+    $sql= "select f.ibandejaid as fiscaliaid, cdescripcion "
             . "from mini_sedi.tbl_imputado_fiscalia if, mini_sedi.tbl_subbandejas f "
              ."where if.nfiscaliaid= f.ibandejaid and bactivo= 't' and "
              ."tdenunciaid= '".$denunciaid."' and "
              ."timputadoid= '".$imputado."';";
         
-	$resFiscaliaActual=$objConexion->ejecutarComando($sql);	
+    $resFiscaliaActual=$objConexion->ejecutarComando($sql); 
 
 //        echo $sql;
         
@@ -606,7 +694,7 @@ Actualizacion: 30may2012
 */
 function CargarFiscalActual($denunciaid, $imputado)
 {
-	$objConexion=new Conexion(); 
+    $objConexion=new Conexion(); 
         
         $sql= "select f.identidad as fiscalid, trim(nombres) || ' ' || trim(apellidos) as nombrecompleto 
             from mini_sedi.tbl_imputado_fiscal i, mini_sedi.tbl_usuarios f where i.cfiscal= f.identidad and i.bactivo= 't' 
@@ -618,7 +706,7 @@ function CargarFiscalActual($denunciaid, $imputado)
 //                ."tdenunciaid= '".$denunciaid."' and "
 //                ."timputadoid= '".$imputado."';";        
         
-	$resFiscaliaActual=$objConexion->ejecutarComando($sql);	
+    $resFiscaliaActual=$objConexion->ejecutarComando($sql); 
 
 //        exit($sql);
 //        exit($resFiscaliaActual);
@@ -632,7 +720,7 @@ Actualizacion: 23sep2017 ¡mi cumpleaños!
 */
 function CargarFiscal($ibandejaid, $subbandejaid)
 {
-	$objConexion=new Conexion(); 
+    $objConexion=new Conexion(); 
         
         $sql= "select identidad, nombres ||', ' || apellidos as nombre
             from mini_sedi.tbl_subbandejas as b, mini_sedi.tbl_usuarios as u
@@ -641,7 +729,7 @@ function CargarFiscal($ibandejaid, $subbandejaid)
             order by nombre;";
    
         
-	$resFiscal=$objConexion->ejecutarComando($sql);	
+    $resFiscal=$objConexion->ejecutarComando($sql); 
 
 //        exit($sql);
 //        exit($resFiscaliaActual);
@@ -656,7 +744,7 @@ Actualizacion: 30may2012
 */
 function CargarCargaFiscal($fiscal)
 {
-	$objConexion=new Conexion(); 
+    $objConexion=new Conexion(); 
         
         $sql= "select impf.tdenunciaid, cnombres || ', ' || capellidos as imputado, cdescripcion as delito, 
                 impdel.ndelito as delitoid, impdel.tpersonaid
@@ -668,7 +756,7 @@ function CargarCargaFiscal($fiscal)
                 impdel.ndelito= del.ndelitoid and impf.bactivo= true and 
                 cfiscal= '$fiscal' order by tdenunciaid, tpersonaid, delitoid;";
         
-	$resCargaFiscal=$objConexion->ejecutarComando($sql);	
+    $resCargaFiscal=$objConexion->ejecutarComando($sql);    
 
 //        exit($sql);
 //        exit($resFiscaliaActual);
@@ -681,12 +769,12 @@ Relacion: Formulario para asignar actividad fiscal. actividad.php
 Actualizacion: 21nar2013
 */
 function CargarImputados(){
-	$objConexion=new Conexion(); 
-	$imputados= $_SESSION["denunciaid"];
-	$sql= "SELECT tpersonaid, cnombres || ' ' || capellidos as cnombrecompleto, "
+    $objConexion=new Conexion(); 
+    $imputados= $_SESSION["denunciaid"];
+    $sql= "SELECT tpersonaid, cnombres || ' ' || capellidos as cnombrecompleto, "
             ."bmenorinfractor "
             ."FROM tbl_imputado where tdenunciaid= ".$imputados.";";
-	$resImputado=$objConexion->ejecutarComando($sql);    
+    $resImputado=$objConexion->ejecutarComando($sql);    
         return $resImputado;
 }
 
@@ -697,9 +785,9 @@ Relacion: Formulario para asignar actividad fiscal. actividad.php
 Actualizacion: 21nar2013
 */
 function CargarEtapa(){
-	$objConexion=new Conexion(); 
-	$sql= "select netapaid, cdescripcion from tbl_etapa ";
-	$resEtapa=$objConexion->ejecutarComando($sql);
+    $objConexion=new Conexion(); 
+    $sql= "select netapaid, cdescripcion from tbl_etapa ";
+    $resEtapa=$objConexion->ejecutarComando($sql);
         return $resEtapa;
 }
 
@@ -709,9 +797,9 @@ Relacion: Formulario para asignar actividad fiscal. actividad.php
 Actualizacion: 21nar2013
 */
 function CargarMateria(){
-	$objConexion=new Conexion(); 
-	$sql= "SELECT nmateria, cdescripcion FROM tbl_materia;";
-	$resMateria=$objConexion->ejecutarComando($sql);
+    $objConexion=new Conexion(); 
+    $sql= "SELECT nmateria, cdescripcion FROM tbl_materia;";
+    $resMateria=$objConexion->ejecutarComando($sql);
         return $resMateria;
 }
 
@@ -722,10 +810,10 @@ Actualizacion: 22feb2015
 */
 function CargarClaseLugar()
 {
-	$objConexion=new Conexion(); 
-	$sql= "SELECT nlugarid, cdescripcion FROM mini_sedi.tbl_clase_lugar_hecho order by cdescripcion;";
+    $objConexion=new Conexion(); 
+    $sql= "SELECT nlugarid, cdescripcion FROM mini_sedi.tbl_clase_lugar_hecho order by cdescripcion;";
        
-	$resClaseLugar=$objConexion->ejecutarComando($sql);
+    $resClaseLugar=$objConexion->ejecutarComando($sql);
 
         return $resClaseLugar;
 }
@@ -737,13 +825,13 @@ Actualizacion: 20sept2017
 */
 function CargarSubBandejas($sub)
 {
-	$objConexion=new Conexion(); 
-	$sql= "select isubbandejaid, cdescripcion
+    $objConexion=new Conexion(); 
+    $sql= "select isubbandejaid, cdescripcion
                 from mini_sedi.tbl_subbandejas
                 where ibandejaid= $sub
                 order by cdescripcion";
        
-	$resSubBandeja=$objConexion->ejecutarComando($sql);
+    $resSubBandeja=$objConexion->ejecutarComando($sql);
 
         return $resSubBandeja;
 }
@@ -859,7 +947,7 @@ function autenticar($usuario, $password, $tipoacceso)
   
     if ($objUsuairo->getConectado()== 0){
         $_SESSION['valido']= 0;
-        header("location:../index.php");     
+        header("location:../index1.php");     
     }
  
     $_SESSION["objUsuario"]= $objUsuairo;
@@ -867,6 +955,30 @@ function autenticar($usuario, $password, $tipoacceso)
     $_SESSION['tipoacceso']= $objUsuairo->getTipoUsuario();
     ProcesaIncompleta();   
 }
+
+/*
+Funcion: Validar que el usuario
+Relacion: Inicio de sesion
+Nota: 
+*/
+function autenticarAdmin($usuario, $password, $tipoacceso)
+{
+    session_start();
+    $objConexion= new Conexion();    
+    $objUsuairo= new Usuario($objConexion, $usuario, $password);
+  
+    if ($objUsuairo->getConectado()== 0){
+        $_SESSION['valido']= 0;
+        header("location:../administrador.php");     
+    }
+
+      echo
+                    "<script>
+                            location.href='../aplicacionAdministrador.php';
+                    </script>";
+}
+
+
 
 /*
 Funcion: Validar que el usuario
@@ -902,61 +1014,61 @@ Nota:
 */
 function ConocerTareas($usuario)
 {
-	$objConexion= new Conexion();
-	$sql= "select rolid from tbl_usr_rol where usuario="."'".$usuario."';";
-	$Cursor= $objConexion->ejecutarComando($sql);	
+    $objConexion= new Conexion();
+    $sql= "select rolid from tbl_usr_rol where usuario="."'".$usuario."';";
+    $Cursor= $objConexion->ejecutarComando($sql);   
 
-	$TareaList="";
-	while($Rol= pg_fetch_array($Cursor))
-	{
-		$sql= "select tarea from tbl_rol_tarea where rolid=".$Rol[rolid];
-		$Cursor2= $objConexion->ejecutarComando($sql);
+    $TareaList="";
+    while($Rol= pg_fetch_array($Cursor))
+    {
+        $sql= "select tarea from tbl_rol_tarea where rolid=".$Rol[rolid];
+        $Cursor2= $objConexion->ejecutarComando($sql);
 
-		while($Tarea= pg_fetch_array($Cursor2))
-		{
-			if ($TareaList== "")
-			{
-				$TareaList= $Tarea[tarea];
-			}
-			else
-			{
-				$TareaList= $TareaList."-".$Tarea[tarea];
-			}                        
-		}
-		
-	}
-	$error= 0;        
-	if ($TareaList!="")
-	{
+        while($Tarea= pg_fetch_array($Cursor2))
+        {
+            if ($TareaList== "")
+            {
+                $TareaList= $Tarea[tarea];
+            }
+            else
+            {
+                $TareaList= $TareaList."-".$Tarea[tarea];
+            }                        
+        }
+        
+    }
+    $error= 0;        
+    if ($TareaList!="")
+    {
                 $TareaArray = explode("-",$TareaList);
-		$_SESSION['tarea']=$TareaArray;
+        $_SESSION['tarea']=$TareaArray;
                 
 //                $xyz= $_SESSION['tarea'];
 //                exit($xyz[2]);
-	}
-	else
-	{
-		$error= 1;
-	}
-	if ($error== 1)
-	{
-		$objConexion->cerrarConexion();
+    }
+    else
+    {
+        $error= 1;
+    }
+    if ($error== 1)
+    {
+        $objConexion->cerrarConexion();
                 unset($objConexion);
 
-		echo
-		"<script>
-		alert('Error al cargar las tareas permitidas al usuario.');
-		</script>";		                
+        echo
+        "<script>
+        alert('Error al cargar las tareas permitidas al usuario.');
+        </script>";                     
                 
                 return $error;
-	}
-	else
-	{           
+    }
+    else
+    {           
             $objConexion->cerrarConexion();
             unset($objConexion);      
             
             return $error;
-	}
+    }
 }
 
 /*Funcion: Retornar verdadero si el usuario puede realizar dicha tarea
@@ -986,7 +1098,7 @@ Nota:
 */
 function BorrarPendiente(){
     //session_start();
-	$oConeccion= new Conexion();
+    $oConeccion= new Conexion();
         $Usr= $_SESSION['usuario'];
         $sql= "select borrar_incompleta('".$Usr."');";
         $reg= $oConeccion->ejecutarComando($sql);    
@@ -1004,35 +1116,35 @@ function ProcesaIncompleta()
 {       
         session_start();
         
-	$oConeccion= new Conexion();
-	$Usr= $_SESSION['usuario'];
+    $oConeccion= new Conexion();
+    $Usr= $_SESSION['usuario'];
 
-	//cuando se inicia el programa o cuando se clikea nuevo
-	if ($_SESSION['estado']== 'Autenticar')
-	{    
-//		$sql= "select * from tbl_controlestados where usr= '".$Usr."' and "
-//			."(not generales or not denunciante or not denunciado or not ofendido);";
+    //cuando se inicia el programa o cuando se clikea nuevo
+    if ($_SESSION['estado']== 'Autenticar')
+    {    
+//      $sql= "select * from tbl_controlestados where usr= '".$Usr."' and "
+//          ."(not generales or not denunciante or not denunciado or not ofendido);";
                 $sql= "select * from denunciaspendientes('".$Usr."');";
-		$reg= $oConeccion->ejecutarComando($sql);
+        $reg= $oConeccion->ejecutarComando($sql);
                 $arr= pg_fetch_array($reg); 
-		if (pg_num_rows($reg) > 0) //tiene denuncias incompletas
-		{                    			
-			$_SESSION['fecha']= $arr["fecha"];
-			$_SESSION['denunciaid']= $arr["denuncia"];
-			$_SESSION['generales']= $arr["generales"];
-			$_SESSION['denunciante']= $arr["denunciante"];
-			$_SESSION['denunciado']= $arr["denunciado"];
-			$_SESSION['ofendido']= $arr["ofendido"];
-		
+        if (pg_num_rows($reg) > 0) //tiene denuncias incompletas
+        {                               
+            $_SESSION['fecha']= $arr["fecha"];
+            $_SESSION['denunciaid']= $arr["denuncia"];
+            $_SESSION['generales']= $arr["generales"];
+            $_SESSION['denunciante']= $arr["denunciante"];
+            $_SESSION['denunciado']= $arr["denunciado"];
+            $_SESSION['ofendido']= $arr["ofendido"];
+        
                         //en denunciapendiente.php se cambia a estado incompleta
                         //y pide que hacer: borrarla o continuar ingresando
-			echo
-			"<script>
-			location.href='../administracion/DenunciaPendiente.php';
-			</script>";
-		}
-		else
-		{   
+            echo
+            "<script>
+            location.href='../administracion/DenunciaPendiente.php';
+            </script>";
+        }
+        else
+        {   
                     //si por errores de conexion quedo un registro en la tabla
                     //controldeestados con todos true, no entra al if anterior
                     //pero provocará error al guardar
@@ -1052,9 +1164,13 @@ function ProcesaIncompleta()
                     "<script>
                             location.href='../aplicacion.php';
                     </script>";
-		}
-	}
+        }
+    }
 }
+
+
+
+
 /************************** NUEVO CATALOGO **************************
 /*
 Funcion: Cargar listado de delitos y faltas
@@ -1066,7 +1182,7 @@ function CargarDelito()
 {
     $objConexion=new Conexion(); 
     $sql= "SELECT ndelitoid, cdescripcion FROM mini_sedi.tbl_delito where bactivo= 't' and derogado= 0 order by cdescripcion;";
-    $resDelito=$objConexion->ejecutarComando($sql);	
+    $resDelito=$objConexion->ejecutarComando($sql); 
 
     return $resDelito;        
 }
@@ -1081,7 +1197,7 @@ function CargarDelitoD()
 {
     $objConexion=new Conexion(); 
     $sql= "SELECT ndelitoid, cdescripcion FROM mini_sedi.tbl_delito where bactivo= 't' and derogado= 1 order by cdescripcion;";
-    $resDelito=$objConexion->ejecutarComando($sql);	
+    $resDelito=$objConexion->ejecutarComando($sql); 
 
     return $resDelito;        
 }
