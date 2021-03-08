@@ -16,6 +16,12 @@ if (isset($_SESSION['objUsuario'])){
     header("location:index.php");
 }
 
+if (isset($_GET['var'])){
+    $denuncia= ($_GET['var']);
+    $_SESSION["denunciaid"]= $denuncia;
+}
+
+ //echo $_SESSION["denunciaid"];
 //valida derechos
 /*
  * COMENTADO PARA QUE TODOS PUEDAN ACCEDER A CREAR
@@ -62,6 +68,7 @@ if (isset($_GET['CambiarEstado'])){
             $Usr= $objUsuario->getUsuario();
             $sql= "select mini_sedi.controlestados_delete('".$Usr."',".$_SESSION['denunciaid'].");";
 
+
             $objConexion= new Conexion();
             $rsp= $objConexion->ejecutarProcedimiento($sql);                       
 
@@ -91,9 +98,14 @@ if (isset($_GET['CambiarEstado'])){
             unset($_SESSION["oOfendidoCola"]); 
         }
     }
-    //cargar los objetos que existen 
+       //cargar los objetos que existen if session estado   
+   } //else de incia una nueva denuncia osea cuando la denucia esta en proceso
+} 
+
+//cargar los objetos que existen 
     if (isset($_SESSION["estado"])){ 
         if($_SESSION["estado"]== "Completando"){ 
+
             //crear obj denuncia
             if ($_SESSION['generales']== 't'){  
                 include_once("../clases/Denuncia.php");       
@@ -132,9 +144,7 @@ if (isset($_GET['CambiarEstado'])){
                 $_SESSION['oRelaciones']= "nulo"; //mientras se mejora la clase relacion
             }
         }        
-     }    //cargar los objetos que existen if session estado   
-   } //else de incia una nueva denuncia osea cuando la denucia esta en proceso
-} 
+     } //cargar los objetos que existen if session estado 
 
 /*se carga la pagina despues de hacer agregar/modificar/eliminar elemento de denuncia:
 generales, denunciado, denunciante, ofendido... para mostrar mensaje de grabado/modificado

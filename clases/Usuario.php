@@ -97,16 +97,24 @@ class Usuario {
 
                 $queryInsert_log=$objConexion->ejecutarComando("INSERT INTO tbl_log_general(usuario,ip_address,time_date,descripcion)
                 VALUES('$usr','".$_SERVER['REMOTE_ADDR']."',now(),'Ingreso al Sistema')");          
-        
+                
+                session_start();
                 $this->Usuario= $registro["usuario"];
                 $this->Identidad= $registro["identidad"];
+                $_SESSION['identidad']= $registro["identidad"];
                 $this->Nombres= $registro["nombres"];
                 $this->Apellidos= $registro["apellidos"];
                 
                 $this->OficinaId= $registro["isubbandejaid"];
+
                 $this->Oficina= $registro["subbandeja"];
+                $_SESSION['oficina']= $registro["subbandeja"];
 
                 $this->BandejaId= $registro["ibandejaid"];
+                
+                $_SESSION['bandeja']=$registro["ibandejaid"];
+
+
                 $this->Bandeja= $registro["bandeja"];
                 $this->SubBandejaId= $registro["isubbandejaid"];
                 $this->SubBandeja= $registro["subbandeja"];
@@ -329,45 +337,45 @@ Nota:
 */
 function ConocerTareas($usuario, $objConexion)
 {
-	$sql= "select rolid from mini_sedi.tbl_usr_rol where usuario="."'".$usuario."';";
-	$Cursor= $objConexion->ejecutarComando($sql);	
+    $sql= "select rolid from mini_sedi.tbl_usr_rol where usuario="."'".$usuario."';";
+    $Cursor= $objConexion->ejecutarComando($sql);   
 
-	$TareaList="";
-	while($Rol= pg_fetch_array($Cursor))
-	{
-		$sql= "select tarea from mini_sedi.tbl_rol_tarea where rolid=".$Rol[rolid];
-		$Cursor2= $objConexion->ejecutarComando($sql);
+    $TareaList="";
+    while($Rol= pg_fetch_array($Cursor))
+    {
+        $sql= "select tarea from mini_sedi.tbl_rol_tarea where rolid=".$Rol[rolid];
+        $Cursor2= $objConexion->ejecutarComando($sql);
 
-		while($Tarea= pg_fetch_array($Cursor2))
-		{
-			if ($TareaList== "")
-			{
-				$TareaList= $Tarea[tarea];
-			}
-			else
-			{
-				$TareaList= $TareaList."-".$Tarea[tarea];
-			}                        
-		}
-		
-	}
-	$error= 0;        
-	if ($TareaList!="")
-	{
+        while($Tarea= pg_fetch_array($Cursor2))
+        {
+            if ($TareaList== "")
+            {
+                $TareaList= $Tarea[tarea];
+            }
+            else
+            {
+                $TareaList= $TareaList."-".$Tarea[tarea];
+            }                        
+        }
+        
+    }
+    $error= 0;        
+    if ($TareaList!="")
+    {
                 $this->TareaList = explode("-",$TareaList);
-	}
-	else
-	{
+    }
+    else
+    {
             $this->Estado= "SinTareas";
-	}
-	if ($error== 1)
-	{
+    }
+    if ($error== 1)
+    {
             $this->Estado= "Error";
-	}
-	else
-	{           
+    }
+    else
+    {           
             $objConexion->cerrarConexion();
-	}
+    }
 }    
 
     function getRealIP()

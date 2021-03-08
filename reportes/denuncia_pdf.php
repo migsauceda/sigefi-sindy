@@ -4,7 +4,7 @@ ob_start();
 //include('conexion/cls_conexion.php');
 include_once "../clases/class_conexion_pg.php";
 require_once('tcpdf/tcpdf.php');
-$denuncia=$_SESSION['denunciaid']; 
+//$denuncia=$_SESSION['denunciaid']; 
 //$usuario=$_SESSION['usr'];
 $usuario=$_SESSION['usuario'];
 $impresion;
@@ -28,7 +28,7 @@ $sqlOfendido= "select * from mini_sedi.vw_ofendido where tdenunciaid = '$denunci
 
 $sqlDelitos= "select * from mini_sedi.vw_delitos where tdenunciaid = '$denuncia' order by tpersonaid"; 
 
-$resultado=$conexion->ejecutarComando($sqlDenuncia);	 //generales de la denuncia
+$resultado=$conexion->ejecutarComando($sqlDenuncia);     //generales de la denuncia
 $resultado1=$conexion->ejecutarComando($sqlDenunciante); //deunciante
 $resultado2=$conexion->ejecutarComando($sqlOfendido); //ofendido
 $resultado3=$conexion->ejecutarComando($sqlDenunciado); //denunciado
@@ -40,7 +40,7 @@ class mipdf extends TCPDF{
     public function Header() {       
         // Logo
         //$image_file = K_PATH_IMAGES.'logo_example.png';
-	$image_file = K_PATH_IMAGES.'mp_logo.png'; 
+    $image_file = K_PATH_IMAGES.'mp_logo.png'; 
         $this->Image($image_file, 98, 10, 38, 30, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
         
         // Set font
@@ -68,7 +68,7 @@ class mipdf extends TCPDF{
         // Set font
         $this->SetFont('helvetica', 'I', 8);
         // Page number
-        $denuncia=$_SESSION['denunciaid'];
+        $denuncia=$_GET['denunciaprn'];
         $this->Cell(0, 0, 'Página '.$this->getAliasNumPage().'/'.$this->getAliasNbPages().', Denuncia: '
                 .$denuncia, 0, false, 'C', 0, '', 0, false, 'T', 'M');
     }    
@@ -101,8 +101,8 @@ $pdf->AddPage();
 
 //generar la denuncia para imprimir
 if (pg_num_rows($resultado)>0){    
-	$i=0;
-	$row=pg_fetch_assoc($resultado);
+    $i=0;
+    $row=pg_fetch_assoc($resultado);
         $fdenuncia= substr($row[dfechadenuncia],8,2)."/".
                                 substr($row[dfechadenuncia],5,2)."/".substr($row[dfechadenuncia],0,4);
         $fdenuncia.= " $row[thoradenuncia]";
@@ -116,12 +116,12 @@ if (pg_num_rows($resultado)>0){
             $fhecho= '';
         
         //inicia datos generales de la denuncia        
-	$html.='<strong>Datos Generales de la Denuncia</strong><br>';
+    $html.='<strong>Datos Generales de la Denuncia</strong><br>';
         $html.='<table align="center" border="1">';
         $html.= "<tr><td><strong>Fecha de la denuncia:</strong> $fdenuncia</td>"
                 . "<td><strong>Fecha del hecho:</strong> $fhecho</td></tr></table><br>";
-	$html.= '<table align="center" border="1" id="denuncia">			
-				<tr>
+    $html.= '<table align="center" border="1" id="denuncia">            
+                <tr>
                                     <td colspan="6"><strong>Números de</strong></td>
                                 </tr>
                                 <tr>                                    
@@ -131,7 +131,7 @@ if (pg_num_rows($resultado)>0){
                                     <td><strong>Judicial</strong></td>
                                     <td><strong>Levatamiento</strong></td>
                                     <td><strong>Reporte Tránsito</strong></td>                                    
-				</tr>';
+                </tr>';
         $html.= "               <tr>
                                     <td>$row[tdenunciaid]</td>
                                     <td>$row[cexpedientesedi]</td>
@@ -156,13 +156,13 @@ if (pg_num_rows($resultado)>0){
         
         $html.='<table align="left" border="1" id="lugarhecho">';
         
-	$rowTemp4=$row[deptohecho];
+    $rowTemp4=$row[deptohecho];
               
-	$rowTemp3=$row[munihecho];
+    $rowTemp3=$row[munihecho];
         
-	$rowTemp2=$row[aldeaciudadhecho];
+    $rowTemp2=$row[aldeaciudadhecho];
         
-	$rowTemp1=$row[barriocoloniahecho];        
+    $rowTemp1=$row[barriocoloniahecho];        
 
         $html.='<tr><td><strong>Lugar de los hechos</strong></td></tr><tr><td>';
         $html.="$rowTemp1 $rowTemp2 $rowTemp3 $rowTemp4</td></tr>";
@@ -175,8 +175,8 @@ if (pg_num_rows($resultado)>0){
         //**************************************fin datos generales de la denuncia *************************
         
         //inicio datos del denunciante    
-	$resultado= $resultado1;
-	while ($row=pg_fetch_assoc($resultado)){ 
+    $resultado= $resultado1;
+    while ($row=pg_fetch_assoc($resultado)){ 
             if ($row['bpersonanatural']== 'f'){
                 $html.= '<strong>Datos Generales del denunciante</strong><br>';
                 $html.='<table align="left" border="1" id="denunciante">';  
@@ -273,13 +273,13 @@ if (pg_num_rows($resultado)>0){
                 $html.="<tr><td><strong>telefono</strong></td><td colspan=\"3\">$row[ctelefono]</td></tr>";
                 $html.="</table><br>";
             }
-	//fin datos denunciante
+    //fin datos denunciante
         }
         
         //inicio datos del ofendido    
-	$resultado=$resultado2;
+    $resultado=$resultado2;
         
-	while ($row=pg_fetch_assoc($resultado)){
+    while ($row=pg_fetch_assoc($resultado)){
             if ($row['bpersonanatural']== 'f'){
                 $html.= '<strong>Datos Generales del ofendido</strong><br>';
                 $html.='<table align="left" border="1" id="denunciante">';  
@@ -376,16 +376,16 @@ if (pg_num_rows($resultado)>0){
                 $html.="<tr><td><strong>telefono</strong></td><td colspan=\"3\">$row[ctelefono]</td></tr>";
                 $html.="</table><br>";
             }
-	//fin datos ofendido
+    //fin datos ofendido
         }
 
         
        
         //inicio datos del denunciado  
         $contaimputado= 1;
-	$resultado=$resultado3;
-	while ($row=pg_fetch_assoc($resultado)){
-	if ($row['bpersonanatural']== 'f'){
+    $resultado=$resultado3;
+    while ($row=pg_fetch_assoc($resultado)){
+    if ($row['bpersonanatural']== 'f'){
                 $html.="<strong>Datos Generales del denunciado número $contaimputado</strong><br>";
                 $html.='<table align="left" border="1" id="denunciante">';  
                 
@@ -483,7 +483,7 @@ if (pg_num_rows($resultado)>0){
             }
             $contaimputado++;
         }
-	//fin datos denunciado     
+    //fin datos denunciado     
 
         //narración de hechos, el dato se captura en el select inicial (ver inicio del programa)        
         $html.='<strong>Narración de hechos</strong><br>';
@@ -520,7 +520,7 @@ if (pg_num_rows($resultado)>0){
                 }
                 $html.="<tr>
                                 <td>   $rowDelitos[delito].$clasificacion</td>
-                        </tr>";	
+                        </tr>"; 
                 $Registros--;
                 
                 echo ($rowDelitos[cnombres]." ". $rowDelitos[capellidos]);

@@ -23,8 +23,11 @@
             $oDenuncia= $_SESSION["oDenuncia"];             
         }     
 //exit($objUsuario->getEtapaId());
-
-    
+    if (isset($_GET['var'])){
+    $denuncia= ($_GET['var']);
+    $_SESSION["denunciaid"]= $denuncia;
+}
+ 
 
     //valida derechos
     if ($objUsuario->getPermiso(5)== '0'){ 
@@ -276,6 +279,24 @@
         return false;
     }
         
+
+    //validar que se selecciono imputado
+        if (ImputadoId.length == 0){
+            alert("Error: Debe seleccionar al menos un imputado");
+            return false;
+        }   
+
+        //validar que se selecciono delito
+        if (DelitoId.length == 0){
+            alert("Error: Debe seleccionar al menos un delito");
+            return false;
+        }   
+
+         
+
+
+
+
 //        alert(Contasub); alert(ActividadId); alert(DelitoId); alert(SubEtapaId); 
 //        alert(ImputadoId);
 
@@ -290,36 +311,16 @@
         document.getElementById("txtDelito").value= DelitoId;
         document.getElementById("txtImputados").value= ImputadoId;  
 
-        var arrEtapa= document.getElementById("cboEtapa").value();                
+       var arrEtapa= document.getElementById("cmbEtapa").value();                
         var n= arrEtapa.length;        
         MismaEtapa= true;
-        for(i= 0; i < n; i++){
+        for(i= 1; i < n; i++){
             if(arrEtapa[i] !== arrEtapa[i-1]) MismaEtapa= false;
         }
         if (MismaEtapa) {
-            document.getElementById("").value= arrEtapa[0];
+            document.getElementById("cmbEtapa").value= arrEtapa[0];
         }
-
         
-        //validar que se selecciono imputado
-        if (ImputadoId.length == 0){
-            alert("Error: Debe seleccionar al menos un imputado");
-            ok= false;
-        }   
-        
-        //validar que se selecciono delito
-        if (DelitoId.length == 0){
-            alert("Error: Debe seleccionar al menos un delito");
-            ok= false;
-        }   
-
-
-         //validar que sea la misma etapa para todos
-        if (!MismaEtapa){
-            alert("Error: existen actividades de distintas etapas procesales");
-            ok= false;
-        }
-
 
     
         //validar fecha

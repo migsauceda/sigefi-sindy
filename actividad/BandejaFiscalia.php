@@ -20,7 +20,7 @@
         alert("No tiene acceso a esta opción");    
         top.location = "../aplicacion.php";     
         </script>    -->
-        //<?php
+        <?php
 //    } 
 //    exit($objUsuario->getOficinaId());
     BorrarDenunciaRAM();    
@@ -32,6 +32,14 @@
   <meta name="GENERATOR" content="Quanta Plus">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <link type="text/css" rel="stylesheet" href="../css/Estilos.css"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
   <script type="text/javascript">
   function MostrarHechos(hechos, denuncia){
@@ -60,6 +68,12 @@
   }
   </script>
 
+   <script type="text/javascript">
+  $(document).ready(function() {
+    $('#example').DataTable();
+} );
+</script>
+
 </head>
 <body>
 
@@ -77,24 +91,26 @@
         </td>
     </tr>
 </table>
-<div align="center">
-    <br><strong>Buscar por número:</strong>
-    <br><input type="text" id="buscar" name="buscar" maxlength="10" size="10">
-    <input type="button" id="bAsignar" name="bAsignar" value="Asignar" 
-           onclick="javascript:AsignarFiscalia(document.getElementById('buscar').value)">
-</div>
+
 <br>
-<table align="center" id="contenido" name="contenido" border="0" class="TablaCaja">
-  <tbody align="center">
-    <tr class="SubTituloCentro">
-      <th><strong>&nbsp;Número SEDI&nbsp;&nbsp;</strong></th>
-      <th><strong>&nbsp;Número de denuncia&nbsp;&nbsp;</strong></th>
-      <th><strong>&nbsp;&nbsp;Fecha de creación&nbsp;&nbsp;</strong></th>
-      <th><strong>&nbsp;Fiscalia asignada&nbsp;</strong></th>
-      <th><strong>Hechos</strong></th>
-      <th><strong>Asignar</strong></th>
-    </tr>
-    <?php
+
+<?php
+session_start();
+        echo '
+
+         <table class="table table-hover table-striped table-bordered" id="example" value="consulta">        
+                      <thead>
+                        <tr>
+        <th><strong>&nbsp;Número de denuncia&nbsp;</strong></th>
+          <th><strong>&nbsp;Fecha de creación&nbsp;</strong></th>
+          <th><strong>&nbsp;Fiscalia asignada&nbsp;</strong></th>
+          <th><strong>&nbsp;Hechos&nbsp;</strong></th>
+          <th><strong>&nbsp;Asignar&nbsp;</strong></th>
+                         </tr>
+                      </thead>
+                      <tbody>';
+
+    
         //$ubicacion= $objUsuario->getOficinaId();        
         $ubicacion= $objUsuario->getBandejaId();        
 //        exit($ubicacion);
@@ -123,25 +139,25 @@
         }
         $fila= pg_fetch_array($regDenuncias);
 
-	while ($fila)
-	{ 
+  while ($fila)
+  { 
                 $hechos= $fila["cnarracionhecho"];
                 $id= $fila["tdenunciaid"];
-		echo "<tr class='Grid'>";                  
-                echo "<td>"; echo $fila["cexpedientesedi"]; echo "</td>";
-		echo "<td>"; echo $fila["tdenunciaid"]; echo "</td>";
-		echo "<td>"; echo $fila["dfechadenuncia"]; echo "</td>";
-		echo "<td>"; echo $fila["cdescripcion"]; echo "</td>";
-		echo "<td>"; 
+    echo "<tr class='Grid'>";                  
+               
+    echo "<td>"; echo $fila["tdenunciaid"]; echo "</td>";
+    echo "<td>"; echo $fila["dfechadenuncia"]; echo "</td>";
+    echo "<td>"; echo $fila["cdescripcion"]; echo "</td>";
+    echo "<td>"; 
                     echo "<a href= 'javascript:MostrarHechos(\"$hechos\", \"$id\")'> Ver </a>";
-		echo "</td>";
-		echo "<td>"; 
+    echo "</td>";
+    echo "<td>"; 
                     echo "<a href= 'javascript:AsignarFiscalia(\"$id\")'> Asignar </a>";
-		echo "</td>";                
-		echo "</tr>";
+    echo "</td>";                
+    echo "</tr>";
                 
                 $fila= pg_fetch_array($regDenuncias);
-	}
+  }
     ?>
   </tbody>
 </table>

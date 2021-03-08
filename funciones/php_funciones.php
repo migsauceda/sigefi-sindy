@@ -219,6 +219,8 @@ function ExisteDenunciaRAM(){
     }
 }
 
+
+
 /*
 Funcion: borra variables de sesion para quitar denuncia de RAM
 Relacion: Menu colgante opciones que no requieren de denuncia en RAM
@@ -736,6 +738,23 @@ function CargarFiscal($ibandejaid, $subbandejaid)
         return $resFiscal;
 }
 
+
+function ListarBandeja()
+{
+    $objConexion=new Conexion(); 
+        
+        $sql= "select ibandejaid, cdescripcion 
+               from mini_sedi.tbl_bandejas 
+               order by cdescripcion asc;";
+   
+        
+    $resExpediente=$objConexion->ejecutarComando($sql); 
+
+//        exit($sql);
+//        exit($resFiscaliaActual);
+        return $resExpediente;
+}
+
 /*
 Funcion: Retorna un registro con la fiscalia en q esta asignado un imputado
 Relacion: Formulario para asignar denuncia a fiscalia,
@@ -762,6 +781,30 @@ function CargarCargaFiscal($fiscal)
 //        exit($resFiscaliaActual);
         return $resCargaFiscal;
 }
+
+
+function CargarExpediente($bandeja)
+{
+    $objConexion=new Conexion(); 
+        
+        $sql= " select impf.tdenunciaid, cnombres || ', ' || capellidos as imputado, del.cdescripcion as delito, 
+                impdel.ndelito as delitoid, impdel.tpersonaid
+                from mini_sedi.tbl_imputado_fiscal as impf, 
+                mini_sedi.tbl_imputado as imp, 
+                mini_sedi.tbl_imputado_delito as impdel,
+                mini_sedi.tbl_delito as del,
+                mini_sedi.tbl_bandejas as tb
+                where impf.timputadoid= imp.tpersonaid and impf.timputadoid= impdel.tpersonaid and
+                impdel.ndelito= del.ndelitoid and impf.bactivo= true and tb.ibandejaid= $bandeja
+                 order by tdenunciaid, tpersonaid, delitoid;";
+        
+    $resCargaExpediente=$objConexion->ejecutarComando($sql);    
+
+//        exit($sql);
+//        exit($resFiscaliaActual);
+        return $resCargaExpediente;
+}
+
 
 /*
 Funcion: Retorna un registro con los imputados del expediente segun denuncia
@@ -1369,6 +1412,33 @@ function ListarContenidoBandeja($bandeja, $limit, $offset)
     
     return $rsCursor;
 }
+
+function ListarContenido()
+{ 
+    //session_start();
+    $pusr= $_SESSION['usuario'];
+    
+    //conocer la bandeja asignada
+    $sql= "select distinct td.tdenunciaid ,td.dfechadenuncia, d.cdescripcion, o.cnombres as ofendido , 
+                ti.cnombres as imputado, den.cnombres as denunciante
+         FROM mini_sedi.tbl_denuncia td 
+         INNER JOIN mini_sedi.tbl_imputado_delito tid on tid.tdenunciaid = td.tdenunciaid 
+         INNER JOIN  mini_sedi.tbl_denunciante den on den.tdenunciaid = td.tdenunciaid 
+         INNER JOIN mini_sedi.tbl_ofendido o on o.tdenunciaid = td.tdenunciaid 
+         INNER JOIN mini_sedi.tbl_bandejas tb on tb.ibandejaid = td.ibandejaid 
+         INNER JOIN mini_sedi.tbl_imputado ti on ti.tpersonaid = tid.tpersonaid 
+         INNER JOIN mini_sedi.tbl_imputado ti2 on ti2.tdenunciaid = td.tdenunciaid 
+         INNER JOIN mini_sedi.tbl_delito d on d.ndelitoid = tid.ndelito 
+         INNER JOIN mini_sedi.tbl_usuarios tu on tu.ibandejaid = tb.ibandejaid 
+         WHERE td.basignadafiscalia = 'f' and tu.usuario='SINDY' and tu.ibandejaid =2;";
+
+//    exit($sql);
+    $objConexion= new Conexion();
+    $rsCursor= $objConexion->ejecutarComando($sql);
+    
+    return $rsCursor;
+}
+
 
 /*
 Funcion: contar denuncias segun badeja asignada a usr

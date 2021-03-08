@@ -13,6 +13,9 @@
         header("location:index.php");
     }
 
+
+
+
     //valida derechos
 //    if ($objUsuario->getPermiso(4)== '0'){ 
 //        ?>
@@ -20,7 +23,7 @@
         alert("No tiene acceso a esta opción");    
         top.location = "../aplicacion.php";     
         </script>    -->
-        //<?php
+        <?php
 //    }
     
     //conocer la cantidad total de registros
@@ -36,9 +39,15 @@
 
 <head>
   <title>Listar Bandeja</title>
-  <meta name="GENERATOR" content="Quanta Plus">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <link type="text/css" rel="stylesheet" href="../css/Estilos.css"> 
+  <meta charset = "utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
   <script type="text/javascript">
   function MostrarHechos(hechos, idn){
@@ -84,6 +93,12 @@
     }  
   </script>
 
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $('#example').DataTable();
+} );
+</script>
+
 </head>
     <style type="text/css">
         .LetraTabla{
@@ -120,59 +135,63 @@
                                 onclick='ModificarLimites("ant")'> 
                          <input type="submit" id="sig" name="sig" value="Siguiente"
                                 onclick='ModificarLimites("sig")'>
-                         <br><br><strong>Buscar por número:</strong>
-                         <br><input type="text" id="buscar" name="buscar" maxlength="10" size="10">
-                         <input type="button" id="bAsignar" name="bAsignar" value="Asignar" 
-                                onclick="javascript:AsignarFiscalia(document.getElementById('buscar').value)">
+                         
+                         
     </div>    
     <br>
     <input type="hidden" name="opc" id="opc">
     <input type="hidden" name="actual" id="actual">
-        
-    <table align="center" id="contenido" name="contenido" border="1" class="TablaCaja">
-      <tbody align="center">
-        <tr class="SubTituloCentro">
-          <th><strong>&nbsp;Número SEDI&nbsp;</strong></th>
-          <th><strong>&nbsp;Número de denuncia&nbsp;</strong></th>
+
+     <?php
+
+    
+      session_start();
+        echo '
+                    <table class="table table-hover table-striped table-bordered" id="example" value="consulta">        
+                      <thead>
+                        <tr>
+        <th><strong>&nbsp;Número de denuncia&nbsp;</strong></th>
           <th><strong>&nbsp;Fecha de creación&nbsp;</strong></th>
           <th><strong>&nbsp;Lugar de recepción&nbsp;</strong></th>
           <th><strong>&nbsp;Hechos&nbsp;</strong></th>
           <th><strong>&nbsp;Asignar&nbsp;</strong></th>
-        </tr>
-        
-        <?php 
-            //$regDenuncias= ListarContenidoBandeja($_SESSION['bandeja'], $limit, $offset);
-            $regDenuncias= ListarContenidoBandeja($objUsuario->getSubBandejaId(), 1000, $offset);
-            $fila= pg_fetch_array($regDenuncias);
-            
-            if (!isset($_POST['actual'])){              
-                $offset = 0;   
-        ?>
+                         </tr>
+                      </thead>
+                      <tbody>';
+       
+
+         $regDenuncias= ListarContenidoBandeja($objUsuario->getSubBandejaId(), 1000, $offset);
+         $fila= pg_fetch_array($regDenuncias);
+
+         if (!isset($_POST['actual'])){              
+                $offset = 0;  
+
+           ?>
                 <script type="text/javascript">
                 document.getElementById('actual').value= "0";
                 </script>
-        <?php
-            }
+          <?php
+             }
             else{
-        ?>
-                <script type="text/javascript">
+          ?>
+             <script type="text/javascript">
                 document.getElementById('actual').value= "<?php echo $_POST['actual']; ?>";
                 document.getElementById("progreso").value = document.getElementById('actual').value;
-                </script>
+            </script>
         <?php 
-            }                        
+          }                        
             $i= 1;
             while ($fila)
             { 
         
                     $hechos= $fila["cnarracionhecho"];
                     $id= $fila["tdenunciaid"];
-            ?>
+             ?>
                     <script type="text/javascript">
                     var Hechos= <?php echo $hechos; ?>
                     </script>
                     <tr class="<?php if($i % 2 == 0) echo Fila_1; else echo Fila_0; ?>" >
-                    <td><?php echo $fila["cexpedientesedi"]; ?> </td>
+                    
                     <td><?php echo $fila["tdenunciaid"]; ?> </td>
                     <td><?php echo $fila["dfechadenuncia"]; ?> </td>
                     <td><?php echo $fila["cdescripcion"]; ?> </td>
@@ -189,10 +208,13 @@
                     $i++;
             }
         ?>
-      </tbody>
-    </table>
-</form>
-</body>
+            </tbody>
+                    </table>";
+          
+            
+       
+     </form>
+     </body>
 
 <!-- para ventana modal -->
 <div onclick="CerrarHechos();" id="NarracionHecho" style="position: fixed; width: 600px; height: 325px; top: 0; left: 0;
