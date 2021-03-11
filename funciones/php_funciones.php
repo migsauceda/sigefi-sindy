@@ -990,7 +990,7 @@ function autenticar($usuario, $password, $tipoacceso)
   
     if ($objUsuairo->getConectado()== 0){
         $_SESSION['valido']= 0;
-        header("location:../index1.php");     
+        header("location:../index.php");     
     }
  
     $_SESSION["objUsuario"]= $objUsuairo;
