@@ -1,0 +1,114 @@
+-- FUNCTION: mini_sedi.actividad_delito_insert(integer[], integer[], integer[], character varying, integer, date, integer, integer, integer[], time with time zone, character varying, integer, character varying, bytea, character varying, double precision, boolean)
+
+-- DROP FUNCTION mini_sedi.actividad_delito_insert(integer[], integer[], integer[], character varying, integer, date, integer, integer, integer[], time with time zone, character varying, integer, character varying, bytea, character varying, double precision, boolean);
+
+CREATE OR REPLACE FUNCTION mini_sedi.actividad_delito_insert(
+	ndelito integer[],
+	pnactividadid integer[],
+	ptpersonaid integer[],
+	pcfiscalid character varying,
+	pmateriaid integer,
+	pdfecha date,
+	pnetapa integer,
+	ptdenunciaid integer,
+	pnactividad2 integer[],
+	pthora time with time zone,
+	pip character varying,
+	piddoc integer,
+	ddescripcion character varying,
+	ddoc bytea,
+	dtipo character varying,
+	dsize double precision,
+	destado boolean)
+    RETURNS SETOF mini_sedi.terror 
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+    ROWS 1000
+    
+AS $BODY$
+declare
+	mierror mini_sedi.terror%rowtype;
+
+	n int;
+	i integer;
+    imp integer;
+    del integer;
+    act integer;
+	delito integer;
+    nactividadid integer;
+    tpersonaid integer;
+    nactividad2 integer;
+	arreglo_soundex character varying[];
+	cadena_soundex character varying(20);
+begin
+	begin
+
+		INSERT INTO mini_sedi.tbl_documentos(
+            iddoc, tdenunciaid, descripcion, documento, tipo, size, estado)
+		VALUES (piddoc, ptdenunciaid, ddescripcion, ddoc, dtipo, dsize, destado);
+     
+      -- por persona
+      imp:= array_length(ptpersonaid, 1);
+      --validar si el arreglo esta vacio
+      if imp= 1 then
+          if ptpersonaid[1]= 0 then
+              imp:= -1;
+          end if;
+      end if;
+      
+      --ciclo principal, por imputado
+      for fimputado in 1..imp loop                  
+        del:= array_length(ndelito, 1);
+		--validar si el arreglo esta vacio
+		if del= 1 then
+			if ndelito[1]= 0 then
+				del:= -1;
+			end if;
+		end if;
+        
+        --ciclo interno por delito
+		for fdelito in 1..del loop
+        	act:= array_length(pnactividadid, 1);
+			--validar si el arreglo esta vacio
+			if act= 1 then
+				if pnactividadid[1]= 0 then
+					act:= -1;
+				end if;
+			end if;
+        
+        	--ultimo ciclo interno, por actividad, aqui es donde guarda
+        	for factividad in 1..act loop
+                delito:= ndelito[fdelito];
+                nactividadid:= pnactividadid[factividad]; --actividad
+                tpersonaid:= ptpersonaid[fimputado];    
+                nactividad2:= pnactividad2[1]; --subetapa, ahora se almacena 0 porque ya no se usa la subetapa
+
+                INSERT INTO mini_sedi.tbl_imputado_actividad_delito(ndelito, nactividadid, tpersonaid, 
+                cfiscalid, nmateriaid, dfecha, netapa, tdenunciaid, nactividadid2, thora, iddoc)
+                VALUES (delito, nactividadid, tpersonaid, pcfiscalid, pmateriaid, pdfecha, 
+                pnetapa, ptdenunciaid, nactividad2, pthora, piddoc);
+				
+				--Actualiza el estado de la denuncia--
+				
+				UPDATE mini_sedi.tbl_denuncia 
+                SET cestadodenuncia= mini_sedi.tbl_estado_actividad.cnuevoestado
+                FROM mini_sedi.tbl_estado_actividad,
+                mini_sedi.tbl_imputado_actividad_delito
+                WHERE mini_sedi.tbl_denuncia.cestadodenuncia= mini_sedi.tbl_estado_actividad.cestadodenuncia
+                AND mini_sedi.tbl_imputado_actividad_delito.nactividadid= mini_sedi.tbl_estado_actividad.nactividadid
+                AND mini_sedi.tbl_denuncia.tdenunciaid= ptdenunciaid; 
+			end loop; 
+		end loop;
+      end loop;       
+	exception
+		when others then
+		for mierror in select SQLSTATE, SQLERRM loop return next mierror; end loop;
+		return;
+	end;
+end;
+$BODY$;
+
+ALTER FUNCTION mini_sedi.actividad_delito_insert(integer[], integer[], integer[], character varying, integer, date, integer, integer, integer[], time with time zone, character varying, integer, character varying, bytea, character varying, double precision, boolean)
+    OWNER TO postgres;

@@ -1,0 +1,735 @@
+--modificacion al aumento del valor del tipo de dato del estado de la denuncia en la tabla denuncia--
+ALTER TABLE mini_sedi.tbl_denuncia ALTER COLUMN cestadodenuncia SET DATA TYPE character varying(2);
+
+
+--CREACION DE LA TABLA ESTADO--
+CREATE TABLE mini_sedi.tbl_estado(cestadodenuncia character varying(2),cdescripcion character varying(50),
+	CONSTRAINT pk_estados PRIMARY KEY (cestadodenuncia)
+    );
+--INSERT EN LA TABLA ESTADO--
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('A', 'Activo');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('P', 'Pendiente');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('I', 'Inactivo');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('D', 'Denuncia');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('C', 'Concluido');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('Ap', 'Aprobado');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('IP', 'Investigación Preliminar');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('CI', 'Cierre de Investigación');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('CD', 'Cierre Definitivo');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('Im', 'Impugnado');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('Pa', 'Pasivo');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('R', 'Reparo');
+INSERT INTO mini_sedi.tbl_estado(cestadodenuncia, cdescripcion) VALUES ('E', 'Espera');
+
+--indica cestadodenuncia de la tabla denuncia es una llave foranea--
+ALTER TABLE mini_sedi.tbl_denuncia
+   ADD CONSTRAINT fk_denuncia
+   FOREIGN KEY (cestadodenuncia) 
+   REFERENCES mini_sedi.tbl_estado(cestadodenuncia);
+
+--creacion de la tabla intermedia estado_actividad--
+CREATE TABLE mini_sedi.tbl_estado_actividad
+(
+    cestadodenuncia character varying(2),
+    nactividadid integer NOT NULL,
+    cnuevoestado character varying(2),
+    CONSTRAINT pk_estado_actividad PRIMARY KEY (cestadodenuncia, nactividadid),
+    CONSTRAINT fk_actividad FOREIGN KEY (nactividadid)
+        REFERENCES mini_sedi.tbl_actividad (nactividadid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_estados FOREIGN KEY (cestadodenuncia)
+        REFERENCES mini_sedi.tbl_estado (cestadodenuncia) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+-- creacion de la tabla intermedia materia_actividad--
+CREATE TABLE mini_sedi.tbl_materia_actividad
+(    nactividadid integer NOT NULL,
+     netapaid integer NOT NULL,
+     nsubetapaid integer NOT NULL,
+     nmateria integer NOT NULL,
+
+    CONSTRAINT pk_materia_actividad PRIMARY KEY (nactividadid, netapaid, nsubetapaid,nmateria),
+    CONSTRAINT fk_actividad FOREIGN KEY (nactividadid)
+        REFERENCES mini_sedi.tbl_actividad (nactividadid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_etapa FOREIGN KEY (netapaid)
+        REFERENCES mini_sedi.tbl_etapa (netapaid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+   CONSTRAINT fk_subetapa FOREIGN KEY (nsubetapaid)
+        REFERENCES mini_sedi.tbl_subetapa (nsubetapaid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+CONSTRAINT fk_materia FOREIGN KEY (nmateria)
+        REFERENCES mini_sedi.tbl_materia (nmateria) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+
+
+);
+--insert de la materia codigo procesal penal--
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (4,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (10,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (12,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (20,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (29,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (38,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (50,2,5,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (69,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (93,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (94,3,8,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (97,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (111,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (74,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (83,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (73,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (71,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (81,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (84,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (45,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (72,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (67,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (32,1,3,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (66,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (36,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (35,1,4,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (24,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (34,1,3,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (41,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (25,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (44,1,4,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (27,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (37,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (26,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (76,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (75,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (46,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (43,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (42,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (17,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (31,1,3,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (80,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (79,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (14,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (78,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (22,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (30,1,3,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (3,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (2,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (8,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (5,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (6,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (7,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (15,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (19,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (11,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (28,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (21,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (70,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (16,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (47,2,5,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (48,2,5,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (49,2,5,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (54,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (85,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (58,3,9,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (59,3,10,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (64,3,10,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (62,3,10,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (63,3,10,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (53,3,8,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (56,3,9,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (88,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (89,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (91,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (87,3,8,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (92,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (98,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (101,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (96,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (95,3,8,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (105,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (109,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (100,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (104,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (107,3,8,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (108,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (103,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (99,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (102,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (55,3,8,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (57,3,9,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (60,3,10,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (61,3,10,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (112,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (113,3,8,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (114,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (116,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (149,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (154,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (159,1,4,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (171,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (303,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (305,2,5,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (162,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (301,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (308,2,5,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (118,1,1,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (194,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (193,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (197,4,11,9);
+
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (205,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (204,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (195,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (196,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (200,4,11,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (201,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (199,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (131,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (151,1,4,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (168,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (310,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (137,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (302,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (40,1,4,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (167,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (144,1,3,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (141,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (136,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (172,1,4,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (142,1,3,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (163,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (143,1,3,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (145,1,3,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (135,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (150,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (139,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (133,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (155,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (153,1,4,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (152,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (170,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (165,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (132,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (169,1,4,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (146,1,3,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (140,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (161,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (177,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (164,1,4,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (138,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (148,1,3,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (147,1,3,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (309,1,1,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (179,2,5,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (181,2,5,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (186,2,5,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (180,2,5,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (178,2,5,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (304,2,5,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (188,3,10,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (115,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (187,3,10,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (307,3,10,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (117,3,9,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (203,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (198,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (202,4,11,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (77,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (82,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (23,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (13,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (166,1,4,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (18,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (134,1,2,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (9,1,2,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (182,2,5,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (86,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (90,3,8,9);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (110,3,8,9);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (306,3,10,9);
+
+--fiscalía de la niñez--
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (203,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (194,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (198,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (193,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (197,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (205,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (204,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (195,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (196,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (200,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (201,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (199,4,11,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (202,4,11,11);
+
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (77,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (131,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (151,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (168,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (118,1,1,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (74,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (83,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (310,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (71,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (137,1,2,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (302,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (40,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (82,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (73,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (167,1,4,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (81,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (144,1,3,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (141,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (84,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (45,1,4,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (72,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (136,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (67,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (32,1,3,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (66,1,2,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (36,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (172,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (35,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (24,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (23,1,2,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (142,1,3,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (163,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (143,1,3,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (34,1,3,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (41,1,4,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (25,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (44,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (145,1,3,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (135,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (150,1,4,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (139,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (133,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (27,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (155,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (37,1,4,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (153,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (152,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (26,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (13,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (166,1,4,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (170,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (165,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (76,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (75,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (46,1,4,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (43,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (42,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (17,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (18,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (31,1,3,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (80,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (79,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (169,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (146,1,3,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (14,1,2,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (140,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (78,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (22,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (30,1,3,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (134,1,2,11);
+
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (3,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (2,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (8,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (5,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (6,1,2,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (9,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (7,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (4,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (161,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (177,1,4,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (164,1,4,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (15,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (19,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (11,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (28,1,2,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (21,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (138,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (148,1,3,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (70,1,2,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (147,1,3,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (309,1,1,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (16,1,2,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (179,2,5,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (47,2,5,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (181,2,5,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (182,2,5,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (186,2,5,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (180,2,5,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (178,2,5,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (48,2,5,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (49,2,5,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (304,2,5,11);
+
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (54,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (85,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (86,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (188,3,10,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (58,3,9,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (59,3,10,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (64,3,10,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (62,3,10,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (63,3,10,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (53,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (56,3,9,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (88,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (90,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (89,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (91,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (87,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (92,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (98,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (95,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (101,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (105,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (109,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (100,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (104,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (107,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (108,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (115,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (103,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (99,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (102,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (55,3,8,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (187,3,10,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (57,3,9,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (60,3,10,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (307,3,10,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (61,3,10,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (117,3,9,11);
+INSERT INTO mini_sedi.tbl_materia_actividad (nactividadid, netapaid, nsubetapaid,nmateria) VALUES (306,3,10,11);
+
+
+--insert en la tabla estado_actividad--
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('D',74, 'IP');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('D',82, 'IP');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('IP',72, 'CI');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('IP',73, 'CI');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('IP',302, 'CI');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('IP',303, 'CI');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('IP',301, 'CI');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('IP',308, 'CI');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',45, 'Im');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',166, 'Im');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',57, 'Im');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',204, 'Im');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',167, 'Im');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',170, 'Im');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',171, 'Im');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',187, 'Im');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',188, 'Im');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',73, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',72, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',84, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',172, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',182, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',42, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',43, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',64, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',61, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',60, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',117, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',137, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',163, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',302, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',303, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',304, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',305, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',301, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',306, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',307, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CI',308, 'CD');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('CD',137, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('Pa',136, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',43, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',64, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',117, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',137, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',163, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',303, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',304, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',305, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',306, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',307, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',308, 'C');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('Pa',164, 'A');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',42, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',73, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',72, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',84, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',182, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',202, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',162, 'Pa');
+INSERT INTO mini_sedi.tbl_estado_actividad(cestadodenuncia, nactividadid, cnuevoestado) VALUES ('A',313, 'Pa');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

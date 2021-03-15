@@ -8,7 +8,7 @@ abstract class Config {
 //    protected $esquema= "mini_sedi";
 
     protected $servidor = "localhost";
-    protected $base_datos = "sigefi3";
+    protected $base_datos = "probando";
     protected $usuario = "postgres";
     protected $contrasena = "ministerio"; //ojo la misma del rol mini_sedi_login
     protected $puerto="5432";

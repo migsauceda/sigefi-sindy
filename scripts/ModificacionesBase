@@ -1,0 +1,18 @@
+
+//MODIFICA LA BANDEJA
+
+ALTER TABLE mini_sedi.tbl_bandejas
+    ALTER COLUMN ibandejaid  SET DEFAULT 
+	nextval('mini_sedi.tbl_bandejas_ibandejaid_seq');
+
+ALTER SEQUENCE mini_sedi.tbl_bandejas_ibandejaid_seq RESTART WITH 400;
+
+
+//MODIFICA LA SUBBANDEJA
+ ALTER TABLE mini_sedi.tbl_subbandejas
+ALTER COLUMN isubbandejaid SET DEFAULT 
+nextval ('mini_sedi.tbl_subbandejas_isubbandejaid_seq1');
+
+ALTER SEQUENCE mini_sedi.tbl_subbandejas_isubbandejaid_seq1 RESTART WITH 400;
+
+ALTER TABLE mini_sedi.tbl_subbandejas ADD COLUMN esfiscalia integer;
