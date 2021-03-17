@@ -147,4 +147,6 @@ if($opcion== "etapa"){
     $json .="]";
     echo $json; 
 }
+
+
 ?>

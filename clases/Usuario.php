@@ -138,7 +138,7 @@ class Usuario {
                 $this->Conectado= 1;
                 $this->Etapaid= $registro["netapaid"];
                 $this->ConocerTareas($usr, $objConexion);         
-//                exit($this->OficinaId);
+//                
             }            
         }        
     }

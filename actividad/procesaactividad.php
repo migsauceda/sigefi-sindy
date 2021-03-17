@@ -8,7 +8,7 @@
         $objConexion= new Conexion();
 
         //campos agrabar
-        $gall= $_SESSION['denunciaid']; //denuncia
+        $gall= $_SESSION['denunciaid']; //numero de la denuncia
         $FiscalId= $_POST['txtFiscalid']; //fiscal
 
         //viene con este formato:  27/04/2011  y se transfroma a 20110427

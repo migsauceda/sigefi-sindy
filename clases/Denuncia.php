@@ -177,7 +177,7 @@ class Denuncia {
   {
     //recibe 20121213 y retorna 13/12/2012
     $FechaAnsi= substr($this->FechaDenuncia,6,2)."/".
-		substr($this->FechaDenuncia,4,2)."/".substr($this->FechaDenuncia,0,4);
+    substr($this->FechaDenuncia,4,2)."/".substr($this->FechaDenuncia,0,4);
     
     $FechaAnsi= $FechaAnsi." ".$this->HoraDenuncia;
             
@@ -224,7 +224,7 @@ class Denuncia {
   {
     //recibe 20110423 y retorna 23/04/2011
     $FechaAnsi= substr($this->FechaHecho,6,2)."/".
-		substr($this->FechaHecho,4,2)."/".substr($this->FechaHecho,0,4);
+    substr($this->FechaHecho,4,2)."/".substr($this->FechaHecho,0,4);
     
     $FechaAnsi= $FechaAnsi." ".$this->HoraHecho;
     
@@ -400,28 +400,28 @@ class Denuncia {
 //otros metodos
   public function Guardar()
   {
-	$objORM= new ORM_Denuncia;
+  $objORM= new ORM_Denuncia;
 
-	$objORM->GuardarDenuncia($this);
+  $objORM->GuardarDenuncia($this);
   }
 
   public function Modificar()
   {
-	$objORM= new ORM_Denuncia;
+  $objORM= new ORM_Denuncia;
 
-	$objORM->ModificarDenuncia($this);
+  $objORM->ModificarDenuncia($this);
   }
 //recuperar denuncia de disco
   public function Recuperar($value)
   {
-		$objORM= new ORM_Denuncia;
-		
-		$rsCursor= $objORM->RecuperarDenuncia($value);		
-		
-		$row = pg_fetch_array($rsCursor);
-		$this->DenunciaId= $row[tdenunciaid];
-		$this->Numero= 	$row[cexpedientesedi];
-		$this->ExpedienteJudicial= 	$row[cexpedientejudicial];
+    $objORM= new ORM_Denuncia;
+    
+    $rsCursor= $objORM->RecuperarDenuncia($value);    
+    
+    $row = pg_fetch_array($rsCursor);
+    $this->DenunciaId= $row[tdenunciaid];
+    $this->Numero=  $row[cexpedientesedi];
+    $this->ExpedienteJudicial=  $row[cexpedientejudicial];
                 
                 $this->HoraDenuncia= $row[thoradenuncia];
                 $this->HoraHecho= $row[thorahecho];                
@@ -435,21 +435,21 @@ class Denuncia {
                 //recibe 2012-12-13 y retorna 20121213
                 $FechaAnsi= substr($row[dfechahecho],0,4).
                 substr($row[dfechahecho],5,2).substr($row[dfechahecho],8,2);                                    
-		$this->FechaHecho= $FechaAnsi." ".$this->HoraHecho;
+    $this->FechaHecho= $FechaAnsi." ".$this->HoraHecho;
                 if ($this->FechaHecho== '19000101')
                     $this->FechaHecho= '';
 
-                $this->DepartamentoDenuncia= 	$row[cdeptodenuncia];
-		$this->MunicipioDenuncia= 	$row[cmunicipiodenuncia];
-		$this->DepartamentoHecho= 	$row[cdeptohecho];
-		$this->MunicipioHecho= 	$row[cmunicipiohecho];
-		$this->AldeaCaserioHecho= 	$row[caldeahecho];
-		$this->BarrioColoniaHecho= 	$row[ccaseriohecho];
-		$this->LugarRecepcion= 	$row[nlugarrecepcion];
-		$this->Estado= 		$row[cestadodenuncia];
-		$this->DetalleDireccion= 	$row[cdetalledireccionhecho];
-		$this->NarracionHecho= $row[cnarracionhecho];
-                $this->ExpedientePolicial= 	$row[cexpedientepolicial];
+    $this->DepartamentoDenuncia=  $row[cdeptodenuncia];
+    $this->MunicipioDenuncia=   $row[cmunicipiodenuncia];
+    $this->DepartamentoHecho=   $row[cdeptohecho];
+    $this->MunicipioHecho=  $row[cmunicipiohecho];
+    $this->AldeaCaserioHecho=   $row[caldeahecho];
+    $this->BarrioColoniaHecho=  $row[ccaseriohecho];
+    $this->LugarRecepcion=  $row[nlugarrecepcion];
+    $this->Estado=    $row[cestadodenuncia];
+    $this->DetalleDireccion=  $row[cdetalledireccionhecho];
+    $this->NarracionHecho= $row[cnarracionhecho];
+                $this->ExpedientePolicial=  $row[cexpedientepolicial];
                 $this->LugarHecho= $row[nlugarid];
                 
 //    $objDenuncia->setDenunciaId('tdenunciaid');
