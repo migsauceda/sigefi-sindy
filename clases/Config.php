@@ -1,16 +1,9 @@
 <?php
 abstract class Config {
-//    protected $servidor = "localhost";
-//    protected $base_datos = "sigefi";
-//    protected $usuario = "mini_sedi_login";
-//    protected $contrasena = "(m1n1*cd1)"; //ojo la misma del rol mini_sedi_login
-//    protected $puerto="5432";
-//    protected $esquema= "mini_sedi";
-
     protected $servidor = "localhost";
     protected $base_datos = "sigefi";
-    protected $usuario = "mini_sedi_login";
-    protected $contrasena = "(m1n1cd1)"; //ojo la misma del rol mini_sedi_login
+    protected $usuario = "musuariologin";
+    protected $contrasena = "(clave123)"; //ojo la misma del rol mini_sedi_login
     protected $puerto="5432";
     protected $esquema= "mini_sedi";
     
