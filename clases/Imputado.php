@@ -322,7 +322,7 @@ class Imputado extends Persona {
       if (substr($tmp,$tam-1,1)== ",")
               $tmp= substr($tmp,0,$tam-1);
       
-	$this->Culposos= $tmp;        
+	        $this->Culposos= $tmp;        
     }
 
     public function getCulposos() {

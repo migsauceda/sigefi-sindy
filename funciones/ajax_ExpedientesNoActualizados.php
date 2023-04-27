@@ -12,11 +12,29 @@ $Bandeja= $objUsuairo->getBandejaId();
 //$Inicio= "20180101";
 //$Fin= "20180101";
 
-$sql= "select distinct nombres || ' ' || apellidos as fiscal
-    from mini_sedi.tbl_usuarios where identidad not in
-    (select cfiscalid from mini_sedi.tbl_imputado_actividad_delito
-    where dfecha >= '$Inicio' and dfecha <= '$Fin') and ibandejaid= $Bandeja
-    order by fiscal";
+//si es fiscal jefe de fiscalia
+if ($objUsuairo->getRolId() == 3) //fiscal jefe
+{    
+    $Bandeja= $objUsuairo->getBandejaId();
+    
+    $sql= "select distinct nombres || ' ' || apellidos as fiscal
+        from mini_sedi.tbl_usuarios where identidad not in
+        (select cfiscalid from mini_sedi.tbl_imputado_actividad_delito
+        where dfecha >= '$Inicio' and dfecha <= '$Fin') and ibandejaid= $Bandeja
+        order by fiscal";  
+}
+
+//si es fiscal jefe de seccion
+if ($objUsuairo->getRolId() == 16) //jefe seccion
+{    
+    $SubBandeja= $objUsuairo->getSubBandejaId();
+    
+    $sql= "select distinct nombres || ' ' || apellidos as fiscal
+        from mini_sedi.tbl_usuarios where identidad not in
+        (select cfiscalid from mini_sedi.tbl_imputado_actividad_delito
+        where dfecha >= '$Inicio' and dfecha <= '$Fin') and isubbandejaid= $SubBandeja
+        order by fiscal";
+}
 
 $conexion= new Conexion();
 $cursor= $conexion->ejecutarProcedimiento($sql);

@@ -9,12 +9,12 @@
       $objUsuario= $_SESSION['objUsuario'];
   }
     $subBandejaId = $objUsuario->getSubBandejaId();
-    $subBandejaTxt = $objUsuario->getSubBandeja();
 
 
 	  $vista = "SELECT DISTINCT * FROM mini_sedi.vw_reporte_fiscales_subbandeja WHERE isubbandejaid = $subBandejaId;";
+//exit($vista);
     $resultado = ejecutarQuery($vista);
-    //$resultSubbandeja = pg_fetch_array($resultado);
+    $resultSubbandeja = pg_fetch_array($resultado);
 
  ?>
 
@@ -32,8 +32,7 @@
       <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 
 
- 	 <h2 align="center"><b>Fiscales de: <?php echo $subBandejaTxt; ?></b></h2> <br><br>
-
+ 	<h2 align="center"><b>Fiscales de:</b> <?php echo $resultSubbandeja["subbandeja"]; ?></h2> <br><br>
  </head>
  <body>
 
@@ -56,17 +55,17 @@
                 			<td align=center>".$row["nombres"]." ".$row["apellidos"]."</td>
                 			<td align=center>
                 			<form action=agenda.php method=post>
-            				      <input type='hidden' name='usuario' value='".$row["usuario"]."' />
-                                  <input type='hidden' name='nombres' value='".$row["nombres"]."' />
-                                  <input type='hidden' name='apellidos' value='".$row["apellidos"]."' />
-                                  <input type='hidden' name='subbandeja' value='".$row["subbandeja"]."' />
-                                  <input type='hidden' name='supervision' value='1' />
-								  <input type=submit name=btnVerFiscal class='btn btn-link' value='Ver Agenda'/>
+            					<input type='hidden' name='usuario' value='".$row["usuario"]."' />
+                      <input type='hidden' name='nombres' value='".$row["nombres"]."' />
+                      <input type='hidden' name='apellidos' value='".$row["apellidos"]."' />
+                      <input type='hidden' name='subbandeja' value='".$row["subbandeja"]."' />
+                      <input type='hidden' name='supervision' value='1' />
+								<input type=submit name=btnVerFiscal class='btn btn-link' value='Ver Agenda'/>
 							</form>
 							</td>
-                			</tr>                          
-                		"; 
-                    }
+                			</tr>
+                		";
+                	}
                 ?>
                 </tbody>
             </table>
@@ -81,8 +80,8 @@
     </div>
     <br>
 
-    <script src="assets/js/jquery-1.10.2.js"></script>
-    <!-- Bootstrap Js -->
+ <script src="assets/js/jquery-1.10.2.js"></script>
+      <!-- Bootstrap Js -->
     <script src="assets/js/bootstrap.min.js"></script>
     <!-- Metis Menu Js -->
     <script src="assets/js/jquery.metisMenu.js"></script>
@@ -97,6 +96,7 @@
     </script>
          <!-- Custom Js -->
     <script src="assets/js/custom-scripts.js"></script>
-     
+
+
  </body>
  </html>

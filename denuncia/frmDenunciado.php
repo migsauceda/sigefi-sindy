@@ -414,7 +414,7 @@
 
                 txt2= document.createElement("input");
                 txt2.type= "radio";
-                txt2.name= "campo5"+Contador;
+                txt2.name= "campo4"+Contador; //mismo que culposo
                 txt2.id= "campo5"+Contador;
                 txt2.value= "Tentativa";  
 
@@ -606,6 +606,16 @@
         function InactivarComboDelitos(Combo){ 
             document.getElementById(Combo).disabled= true; 
         }
+        
+        //<!-- inactivar radio buton derogado o vigente al momento de selccionar el otro -->
+        //<!--    son mutuamente excluyentes -->
+        function InactivarRadioDelitos(indice, derogado){             
+            //culposo
+            document.getElementById("campo4_"+derogado+indice).disabled= true; 
+            
+            //doloso
+            document.getElementById("campo5_"+derogado+indice).disabled= true; 
+        }        
       
         //<!--agregar filas a las tablas-->
         function AgregarFila(TablaId, Valor)
@@ -746,15 +756,15 @@
                     //agregar br
                     br= document.createElement("br");
 
-                    txt2= document.createElement("input");
-                    txt2.type= "radio";
-                    txt2.name= "campo4"+Contador;
-                    txt2.id= "campo4"+Contador;
-                    txt2.value= "Culposo";  
-
                     lbl2= document.createElement("label");
                     lbl2.setAttribute("for","all");
                     lbltext= document.createTextNode("Culposo");
+                    
+                    txt2= document.createElement("input");
+                    txt2.type= "radio";
+                    txt2.name= "campo4"+Contador;
+                    txt2.id= "campo4_d"+Contador;
+                    txt2.value= "Culposo";  
 
                     col.appendChild(br);
                     lbl2.appendChild(lbltext);
@@ -762,21 +772,38 @@
                     col.appendChild(txt2);
                     fil.appendChild(col);
 
-                    txt2= document.createElement("input");
-                    txt2.type= "radio";
-                    txt2.name= "campo5"+Contador;
-                    txt2.id= "campo5"+Contador;
-                    txt2.value= "Tentativa";  
-
                     lbl2= document.createElement("label");
                     lbl2.setAttribute("for","all");
-                    lbltext= document.createTextNode("Tentativa");
+                    lbltext= document.createTextNode("| Tentativa");
+                    
+                    txt2= document.createElement("input");
+                    txt2.type= "radio";
+                    txt2.name= "campo4"+Contador; //mismo name que "culposo"
+                    txt2.id= "campo5_d"+Contador;
+                    txt2.value= "Tentativa";                      
 
                     lbl2.appendChild(lbltext);
-                    col.appendChild(txt2);
-                    col.appendChild(lbl2);                
+                    col.appendChild(lbl2); 
+                    col.appendChild(txt2);                                   
                     fil.appendChild(col);    
+               
+                    //nuevo
+                    lbl2= document.createElement("label");
+                    lbl2.setAttribute("for","all");
+                    lbltext= document.createTextNode("  | Doloso");
+                    
+                    txt2= document.createElement("input");
+                    txt2.type= "radio";
+                    txt2.name= "campo4"+Contador; //mismo name que "culposo"
+                    txt2.id= "campo5_d"+Contador;
+                    txt2.value= "Tentativa";  
+
+                    lbl2.appendChild(lbltext);
+                    col.appendChild(lbl2);
+                    col.appendChild(txt2);                                    
+                    fil.appendChild(col);                 
                 
+                    //fin nuevo
                     //agregar br
                     br= document.createElement("br");
                     col.appendChild(br);
@@ -796,7 +823,7 @@
                     txt1= document.createElement("select");
                     txt1.name= "delito_v"+Contador;
                     txt1.id= "delito_v"+Contador;
-                    txt1.onchange= function(){InactivarComboDelitos("delito_d"+Contador);}
+                    txt1.onchange= function(){InactivarComboDelitos("delito_d"+Contador); InactivarRadioDelitos(Contador, "d");}
 
                     <?php 
                     $resDelito= CargarDelito();
@@ -828,12 +855,12 @@
                     txt2= document.createElement("input");
                     txt2.type= "radio";
                     txt2.name= "campo4"+Contador;
-                    txt2.id= "campo4"+Contador;
+                    txt2.id= "campo4_v"+Contador;
                     txt2.value= "Culposo";  
 
                     lbl2= document.createElement("label");
                     lbl2.setAttribute("for","all");
-                    lbltext= document.createTextNode("Culposo");
+                    lbltext= document.createTextNode("Imprudencial");
 
                     col.appendChild(br);
                     lbl2.appendChild(lbltext);
@@ -843,18 +870,33 @@
 
                     txt2= document.createElement("input");
                     txt2.type= "radio";
-                    txt2.name= "campo5"+Contador;
-                    txt2.id= "campo5"+Contador;
+                    txt2.name= "campo4"+Contador; //mismo name que culposo
+                    txt2.id= "campo5_v"+Contador;
                     txt2.value= "Tentativa";  
 
                     lbl2= document.createElement("label");
                     lbl2.setAttribute("for","all");
-                    lbltext= document.createTextNode("Tentativa");
+                    lbltext= document.createTextNode("| Tentativa");
 
                     lbl2.appendChild(lbltext);
-                    col.appendChild(txt2);
-                    col.appendChild(lbl2);                
-                    fil.appendChild(col);        
+                    col.appendChild(lbl2);  
+                    col.appendChild(txt2);                                  
+                    fil.appendChild(col);      
+                    
+                    txt2= document.createElement("input");
+                    txt2.type= "radio";
+                    txt2.name= "campo4"+Contador; //mismo name que culposo
+                    txt2.id= "campo5_v"+Contador;
+                    txt2.value= "Tentativa";  
+
+                    lbl2= document.createElement("label");
+                    lbl2.setAttribute("for","all");
+                    lbltext= document.createTextNode("| Simple");
+
+                    lbl2.appendChild(lbltext);
+                    col.appendChild(lbl2);  
+                    col.appendChild(txt2);                                  
+                    fil.appendChild(col);                     
                 
                     //agrear linea división
                     ln = document.createElement("hr");
@@ -1281,22 +1323,48 @@
             Hasta= 0;
             i= 0; 
             
-           
+            //alert(iterar);
             document.getElementById("txtTentativa").value=""; 
+
+            /* se debe distinguir entre los radio button culposo y tentativa
+             * seleccionados del combo de codigo vigente vs codigo derogado
+             * para ello se va a evaluar si el combo derogado apunta a NULL,
+             * significando que no tienen datos y por tal motivo se usó el combo
+             * de codigo vigente.
+             * De lo contrario se tomará culposo y tentativa de derogado
+             */
+                        
             for(i=1; i <= iterar; i++)
             {
                 try{
-                    if (document.getElementById("campo5"+i).checked== true)
-                    {                
-                        document.getElementById("txtTentativa").value=
-                            document.getElementById("txtTentativa").value + '1'+";";
+                    //para codigo derogado
+                    if(!(document.getElementById("delito_d"+i).value == '' || document.getElementById("delito_d"+i).value == null)){
+                        if (document.getElementById("campo5_d"+i).checked== true)
+                        {             
+                            document.getElementById("txtTentativa").value=
+                                document.getElementById("txtTentativa").value + '1'+";";
 
+                        }
+                        else
+                        {
+                            document.getElementById("txtTentativa").value=
+                                document.getElementById("txtTentativa").value + '0'+";";                     
+                        }  
                     }
-                    else
-                    {
-                        document.getElementById("txtTentativa").value=
-                            document.getElementById("txtTentativa").value + '0'+";";                     
-                    }                
+                    //para codigo vigente
+                    if(!(document.getElementById("delito_v"+i).value == '' || document.getElementById("delito_v"+i).value == null)){
+                        if (document.getElementById("campo5_v"+i).checked== true)
+                        {                
+                            document.getElementById("txtTentativa").value=
+                                document.getElementById("txtTentativa").value + '1'+";";
+
+                        }
+                        else
+                        {
+                            document.getElementById("txtTentativa").value=
+                                document.getElementById("txtTentativa").value + '0'+";";                     
+                        }  
+                    }                    
                 }catch(err){
                 }
             }  
@@ -1311,15 +1379,31 @@
             for(i=1; i <= iterar; i++)
             { 
                 try{
-                    if (document.getElementById("campo4"+i).checked== true)
-                    {
-                        document.getElementById("txtCulposo").value=
-                            document.getElementById("txtCulposo").value + '1'+";";                        
+                    //para codigo derogado
+                    if(!(document.getElementById("delito_d"+i).value == '' || document.getElementById("delito_d"+i).value == null)){                    
+                        if (document.getElementById("campo4_d"+i).checked== true)
+                        {
+                            document.getElementById("txtCulposo").value=
+                                document.getElementById("txtCulposo").value + '1'+";";                        
+                        }
+                        else
+                        {
+                            document.getElementById("txtCulposo").value=
+                                document.getElementById("txtCulposo").value + '0'+";";
+                        }
                     }
-                    else
-                    {
-                        document.getElementById("txtCulposo").value=
-                            document.getElementById("txtCulposo").value + '0'+";";
+                    //para codigo vigente
+                    if(!(document.getElementById("delito_v"+i).value == '' || document.getElementById("delito_v"+i).value == null)){
+                        if (document.getElementById("campo4_d"+i).checked== true)
+                        {
+                            document.getElementById("txtCulposo").value=
+                                document.getElementById("txtCulposo").value + '1'+";";                        
+                        }
+                        else
+                        {
+                            document.getElementById("txtCulposo").value=
+                                document.getElementById("txtCulposo").value + '0'+";";
+                        }                        
                     }
                 }catch(err){
                 }

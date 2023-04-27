@@ -153,7 +153,7 @@ if(isset($_POST["Denunciado3Jur"]) && $_POST["Denunciado3Jur"]== 'juridico'){
     $objImputado->setDelitos($_POST["txtTodosDelitos3"]);
     
     $objImputado->setTentativas($_POST["txtTentativa"]);
-    
+    //exit($_POST["txtCulposo"]);
     $objImputado->setCulposos($_POST["txtCulposo"]);
 
     $objImputado->setRepresentante($_POST["txtNombrePadre"]);

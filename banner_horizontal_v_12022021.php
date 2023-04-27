@@ -200,8 +200,6 @@ function Recargar(){
 					<li><a href="reportes/menu.php" target="destino">Buscar denuncia</a></li>
 					     <?php if($objUsuario->getRolId() ==16){ //jefe de seccion?>
 						 <li><a href="reporteria/reporte_jefe_seccion.php" target="destino">Reporte Jefe Sección</a></li>
-                         <li><a href="reportes/ExpedientesActualizados.php" target="destino">Actualizados</a></li>
-                         <li><a href="reportes/ExpedientesNoActualizados.php" target="destino">No actualizados</a></li>
 					      <?php }else if($objUsuario->getRolId() ==4 || $objUsuario->getRolId() ==5){ //director de fiscales y fiscal general?>
 						<li><a href="reporteria/reporte_gerencia_bandejas.php" target="destino">Reporte Gerencia</a></li>
 					    <?php }else if($objUsuario->getRolId() ==3){ //jefe de fiscalia?>
@@ -229,7 +227,7 @@ function Recargar(){
 			<li><a href="reportes/Rdepto.php" target="destino">Depto,Municipio del Imputado</a></li>
 			<li><a href="reportes/Rdeptofe.php" target="destino">Depto,Municipio del Ofendido </a></li>
 			<li><a href="reportes/RDepartamentos.php" target="destino">General por Depto y Municipio</a></li>
-			<li><a href="reportes/vaciadoprimer2.php" target="destino">General 1</a></li>
+			<li><a href="reportes/vaciadoprimer.php" target="destino">General 1</a></li>
 			<li><a href="reportes/Consultas/menu.php" target="destino">DIPEGEC</a></li>
                         <li><a href="http://172.17.0.254:8080" target="_blank">Indicadores</a></li>
 		

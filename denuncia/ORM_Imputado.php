@@ -121,7 +121,7 @@ class ORM_Imputado {
                 ."array[".$Objetos."], "
                 ."'".$objImputado->getIntegraLGBTI()."' "
 		.")";
-
+exit($sql);
         $objConexion= new Conexion();
         $reg= $objConexion->ejecutarComando($sql);
         $err= pg_fetch_array($reg);  

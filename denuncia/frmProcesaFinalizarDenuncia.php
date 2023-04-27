@@ -165,8 +165,8 @@ else
                     alert("Error al crear archivo PDF");
                 },
                 success: function(data){ 
-                    location.href= '../reportes/reporte1b.php?denunciaprn='+data;                
-			//location.href= '../reportes/denuncia_pdf.php?denunciaprn='+data; 
+                    //location.href= '../reportes/reporte1b.php?denunciaprn='+data;                
+			location.href= '../reportes/denuncia_pdf.php?denunciaprn='+data; 
                 }
             });
         }        
