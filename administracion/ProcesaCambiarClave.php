@@ -90,10 +90,10 @@ if (clave($Actual, $PassCript)){
         $PassCript= clave($Nueva, false);
         
         //ahora si, a sustituir la clave
-        $sql= "select usuario_clave("
+        $sql= "select mini_sedi.usuario_clave("
             ."'".$Usr."', "
             ."'".$PassCript."');";        
-
+exit($sql);
         $reg= $oConeccion->ejecutarProcedimiento($sql);
         $valor= pg_fetch_array($reg);
 		

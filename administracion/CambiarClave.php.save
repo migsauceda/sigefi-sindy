@@ -80,17 +80,17 @@ and open the template in the editor.
 	<tbody align="left">
 	<tr>
 	<td><strong>Clave actual:</strong></td>
-	<td><INPUT type="password" name="PassActual" size="20" maxlength="50"></td>
+	<td><INPUT type="input" name="PassActual" size="20" maxlength="50"></td>
 	</tr>
 	<tr>
 	<td><strong>Clave nueva:</strong></td>
-	<td><INPUT type="password" name="PassNueva" id="PassNueva" size="20" maxlength="50" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"></td>
+	<td><INPUT type="input" name="PassNueva" id="PassNueva" size="20" maxlength="50" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"></td>
 	</tr>
 	<tr>
 	<td><strong>Repita nueva:</strong></td>
-	<td><INPUT type="password" name="PassRepita" size="20" maxlength="50"></td>
+	<td><INPUT type="input" name="PassRepita" size="20" maxlength="50"></td>
 	</tr>
-	<tr><TD colspan="2"><hr></TD></tr>	
+password	<tr><TD colspan="2"><hr></TD></tr>	
 	<TR>
 	<TD colspan="2" align="center">
 	<INPUT type="submit" name="Cambiar" value="Cambiar">

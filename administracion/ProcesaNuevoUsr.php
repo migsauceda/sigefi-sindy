@@ -35,7 +35,7 @@ $clave= $contrasena;
 
 //generar nueva clave, segun funcin hash, encriptar
 $PassCript= clave($clave, false);
-
+//exit($PassCript);
 //guardar
 $oConeccion= new Conexion();
             
